@@ -8,9 +8,13 @@ O usuário forneceu os resultados de consultas reais, somente leitura, realizada
 
 A auditoria externa confirmou `has_role(admin)=false`, resgate/relatórios privados negados para anon e catálogo publicado vazio. O Security Advisor sinalizou quatro funções executáveis por anon e cinco por authenticated. Isso não é uma homologação completa de Auth/Storage HTTP e não fornece corpos completos, ACLs, políticas ou hashes para comparar equivalência.
 
-A sessão atual não possui conector Supabase nem autenticação da CLI: `Access token not provided`. Não há `VITE_SUPABASE_ANON_KEY` utilizável. A tentativa de conexão pública sem credenciais encontrou `Tunnel connection failed: 403 Forbidden` no proxy e falha de resolução DNS local. Isso não prova que o projeto esteja ausente ou inacessível na outra sessão.
+Atualização em 22/10/2026: as duas variáveis públicas agora estão injetadas no processo e foram aceitas pelo gateway. Não foi necessário imprimir valores ou alterar o `.env.local` ignorado, cuja chave continua vazia; as variáveis do processo têm precedência. O runtime registra os dois requisitos ativos e nenhuma pendência de variável.
 
-A URL pública foi configurada no exemplo e em `.env.local` ignorado (modo 0600), preservando arquivos existentes. O usuário informou que as variáveis públicas já foram configuradas; contudo, a verificação deste processo não encontrou nenhuma das duas variáveis injetadas e a chave no arquivo local continua vazia. A configuração do ambiente registra os dois requisitos como **pendentes de ativação**, sem secret binding ativo. Não foi inventada chave nem extraída credencial privada. Os requisitos de variáveis e domínios estão salvos no rascunho do ambiente; revisar/salvar/publicar esse ambiente é distinto de publicar o site. A integração HTTP nesta sessão **continua pendente** até a configuração existente chegar ao runtime autorizado.
+A primeira execução de `npm run test:cloud` retornou exit 2, `BLOCKED: Supabase gateway unreachable. No remote assertions executed.` Diagnóstico sem chave: DNS direto com `[Errno -3] Temporary failure in name resolution`, mas HTTPS pelo proxy autorizado retornou HTTP 401 (esperado sem chave). Ativando proxy nativo do Node 24, `node --use-env-proxy --env-file-if-exists=.env.local scripts/cloud-smoke.mjs` passou **23 verificações HTTP de leitura, zero falhas**. As duas verificações anunciante/admin ficaram `not_run`, sem sessões autorizadas.
+
+Uma chamada de leitura adicional a `place_daily_metrics` confirmou negação para anon: HTTP 401, SQLSTATE 42501. As configurações públicas de Auth confirmaram e-mail habilitado, signup habilitado (`disable_signup=false`) e autoconfirmação desabilitada. Isso não comprova SMTP, CAPTCHA, callbacks ou login/recuperação com contas reais. Revisar o signup remoto para a fase de contas existentes; a interface sozinha não bloqueia a API.
+
+Não há binding `SUPABASE_ACCESS_TOKEN`, conector Supabase ou acesso Vercel nesta sessão. Advisor, comparação privilegiada de definições, Auth com e-mail/usuários reais e Storage HTTP continuam pendentes. Roteiro completo de Preview, incluindo callbacks com query e limites operacionais: [VERCEL_PREVIEW.md](VERCEL_PREVIEW.md). Nenhuma configuração remota, dado, migration ou deployment foi alterado.
 
 ## Implementação da conexão
 
@@ -84,19 +88,19 @@ Buckets e controles de escrita remotos são inspecionados pelo relatório SQL/gr
 
 Resultados da execução atual:
 
-- Build e lint: executados localmente.
+- Build, lint e suítes locais: aprovados no commit `b8e45a9` e nos dois jobs do GitHub Actions da PR #3; não repetidos nesta atualização de documentação.
 - Vitest e Chromium: resultados finais em `REVISAO.md`; navegador usa respostas HTTP sintéticas exclusivas de teste.
 - `test:db`: PostgreSQL 17 real descartável, quatro migrations **locais**, seed reexecutado, RLS e grants/hardening. Nenhuma conexão ao Cloud pelo runner.
 - Comparação `.audit/local-hardened.json` × `.audit/local-baseline.json`: sem achados de hardening; `rls_auto_enable` ausente na fixture continua item de revisão. Não é comparação com Cloud.
-- `test:cloud`: bloqueado, exit 2, sem chave pública utilizável; nenhuma asserção remota executada.
-- `cloud:advisors`: bloqueado, exit 2, sem autorização Supabase Management API; Advisor oficial não executado nesta sessão.
+- `test:cloud`: primeira tentativa sem proxy, exit 2. Execução com proxy nativo Node 24 passou 23 verificações HTTP, zero falhas; papéis autenticados `not_run`. Negação de métricas confirmada separadamente.
+- `cloud:advisors`: bloqueio por ausência de binding Management API continua; comando não repetido desnecessariamente. Advisor oficial não reexecutado nesta sessão.
 - Histórico Cloud e resultados do Advisor: conhecidos pelo relatório externo, sem reexecução aqui. Equivalência estrutural completa, corpos/ACLs/dependências, permissões dos usuários reais, Auth/CAPTCHA/MFA/SMTP e buckets HTTP: pendentes de acesso autorizado.
 
 ## Primeira prévia Vercel — sem publicar produção agora
 
 1. Revisar esta PR e disponibilizar URL/chave pública corretas nas variáveis **Preview** da Vercel. Não copiar tokens privados, senhas ou bindings administrativos para `VITE_*`. Build `npm run build`, saída `dist`, Node 22.12+.
 2. Confirmar a reconciliação do histórico e revisar a migration adicional; a existência das três migrations não autoriza reaplicação. Resolver achados remotos relevantes antes de declarar homologação concluída.
-3. No Auth remoto, revisar Site URL e adicionar apenas o callback exato `<origem-confiável-da-prévia>/auth/confirmar` à allowlist de redirects. Preservar URLs legítimas existentes, evitar wildcard amplo para previews não confiáveis e não substituir produção automaticamente.
+3. No Auth remoto, revisar Site URL e cadastrar o callback exato e suas variantes `?next=%2Fconta` e `?next=%2Ffavoritos`, conforme `VERCEL_PREVIEW.md`. Preservar URLs legítimas existentes, evitar wildcard amplo para previews não confiáveis e não substituir produção automaticamente.
 4. Confirmar e-mail habilitado, SMTP/cotas de entrega, templates compatíveis com PKCE (`ConfirmationURL`), rate limit, CAPTCHA se exigido, política de senha e estratégia MFA administrativa. Nenhuma dessas opções Cloud foi alterada aqui.
 5. Conferir na prévia os headers, assets/PWA, callback sem código visível, mapa/atribuição, catálogo vazio legítimo, busca, idiomas, favoritos, login/logout e recuperação com conta existente. Não publicar dados de demonstração para preencher a tela.
 6. Manter pagamentos, criação automática de admin e deploy de produção desativados. O código está preparado para revisão; conexão/segurança remotas precisam das validações acima para afirmar que a prévia está homologada.

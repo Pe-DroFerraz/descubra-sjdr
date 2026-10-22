@@ -23,13 +23,13 @@ Base desta PR: `work/etapa-2-turista`. Revisão incremental em rascunho, sem mer
 | `npm run test:e2e` | Dez cenários passaram em Chromium: Auth/PKCE/recuperação/idiomas, catálogo, mapa, filtros, favoritos, roteiros, eventos, estados e acessibilidade automática |
 | Comparação hardening local × baseline local | Zero achados; helper de plataforma ausente da fixture continua em revisão |
 | PRs #1 e #2 | Abertas, CI validate com sucesso, sem comentários/revisões registrados; nenhum merge |
-| `npm run test:cloud` | Bloqueado, exit 2: chave pública não disponível neste runtime; sem asserção remota |
+| Cloud com proxy nativo Node 24 | 23 verificações HTTP somente leitura passaram, zero falhas; negação da RPC de métricas para anon confirmada separadamente (401/42501) |
 | `npm run cloud:advisors` | Bloqueado, exit 2: binding Management API ausente; auditoria externa preservada sem alegar reexecução |
 
 ## Limitações e revisão necessária
 
-O usuário informou as variáveis públicas configuradas em outro contexto; nesta sessão os requisitos ainda estão pendentes no rascunho do ambiente e a chave não foi injetada. Não inventamos uma chave. Auth/Storage HTTP reais, anunciante/admin reais, SMTP/redirects/CAPTCHA/MFA e os corpos/ACLs/dependências remotos ainda precisam de homologação autorizada. Fixtures de navegador e banco isolado não comprovam integração Cloud.
+As duas variáveis públicas agora estão ativas e o gateway real aceitou a chave autorizada. O Node exigiu proxy nativo neste ambiente: `node --use-env-proxy --env-file-if-exists=.env.local scripts/cloud-smoke.mjs`. A tentativa anterior sem proxy retornou exit 2 por DNS; HTTPS pelo proxy funciona. Anunciante/admin reais ficaram `not_run`, sem sessões autorizadas. Auth por e-mail/contas reais, Storage HTTP, SMTP/redirects/CAPTCHA/MFA e corpos/ACLs/dependências remotos ainda precisam de homologação. A leitura pública de Auth confirmou e-mail habilitado, signup habilitado e autoconfirmação desabilitada; revisar signup para a fase restrita a contas existentes. Nenhuma configuração remota foi alterada.
 
 Os avisos SECURITY DEFINER não foram eliminados cegamente: execução de `has_role` e RPCs públicas é legítima. A ausência de CREATE para anon/authenticated já foi confirmada externamente. A migration adicional não foi aplicada remotamente e não substitui revisão dos avisos.
 
-Para a primeira prévia Vercel: configurar URL/chave pública em Preview, validar callback exato confiável no Auth, entrega de e-mail, configuração de segurança e headers na prévia, seguindo `docs/CLOUD_HOMOLOGACAO.md`. Nenhum deploy, pagamento real ou alteração de Auth Cloud ocorreu nesta entrega. Não publicar o seed para preencher o catálogo vazio.
+O código b8e45a9 teve os dois jobs Validate aprovados; o complemento posterior preserva aplicação/migrations e altera apenas documentação/ignore, sem repetir manualmente os testes aprovados. Para a primeira prévia Vercel, seguir `docs/VERCEL_PREVIEW.md`: variáveis com escopo Preview, branch/versão da PR #3, callbacks exatos incluindo as variantes next e revisão de e-mail/segurança/headers. Não há vínculo/acesso Vercel ou URL Preview criada nesta sessão. Nenhum deploy, pagamento real ou alteração de Auth Cloud ocorreu nesta entrega. Não publicar o seed para preencher o catálogo vazio.

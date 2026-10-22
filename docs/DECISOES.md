@@ -33,3 +33,9 @@
 - Hardening aditivo preserva SECURITY DEFINER necessário e grants legítimos; fixa search_path/ACL/schema CREATE. Não muda defaults globais de postgres; futuras funções exigem revogações/grants explícitos (REVOKE por schema não supera o default global PUBLIC). Preservar rls_auto_enable: auditoria externa confirma postgres/event_trigger/search_path pg_catalog; corpo/ACL/dependências ainda precisam de inspeção.
 - Auditoria de metadados em READ ONLY, baseline antes/depois em PostgreSQL descartável e comparação sem repair automático. Mapeamento explícito das versões locais para 20261022141818/28/35; hardening adicional 20261022150000 posterior. Histórico de nomes/versões não prova equivalência do SQL.
 - Testes Cloud e Advisor oficial opt-in, sem dados fictícios ou escrita. Falta de chave/autorização/rede é bloqueio, não aprovação. Ver docs/CLOUD_HOMOLOGACAO.md.
+
+## Preparo de Preview após CI da PR #3
+- Base b8e45a9 preservada na aplicação; complementar documentação/ignore sem repetir manualmente testes locais aprovados. PRs permanecem sem merge.
+- Variáveis públicas agora ativas; Node precisa de proxy nativo neste ambiente. Runner somente leitura com --use-env-proxy passou 23 verificações, papéis reais não executados. Métricas privadas negaram anon (401/42501).
+- Auth público confirma e-mail habilitado, signup habilitado e autoconfirmação desabilitada. Não alterar remotamente sem acesso; registrar revisão de signup para contas existentes. Isso não comprova SMTP/CAPTCHA/MFA/callbacks.
+- Preview Vercel preparado por guia específico, sem vínculo/acesso/deployment. Registrar as variantes reais de callback com next e preservar origem do PKCE. Variáveis Codex não são copiadas automaticamente para Preview. Nenhuma mudança no banco/hardening remoto.
