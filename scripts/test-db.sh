@@ -17,6 +17,7 @@ for migration in supabase/migrations/*.sql; do psql_run < "$migration"; done
 psql_run < supabase/seed.sql
 psql_run < supabase/seed.sql
 psql_run < supabase/tests/security.sql
+psql_run < supabase/tests/tourist.sql
 psql_run < supabase/tests/concurrency-fixture.sql
 psql_run < supabase/tests/concurrent-redeem.sql &
 first_pid=$!

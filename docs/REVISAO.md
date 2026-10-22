@@ -1,4 +1,27 @@
-# Entrega para revisão — Etapas 0 e 1
+# Entrega atual para revisão — Etapa 2
+
+Branch `work/etapa-2-turista`, partindo do HEAD da PR #1. Relatório completo, revisão de código e configuração Cloud: [ETAPA2.md](ETAPA2.md).
+
+| Verificação local | Resultado |
+| --- | --- |
+| Revisão inicial do HEAD da PR #1 | Build, lint, 16 testes herdados e suíte PostgreSQL passaram |
+| `npm run build` após Etapa 2 | Passou, com divisão por página/vendor e sem warning de chunk >500 KiB |
+| `npm run lint` | Passou |
+| `npm test` | 40 passaram, nenhum ignorado |
+| `npm run test:db` | Passou: três migrations, seed reexecutado, políticas herdadas, concorrência e novas RPCs públicas |
+| `npm run test:e2e` | Seis cenários passaram em Chromium real; fixtures HTTP exclusivamente de teste |
+| axe WCAG 2 A/AA e 2.1 AA — Home desktop/mobile | Nenhuma violação nas regras executadas; não equivale a auditoria manual completa |
+| Responsividade | Home e navegação mobile verificadas sem overflow horizontal; capturas inspecionadas |
+| Supabase Cloud | Não homologado: URL/chave pública ainda não configuradas neste ambiente |
+| Comentários e CI remoto da PR #1 | Não consultados: API GitHub retornou `Forbidden` |
+
+O frontend consulta dados reais publicados no Supabase, sem fallback fictício de produção. As credenciais públicas e o cadastro editorial real ainda precisam ser configurados conforme `ETAPA2.md`. Os testes HTTP de navegador usam fixtures sintéticas e não comprovam conexão ao Cloud. Testes PostgreSQL usam Auth/Storage mínimos simulados; a limitação de disco para a pilha Supabase completa continua registrada abaixo. Sem merge automático, deploy Vercel ou alteração de banco remoto.
+
+QR, tracking, inserção de avaliações e resgate de cupons são Etapa 3. Tradução automática, IA, cobranças, cron, cache offline completo e SEO avançado permanecem nas fases correspondentes. Não houve medição Lighthouse.
+
+---
+
+# Histórico de revisão — Etapas 0 e 1
 
 Branch local: `work/etapas-0-1`, baseada no commit `ebd500eb38a70301889a9597b5b2d30fc373e09d` de `main`. Sem push/deploy ou alteração de banco remoto.
 
