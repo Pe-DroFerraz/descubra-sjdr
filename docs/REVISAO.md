@@ -1,3 +1,56 @@
+# Atualização — leituras Cloud e preparo de Preview
+
+Base confirmada e sincronizada antes das alterações: `work/cloud-auth-homologacao`, commit `b8e45a93ca706cbb2eca96f39ee02dfb22145c39`. Ambos os jobs Validate da [PR #3](https://github.com/Pe-DroFerraz/descubra-sjdr/pull/3) concluíram SUCCESS. Não repetimos build/lint/75 testes unitários/banco/dez E2E já aprovados; esta atualização preserva código/configuração da aplicação e migrations, alterando documentação e ignore de `.vercel/`.
+
+| Verificação atual — 22/10/2026 | Resultado |
+| --- | --- |
+| Variáveis públicas no processo | URL e chave presentes; valores não impressos; configuração aceita pelo gateway |
+| `npm run test:cloud` sem proxy nativo | Exit 2: `BLOCKED: Supabase gateway unreachable. No remote assertions executed.` |
+| DNS direto / HTTPS com proxy, sem chave | DNS: `[Errno -3] Temporary failure in name resolution`; proxy: HTTP 401 esperado sem chave |
+| Runner com `node --use-env-proxy --env-file-if-exists=.env.local scripts/cloud-smoke.mjs` | **23 verificações passaram, zero falhas** |
+| Catálogo e RPCs públicas | Leitura de projeções/publicação, benefícios, patrocinadores e `has_role(admin)=false` passou |
+| Fronteiras privadas para anon | Leituras HEAD/count retornaram zero registros nos cenários da suíte; não comprovam isolamento de usuários reais ou equivalência de grants |
+| `place_daily_metrics` como anon — leitura adicional | Negado: HTTP 401, SQLSTATE 42501 |
+| Configurações públicas de Auth | E-mail habilitado, signup habilitado, autoconfirmação desabilitada; CAPTCHA não informado |
+| Anunciante/admin reais | Dois cenários `not_run`, sem sessões autorizadas existentes |
+| Supabase Advisor / definições privilegiadas | Pendente: binding Management API/conector ausente; sem repetição do comando bloqueado |
+| Vercel | Sem token, projeto vinculado, deployment ou URL Preview nesta sessão |
+
+Configuração detalhada em [VERCEL_PREVIEW.md](VERCEL_PREVIEW.md): escopo Preview das variáveis, origem e callbacks com `next`, templates ConfirmationURL, PKCE no mesmo navegador/origem, SMTP/CAPTCHA/MFA e teste posterior do deployment. Signup habilitado é pendência real de configuração para a fase de contas existentes; `shouldCreateUser:false` protege o fluxo do aplicativo, não desativa signup direto na API.
+
+Nenhuma migration remota aplicada: originais preservadas, adicional pendente de reconciliação/revisão. Sem alteração de Auth remoto, publicação de conteúdo fictício, envio de e-mails, merge ou deploy de produção. Resultados anteriores abaixo são registros históricos.
+
+---
+
+# Histórico — conexão Cloud, Auth e hardening
+
+Branch `work/cloud-auth-homologacao`, baseada em `work/etapa-2-turista`. Ver [CLOUD_HOMOLOGACAO.md](CLOUD_HOMOLOGACAO.md) para contexto, configuração segura, histórico e plano de revisão.
+
+- Implementados login/sessão verificada, senha, magic link PKCE, recuperação/troca, logout e consulta segura de papéis; catálogo permanece anônimo.
+- Migration adicional `20261022150000_security_hardening.sql` preparada/testada somente no banco local. As três migrations originais permanecem intactas e **não foram reaplicadas no Cloud**. Não aplicar a adicional remotamente antes da reconciliação/revisão.
+- Auditoria SQL READ ONLY e comparador de histórico/estrutura/funções/buckets preparados. Mapeamento dos três timestamps remotos registrado, com testes contra duplicação/colisão; equivalência das definições ainda pendente. `rls_auto_enable()` preservada conforme revisão externa.
+- PRs #1 e #2 consultadas nesta sessão: ambas abertas, CI `validate` com sucesso e sem comentários/revisões registrados; nenhum merge realizado.
+- URL pública configurada; chave pública/conectividade autorizada ainda faltam nesta sessão. Scripts de integração Cloud e Security Advisor oficial retornaram bloqueio (exit 2), não aprovação.
+- [RELATORIO_SUPABASE_CODEX.md](RELATORIO_SUPABASE_CODEX.md) registra os resultados reais fornecidos pelo usuário: 29 tabelas/RLS, buckets, histórico, negações para anon, ausência de CREATE e alertas do Advisor. Fonte externa autorizada, sem reexecução nesta sessão; não equivale a homologação HTTP completa.
+
+| Verificação desta entrega | Resultado |
+| --- | --- |
+| `npm run build` | Passou: TypeScript, Vite e PWA |
+| `npm run lint` | Passou |
+| `npm test` | 75 passaram; inclui Auth, storage de sessão, tradução e histórico |
+| `npm run test:db` | Passou: PostgreSQL 17 isolado, quatro migrations locais, seed repetível, RLS/grants, concorrência |
+| `npm run test:e2e` | Dez cenários passaram em Chromium; HTTP sintético exclusivo de teste |
+| Comparação baseline local × hardening local | Zero achados; revisão de `rls_auto_enable` pendente, pois não existe na fixture |
+| `npm run test:cloud` | Exit 2: chave pública não injetada neste runtime; nenhuma asserção HTTP remota |
+| `npm run cloud:advisors` | Exit 2: binding Management API ausente; resultados externos do Advisor preservados no relatório |
+| Migrações/seed remotos | Nenhum comando de aplicação/repair/reset/seed executado |
+
+Cenários de Auth cobrem verificação no servidor, metadados sem autoridade, negação por sessão inválida, logout, resposta genérica de e-mail, PKCE deduplicado, recuperação legítima, rejeição de recuperação forjada e de redirect externo, tradução e catálogo anônimo após login. Storage de sessão testa que logout em outra aba não restaura um token antigo do fallback. Corrigido o atributo de prioridade da imagem para compatibilidade com React 18. Asserções de banco confirmam que grants legítimos e triggers continuam funcionando após hardening local.
+
+Limites: Auth/Storage HTTP reais e papéis de contas reais ainda não homologados, Advisor sem reexecução, histórico sem comparação completa das definições, CSP preparada mas não observada em CDN, SMTP/CAPTCHA/MFA remotos pendentes. Nenhum dado fictício foi publicado. Os registros das etapas anteriores abaixo são históricos.
+
+---
+
 # Entrega atual para revisão — Etapa 2
 
 Branch `work/etapa-2-turista`, partindo do HEAD da PR #1. Relatório completo, revisão de código e configuração Cloud: [ETAPA2.md](ETAPA2.md).

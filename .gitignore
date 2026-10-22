@@ -13,3 +13,7 @@ supabase/.temp/
 supabase/.branches/
 playwright-report/
 test-results/
+.audit/
+.env.local.cloud-tmp
+
+.vercel/
