@@ -1,3 +1,38 @@
+# Entrega atual — referências oficiais externas e publicação editorial
+
+Branch `work/fontes-oficiais-editorial`, criada após atualizar e confirmar `work/gestao-conteudo-turistico` no commit `d325646f70d57b278bbeae2d330da0b95f8e7ba0`. A base do módulo permanece descendente de `work/cloud-auth-homologacao`; não iniciamos da main. As entregas anteriores abaixo são históricas.
+
+O painel mantém CRUD/galeria/paradas com Auth e papel admin no backend. Esta atualização persiste URLs de fontes/campos pendentes nos cinco formulários e na proposta SQL, bloqueia publicação incompleta e mostra a dependência de migration quando faltam as colunas no Cloud. Rótulos explícitos corrigem a localização/associação de seletores e a reedição de textareas preenchidas.
+
+| Verificação desta atualização | Resultado |
+| --- | --- |
+| `npm run build` | Passou — TypeScript, Vite, PWA; sem warning de tamanho de chunk |
+| `npm run lint` | Passou |
+| `npm test` | 106 testes passaram, 15 arquivos |
+| `npm run test:db` | Passou — PostgreSQL 17 descartável sem rede, seis migrations locais, 29 tabelas com RLS, seed repetível, políticas/Storage SQL, resgate concorrente, CRUD/RPC e publicação editorial |
+| Preflight editorial somente leitura | Executado no schema original da fixture; compatível sem as novas colunas. **Não executado no Cloud** |
+| Proposta importada apenas na fixture | 28 locais draft e seis roteiros; fontes/pendências persistidas; importação repetida preserva edições/paradas removidas e não vaza drafts para anon |
+| `npm run test:e2e` | Passou — 25 cenários em Chromium; CRUD, mídia, paradas, publicação, ausência de migration, idiomas, estados e acesso |
+| axe e responsividade | Home desktop/mobile e painel mobile nas regras WCAG automatizadas da suíte; não equivale a auditoria manual completa |
+| `npm run catalog:check` | Passou — 28 candidatos: um endereço confirmado externamente, 14 provisórios e 13 ausentes; seis roteiros draft |
+| HTTP Supabase Cloud real, leitura via proxy | 23 verificações anônimas passaram; projeções públicas, limites privados observados, has_role(admin)=false e Auth settings. Nenhuma chave impressa |
+| HTTP autenticado admin/anunciante | Dois cenários `not_run`: sessões de usuários existentes autorizados não fornecidas |
+| Migrations/dados/imagens remotos | Nenhuma aplicação/importação/mutação/upload executada; nenhum usuário criado ou e-mail enviado |
+
+Os cinco links oficiais e o conteúdo informado pelo usuário são evidência de outra sessão. Não houve acesso direto aos portais nesta atualização nem reinterpretação do bloqueio anterior como consulta bem-sucedida. Dez identidades estão referenciadas externamente. Endereço do Museu Regional registrado exatamente como fornecido; horários divergentes seguem pendentes e `place_hours` não é preenchido. Complexo Ferroviário/Maria Fumaça ainda precisam de página/trecho específico no conjunto de fontes fornecido. Componentes ferroviários exigem revisão de agrupamento. Os demais candidatos preservam evidência secundária/histórica, sem afirmar operação atual.
+
+Segurança preparada: `20261022180000_editorial_provenance.sql` adiciona somente duas colunas às cinco tabelas; triggers SECURITY INVOKER com search_path vazio validam HTTPS/limites, pendências, descrição/endereço e paradas publicadas. Não há SECURITY DEFINER nova, nova tabela, mudança de RLS/grants, alteração das três migrations originais ou de `rls_auto_enable()`. Testes SQL confirmam negação de publicação incompleta, credenciais em URLs, arrays inválidos, roteiro vazio, retirada de local referenciado e exclusão direta da última parada; rollback preserva o estado anterior. URLs e nomes de campos são potencialmente públicos, nunca notas privadas.
+
+**Limitações e aprovações:** a nova migration foi aplicada somente na fixture. Esta versão da gestão depende das novas colunas e da RPC adicional para paradas. Reconciliar versões/definições remotas antes de revisar/aprovar cada migration adicional; registros publicados legados sem fontes exigirão revisão para futuras edições. O preflight mostra contagens de impacto, não verifica fatos. Não executar db push, repair/reset/seed ou propostas de importação automaticamente. Aprovar separadamente rascunhos e posterior publicação individual; completar endereço/descrição/visitação, roteiros e estabelecimentos gastronômicos, além de direitos de fotografias. Não existe conteúdo operacional inventado para preencher essas lacunas.
+
+Auth/Storage HTTP com admin/anunciante reais, callbacks/MFA, definições/grants efetivos e Security Advisor ainda dependem de acesso/homologação privilegiados autorizados. As 23 leituras anônimas não comprovam essas permissões. Testes de navegador interceptam HTTP de fixtures; PostgreSQL usa contratos mínimos de Auth/Storage, sem substituir o Cloud.
+
+A primeira execução E2E localizou problemas de associação dos campos após preenchimento. Os rótulos foram corrigidos e a suíte final consta acima. Uma tentativa auxiliar de formatação usou cache npm fora do workspace e falhou com ENOENT; repetir com cache em `/tmp` resolveu sem alterar dependências do projeto. Permanecem os avisos não impeditivos herdados de migração futura do React Router nos testes e NO_COLOR/FORCE_COLOR no Playwright.
+
+Documentação: [CATALOGO_EDITORIAL.md](CATALOGO_EDITORIAL.md), [GESTAO_CONTEUDO.md](GESTAO_CONTEUDO.md), `content/referencias-oficiais-externas.json`. Sem merge automático, publicação de dados turísticos ou deploy de produção.
+
+---
+
 # Entrega atual — gestão editorial e catálogo inicial
 
 Branch `work/gestao-conteudo-turistico`, baseada na versão atualizada `3d14509` de `work/cloud-auth-homologacao`. Funcionalidades, configuração e aprovações em [GESTAO_CONTEUDO.md](GESTAO_CONTEUDO.md). Pesquisa e pendências em [CATALOGO_EDITORIAL.md](CATALOGO_EDITORIAL.md).

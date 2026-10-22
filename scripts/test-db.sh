@@ -21,6 +21,7 @@ for migration in supabase/migrations/*.sql; do
   [[ "$migration_version" =~ ^[0-9]+$ && "$migration_name" =~ ^[a-z_]+$ ]]
   printf "insert into supabase_migrations.schema_migrations(version,name) values ('%s','%s');\n" "$migration_version" "$migration_name" | psql_run
   if [[ "$migration_version" == 202610220003 ]]; then
+    psql_run < supabase/audit/editorial-preflight.sql
     mkdir -p .audit
     docker exec -i "$container" psql -X -U postgres -v ON_ERROR_STOP=1 -qAt < supabase/audit/cloud-readonly.sql > .audit/local-baseline.json
   fi
@@ -31,6 +32,7 @@ psql_run < supabase/tests/security.sql
 psql_run < supabase/tests/tourist.sql
 psql_run < supabase/tests/hardening.sql
 psql_run < supabase/tests/admin-content.sql
+psql_run < supabase/tests/editorial.sql
 docker exec -i "$container" psql -X -U postgres -v ON_ERROR_STOP=1 -qAt < supabase/audit/cloud-readonly.sql > .audit/local-hardened.json
 psql_run < supabase/tests/concurrency-fixture.sql
 psql_run < supabase/tests/concurrent-redeem.sql &

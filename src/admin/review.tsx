@@ -16,9 +16,16 @@ export function CatalogReview() {
           <article key={place.id} className="admin-record block">
             <h3 className="font-display text-xl">{place.name}</h3>
             <p className="my-3 text-sm">{place.address ?? t('admin.none')}</p>
+            {place.editorial.address_state ===
+              'external-official-reference' && (
+              <p className="my-3 text-sm">{t('admin.addressExternal')}</p>
+            )}
             <span className="pill bg-ochre/10 text-clay">
               {t('admin.sourcePending')}
             </span>
+            <p className="mt-4 text-sm">
+              {t('admin.fieldPending')}: {place.pending_fields.join(', ')}
+            </p>
             <ul className="mt-4 space-y-2 text-sm text-colonial/80">
               {place.editorial.notes.map((note) => (
                 <li key={note}>{note}</li>
@@ -38,6 +45,11 @@ export function CatalogReview() {
                     rel="noopener noreferrer"
                   >
                     {source.title}
+                    {!source.consulted && (
+                      <span className="mt-1 block text-xs">
+                        {t('admin.externalEvidence')}
+                      </span>
+                    )}
                   </a>
                 ))}
             </div>

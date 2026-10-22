@@ -1,0 +1,136 @@
+{
+  "origin": "user_external_session",
+  "accessed_here": false,
+  "supplied_on": "2026-10-22",
+  "sources": [
+    {
+      "id": "iphan-patrimonio-externo",
+      "title": "IPHAN — Patrimônio histórico de Minas Gerais",
+      "url": "https://www.gov.br/iphan/pt-br/superintendencias/minas-gerais/patrimonio-material",
+      "consulted": false,
+      "kind": "external-official-reference",
+      "verification_origin": "user_external_session",
+      "accessed_here": false,
+      "supplied_on": "2026-10-22",
+      "note": "Referência e resultados fornecidos pelo usuário, de outra sessão do ChatGPT. Portal não acessado nesta entrega. Não confirma campos além dos explicitamente informados."
+    },
+    {
+      "id": "iphan-pontes-externo",
+      "title": "IPHAN — Pontes históricas de São João del-Rei",
+      "url": "https://www.gov.br/iphan/pt-br/assuntos/noticias/restauracoes-de-pontes-historicas-sao-concluidas-em-sao-joao-del-rei-mg/",
+      "consulted": false,
+      "kind": "external-official-reference",
+      "verification_origin": "user_external_session",
+      "accessed_here": false,
+      "supplied_on": "2026-10-22",
+      "note": "Referência e resultados fornecidos pelo usuário, de outra sessão do ChatGPT. Portal não acessado nesta entrega. Não confirma campos além dos explicitamente informados."
+    },
+    {
+      "id": "ibram-regional-externo",
+      "title": "Ibram — Museu Regional de São João del-Rei",
+      "url": "https://www.gov.br/museus/pt-br/museus-ibram/museu-regional-de-sao-joao-del-rei",
+      "consulted": false,
+      "kind": "external-official-reference",
+      "verification_origin": "user_external_session",
+      "accessed_here": false,
+      "supplied_on": "2026-10-22",
+      "note": "Referência e resultados fornecidos pelo usuário, de outra sessão do ChatGPT. Portal não acessado nesta entrega. Não confirma campos além dos explicitamente informados."
+    },
+    {
+      "id": "ibram-museus-externo",
+      "title": "Ibram — Lista de museus de São João del-Rei",
+      "url": "https://visite.museus.gov.br/cidade-instituicoes/sao-joao-del-rei/",
+      "consulted": false,
+      "kind": "external-official-reference",
+      "verification_origin": "user_external_session",
+      "accessed_here": false,
+      "supplied_on": "2026-10-22",
+      "note": "Referência e resultados fornecidos pelo usuário, de outra sessão do ChatGPT. Portal não acessado nesta entrega. Não confirma campos além dos explicitamente informados."
+    },
+    {
+      "id": "iphan-igrejas-externo",
+      "title": "IPHAN — Igrejas históricas de São João del-Rei",
+      "url": "https://www.gov.br/iphan/pt-br/unidades-especiais/centro-lucio-costa/mestrado-profissional/dissertacoes-1/ficha-tecnica-as-praticas-de-restauracao-de-bens-moveis-e-integrados-nas-igrejas-matriz-de-nossa-senhora-do-pilar-nossa-senhora-do-carmo-e-sao-francisco-de-assis-em-sao-joao-del-rei-mg-1947-1976",
+      "consulted": false,
+      "kind": "external-official-reference",
+      "verification_origin": "user_external_session",
+      "accessed_here": false,
+      "supplied_on": "2026-10-22",
+      "note": "Referência e resultados fornecidos pelo usuário, de outra sessão do ChatGPT. Portal não acessado nesta entrega. Não confirma campos além dos explicitamente informados."
+    }
+  ],
+  "confirmed_identities": [
+    {
+      "slug": "sao-francisco-assis",
+      "name": "Igreja de São Francisco de Assis",
+      "source_id": "iphan-igrejas-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "catedral-pilar",
+      "name": "Catedral Basílica de Nossa Senhora do Pilar",
+      "source_id": "iphan-igrejas-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "igreja-carmo",
+      "name": "Igreja de Nossa Senhora do Carmo",
+      "source_id": "iphan-igrejas-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "museu-regional",
+      "name": "Museu Regional de São João del-Rei",
+      "source_id": "ibram-regional-externo",
+      "scope": "identity_and_address",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "ponte-cadeia",
+      "name": "Ponte da Cadeia",
+      "source_id": "iphan-pontes-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "ponte-rosario",
+      "name": "Ponte do Rosário",
+      "source_id": "iphan-pontes-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "ponte-teatro",
+      "name": "Ponte do Teatro",
+      "source_id": "iphan-pontes-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    },
+    {
+      "slug": "complexo-ferroviario",
+      "name": "Complexo Ferroviário de São João del-Rei",
+      "source_id": "iphan-patrimonio-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": true
+    },
+    {
+      "slug": "maria-fumaca",
+      "name": "Maria Fumaça — passeio ferroviário",
+      "source_id": "iphan-patrimonio-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": true
+    },
+    {
+      "slug": "fortim-emboabas",
+      "name": "Centro de Referência de Cultura Popular Max Justo Guedes - Fortim dos Emboabas - Universidade Federal de São João del-Rei - UFSJ",
+      "source_id": "ibram-museus-externo",
+      "scope": "identity_only",
+      "specific_page_match_pending": false
+    }
+  ],
+  "museum_regional_address": "Rua Marechal Deodoro, 12, Centro, São João del-Rei, MG",
+  "museum_regional_hours": "conflicting_official_pages_pending_confirmation"
+}

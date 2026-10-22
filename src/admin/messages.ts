@@ -1,4 +1,12 @@
 const pt = {
+  provenanceHelp:
+    'Fontes: uma URL HTTPS por linha. Pendências: um campo por linha. Estas informações podem ser públicas; não inclua dados pessoais nem notas privadas. Publicação exige fontes, ausência de pendências, descrição e endereço do local. Horários, preços, coordenadas e fotos desconhecidos devem continuar vazios.',
+  publicationIncomplete:
+    'Publicação bloqueada: confira fontes, pendências, descrição e endereço. Roteiros exigem paradas publicadas, sem demonstrações. Mantenha o conteúdo em rascunho até concluir a revisão.',
+  externalEvidence:
+    'Referência oficial fornecida em outra sessão; não acessada neste ambiente',
+  addressExternal: 'Endereço confirmado na referência fornecida pelo usuário',
+  fieldPending: 'Campos pendentes de confirmação',
   uncertainUpload:
     'A conexão falhou e o vínculo pode ter sido gravado. Não reenvie antes de conferir o registro e este caminho no Storage:',
   title: 'Ateliê do conteúdo',
@@ -44,7 +52,7 @@ const pt = {
   conflict:
     'O conteúdo mudou desde que você o abriu, ou não está mais acessível. Recarregue antes de editar novamente.',
   migrationRequired:
-    'A função de paradas ainda não está disponível. Revisar e homologar a migration adicional antes de habilitar esta gravação no Cloud.',
+    'O banco ainda não oferece todos os recursos editoriais. Revisar o histórico e homologar as migrations adicionais antes de habilitar esta gravação no Cloud.',
   demoPublication:
     'Conteúdo de demonstração não pode ser publicado por este painel.',
   tooMany:
@@ -127,6 +135,9 @@ const pt = {
     tips: 'Dicas úteis',
   },
   fields: {
+    source_urls: 'Fontes do conteúdo (uma URL HTTPS por linha)',
+    pending_fields:
+      'Campos pendentes (um por linha; vazio somente após revisão)',
     name: 'Nome',
     slug: 'Nome na URL',
     description: 'Descrição',
@@ -153,6 +164,14 @@ const pt = {
 };
 const en = {
   ...pt,
+  provenanceHelp:
+    'Sources: one HTTPS URL per line. Pending fields: one per line. This information may be public; do not include personal data or private notes. Publishing requires sources, no pending fields, a description and a place address. Unknown hours, prices, coordinates and photos must remain empty.',
+  publicationIncomplete:
+    'Publication blocked: check sources, pending fields, description and address. Routes require published, non-demo stops. Keep drafts until review is complete.',
+  externalEvidence:
+    'Official reference supplied from another session; not accessed in this environment',
+  addressExternal: 'Address confirmed by the reference supplied by the user',
+  fieldPending: 'Fields awaiting confirmation',
   uncertainUpload:
     'The connection failed and the link may have committed. Check the record and this Storage path before retrying:',
   errorTitle: 'The operation could not be completed',
@@ -194,7 +213,7 @@ const en = {
   conflict:
     'The content changed or is no longer accessible. Reload before editing.',
   migrationRequired:
-    'The route-stop function is unavailable. Review and validate the additional migration before enabling this write in Cloud.',
+    'Editorial database features are missing. Reconcile history and validate the additional migrations before enabling this Cloud write.',
   demoPublication: 'Demonstration content cannot be published here.',
   tooMany: 'This query exceeds its safe volume limit.',
   removePhotosFirst: 'Remove linked images before deleting the place or event.',
@@ -271,6 +290,8 @@ const en = {
     tips: 'Useful tips',
   },
   fields: {
+    source_urls: 'Content sources (one HTTPS URL per line)',
+    pending_fields: 'Pending fields (one per line; clear only after review)',
     name: 'Name',
     slug: 'URL name',
     description: 'Description',
@@ -297,6 +318,15 @@ const en = {
 };
 const es = {
   ...en,
+  provenanceHelp:
+    'Fuentes: una URL HTTPS por línea. Campos pendientes: uno por línea. Esta información puede ser pública; no incluya datos personales ni notas privadas. Publicar exige fuentes, ninguna tarea pendiente, descripción y dirección del lugar. Horarios, precios, coordenadas y fotos desconocidos deben permanecer vacíos.',
+  publicationIncomplete:
+    'Publicación bloqueada: revise fuentes, campos pendientes, descripción y dirección. Las rutas requieren paradas publicadas sin demostraciones. Mantenga el borrador hasta completar la revisión.',
+  externalEvidence:
+    'Referencia oficial aportada desde otra sesión; no consultada en este entorno',
+  addressExternal:
+    'Dirección confirmada en la referencia aportada por el usuario',
+  fieldPending: 'Campos pendientes de confirmación',
   uncertainUpload:
     'Falló la conexión y el vínculo puede haberse guardado. Revisa el registro y esta ruta en Storage antes de reenviar:',
   errorTitle: 'No se pudo completar la operación',
@@ -343,7 +373,7 @@ const es = {
   conflict:
     'El contenido cambió o ya no está accesible. Recarga antes de editar.',
   migrationRequired:
-    'La función de paradas no está disponible. Revisa y homologa la migration adicional antes de guardar en Cloud.',
+    'Faltan recursos editoriales en la base de datos. Reconcilia el historial y homologa las migrations adicionales antes de guardar en Cloud.',
   preview: 'Ver catálogo público',
   select: 'Selecciona',
   none: 'No informado',
@@ -415,6 +445,9 @@ const es = {
     tips: 'Consejos útiles',
   },
   fields: {
+    source_urls: 'Fuentes (una URL HTTPS por línea)',
+    pending_fields:
+      'Campos pendientes (uno por línea; borrar solo tras revisión)',
     name: 'Nombre',
     slug: 'Nombre en la URL',
     description: 'Descripción',

@@ -1,8 +1,9 @@
 -- Isolated candidate import assertions; no production publication.
 begin;
 do $$ begin
- if (select count(*) from public.places where not is_demo)<>24 then raise exception 'candidate place count'; end if;
+ if (select count(*) from public.places where not is_demo)<>28 then raise exception 'candidate place count'; end if;
  if exists(select 1 from public.places where not is_demo and (status<>'draft' or verified_at is not null or latitude is not null or price_description is not null)) then raise exception 'unreviewed candidates published or enriched'; end if;
+ if exists(select 1 from public.places where cardinality(source_urls)=0 or cardinality(pending_fields)=0) then raise exception 'editorial provenance lost on import';end if;
  if (select count(*) from public.routes where not is_demo)<>6 then raise exception 'candidate route count'; end if;
  if exists(select 1 from public.routes where not is_demo and (status<>'draft' or duration_minutes is not null)) then raise exception 'unreviewed route published'; end if;
  if exists(select 1 from public.route_stops stop join public.routes route on route.id=stop.route_id left join public.places place on place.id=stop.place_id where not route.is_demo and (place.id is null or place.is_demo)) then raise exception 'candidate stop relation'; end if;

@@ -40,3 +40,56 @@ describe('review-only initial tourism catalog', () => {
     expect(sql).not.toContain("'published'");
   });
 });
+
+describe('official evidence supplied externally', () => {
+  it('attributes all five external sources without claiming local access', () => {
+    const official = data.sources.filter(
+      (s) => s.kind === 'external-official-reference',
+    );
+    expect(official).toHaveLength(5);
+    expect(
+      official.every(
+        (s) =>
+          !s.consulted &&
+          !s.accessed_here &&
+          s.verification_origin === 'user_external_session',
+      ),
+    ).toBe(true);
+    const changed = globalThis.structuredClone(data);
+    changed.sources.find(
+      (s) => s.kind === 'external-official-reference',
+    ).consulted = true;
+    expect(proposalSchema.safeParse(changed).success).toBe(false);
+  });
+  it('confirms only the supplied address and keeps divergent schedules unresolved', () => {
+    const museum = data.places.find((p) => p.slug === 'museu-regional');
+    expect(museum.address).toBe(
+      'Rua Marechal Deodoro, 12, Centro, São João del-Rei, MG',
+    );
+    expect(
+      data.places.filter(
+        (p) => p.editorial.address_state === 'external-official-reference',
+      ),
+    ).toHaveLength(1);
+    expect(museum.pending_fields).toContain('horarios');
+    expect(
+      museum.editorial.notes.some((n) => n.includes('Horários divergentes')),
+    ).toBe(true);
+  });
+  it('persists every candidate reference and pending field in review-only SQL', () => {
+    expect(
+      data.places.every((p) => p.source_urls.length && p.pending_fields.length),
+    ).toBe(true);
+    expect(proposalSql(data)).toContain('source_urls,pending_fields');
+    expect(proposalSql(data)).toContain('horarios');
+    for (const route of data.routes)
+      for (const stop of route.stops)
+        expect(
+          data.places.find((p) => p.id === stop.place_id).editorial
+            .identity_state,
+        ).toBe('external-official-reference');
+    expect(
+      data.routes.find((r) => r.slug === 'gastronomico').pending_fields,
+    ).toContain('estabelecimentos_gastronomicos_verificados');
+  });
+});

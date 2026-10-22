@@ -40,6 +40,40 @@ const website = optionalText(2000).refine((v) => {
     return false;
   }
 }, 'httpsOnly');
+// Public provenance only: never enter credentials, personal data or private notes.
+const sourceUrl = z
+  .string()
+  .trim()
+  .max(2000)
+  .url()
+  .refine((value) => {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && !url.username && !url.password;
+    } catch {
+      return false;
+    }
+  }, 'httpsOnly');
+const provenance = {
+  source_urls: z.array(sourceUrl).max(20).default([]),
+  pending_fields: z.array(text(160)).max(30).default([]),
+};
+function publicationReady(value: {
+  source_urls: string[];
+  pending_fields: string[];
+  status?: string;
+  published?: boolean;
+  description?: string;
+  address?: string | null;
+}) {
+  if (value.status !== 'published' && !value.published) return true;
+  return (
+    value.source_urls.length > 0 &&
+    value.pending_fields.length === 0 &&
+    (value.description === undefined || value.description.trim().length > 0) &&
+    (value.address === undefined || !!value.address?.trim())
+  );
+}
 const point = { latitude: number(-90, 90), longitude: number(-180, 180) };
 const paired = (v: { latitude: number | null; longitude: number | null }) =>
   (v.latitude === null) === (v.longitude === null);
@@ -47,9 +81,13 @@ const base = {
   name: text(),
   description: z.string().trim().max(20000),
   status,
+  ...provenance,
 };
 export const schemas = {
-  categories: z.object({ name: text(), slug, published: z.boolean() }).strict(),
+  categories: z
+    .object({ name: text(), slug, published: z.boolean(), ...provenance })
+    .strict()
+    .refine(publicationReady, 'publicationIncomplete'),
   places: z
     .object({
       ...base,
@@ -65,7 +103,8 @@ export const schemas = {
       verified_at: verified,
     })
     .strict()
-    .refine(paired, 'pairedCoordinates'),
+    .refine(paired, 'pairedCoordinates')
+    .refine(publicationReady, 'publicationIncomplete'),
   routes: z
     .object({
       ...base,
@@ -73,7 +112,8 @@ export const schemas = {
       duration_minutes: number(1, 10080, true),
       weather: z.enum(['any', 'rain', 'dry']),
     })
-    .strict(),
+    .strict()
+    .refine(publicationReady, 'publicationIncomplete'),
   events: z
     .object({
       ...base,
@@ -92,21 +132,28 @@ export const schemas = {
     .refine(
       (v) => v.status !== 'published' || !!v.verified_at,
       'eventVerification',
-    ),
+    )
+    .refine(publicationReady, 'publicationIncomplete'),
   tips: z
     .object({
       title: text(),
       description: text(20000),
       category: text(100),
+      ...provenance,
       ...point,
       status,
     })
     .strict()
-    .refine(paired, 'pairedCoordinates'),
+    .refine(paired, 'pairedCoordinates')
+    .refine(publicationReady, 'publicationIncomplete'),
 };
 export type Entity = keyof typeof schemas;
 export const entities = Object.keys(schemas) as Entity[];
-export type Row = { id: string; updated_at: string; [key: string]: unknown };
+export type Row = {
+  id: string;
+  updated_at: string;
+  [key: string]: unknown;
+};
 export type Field = {
   key: string;
   type?:
@@ -120,6 +167,10 @@ export type Field = {
   relation?: 'categories' | 'places';
   required?: boolean;
 };
+const provenanceFields: Field[] = [
+  { key: 'source_urls', type: 'textarea' },
+  { key: 'pending_fields', type: 'textarea' },
+];
 const named: Field[] = [
   { key: 'name', required: true },
   { key: 'slug', required: true },
@@ -181,6 +232,7 @@ export const fields: Record<Entity, Field[]> = {
     state,
   ],
 };
+for (const entity of entities) fields[entity].push(...provenanceFields);
 export function cityInput(iso: string) {
   if (!iso) return '';
   const parts = new Intl.DateTimeFormat('sv-SE', {
@@ -215,18 +267,22 @@ export function formValues(entity: Entity, row?: Row) {
   return Object.fromEntries(
     fields[entity].map((f) => [
       f.key,
-      f.type === 'checkbox'
-        ? row?.[f.key] === true
-        : f.type === 'datetime-local'
-          ? cityInput(String(row?.[f.key] ?? ''))
-          : String(
-              row?.[f.key] ??
-                (f.key === 'status'
-                  ? 'draft'
-                  : f.key === 'weather'
-                    ? 'any'
-                    : ''),
-            ),
+      f.key === 'source_urls' || f.key === 'pending_fields'
+        ? (Array.isArray(row?.[f.key]) ? (row[f.key] as string[]) : []).join(
+            '\n',
+          )
+        : f.type === 'checkbox'
+          ? row?.[f.key] === true
+          : f.type === 'datetime-local'
+            ? cityInput(String(row?.[f.key] ?? ''))
+            : String(
+                row?.[f.key] ??
+                  (f.key === 'status'
+                    ? 'draft'
+                    : f.key === 'weather'
+                      ? 'any'
+                      : ''),
+              ),
     ]),
   );
 }
@@ -238,13 +294,22 @@ export function parseForm(
   const data = Object.fromEntries(
     fields[entity].map((f) => [
       f.key,
-      f.type === 'datetime-local'
-        ? original &&
-          String(values[f.key] ?? '') ===
-            cityInput(String(original[f.key] ?? ''))
-          ? (original[f.key] ?? '')
-          : cityInstant(String(values[f.key] ?? ''))
-        : values[f.key],
+      f.key === 'source_urls' || f.key === 'pending_fields'
+        ? [
+            ...new Set(
+              String(values[f.key] ?? '')
+                .split(/\r?\n/)
+                .map((v) => v.trim())
+                .filter(Boolean),
+            ),
+          ]
+        : f.type === 'datetime-local'
+          ? original &&
+            String(values[f.key] ?? '') ===
+              cityInput(String(original[f.key] ?? ''))
+            ? (original[f.key] ?? '')
+            : cityInstant(String(values[f.key] ?? ''))
+          : values[f.key],
     ]),
   );
   return schemas[entity].parse(data);

@@ -41,6 +41,7 @@ async function backend(page: Page, admin = true) {
   const state = {
     admin,
     failPlaces: false,
+    schemaReady: true,
     storageUploads: 0,
     storageDeletes: 0,
     order: [] as unknown[],
@@ -166,6 +167,18 @@ async function backend(page: Page, admin = true) {
         status: 503,
         json: { message: 'Test-only unavailable' },
       });
+    if (
+      !state.schemaReady &&
+      method === 'GET' &&
+      url.searchParams.get('select')?.includes('source_urls')
+    )
+      return route.fulfill({
+        status: 400,
+        json: {
+          code: '42703',
+          message: 'Fixture missing editorial columns',
+        },
+      });
     const records = state.tables[table] ?? [];
     const selected = records.filter((row) =>
       [...url.searchParams].every(
@@ -198,7 +211,9 @@ async function backend(page: Page, admin = true) {
     }
     if (method === 'PATCH') {
       for (const row of selected)
-        Object.assign(row, request.postDataJSON(), { updated_at: nextStamp() });
+        Object.assign(row, request.postDataJSON(), {
+          updated_at: nextStamp(),
+        });
       result = selected;
     }
     if (method === 'DELETE') {
@@ -267,6 +282,17 @@ for (const entity of [
       await editor
         .getByLabel('Nome na URL', { exact: true })
         .fill('conteudo-fixture');
+    await editor
+      .getByLabel('Fontes do conteúdo (uma URL HTTPS por linha)', {
+        exact: true,
+      })
+      .fill('https://example.invalid/editorial');
+    await editor
+      .getByLabel(
+        'Campos pendentes (um por linha; vazio somente após revisão)',
+        { exact: true },
+      )
+      .fill('revisao_fixture');
     if (entity === 'places')
       await editor
         .getByRole('combobox', { name: 'Categoria', exact: true })
@@ -310,7 +336,10 @@ for (const entity of [
         .getByRole('heading', { name: 'Conteúdo revisado', exact: true }),
     ).toBeVisible();
     await page
-      .getByRole('button', { name: 'Excluir: Conteúdo revisado', exact: true })
+      .getByRole('button', {
+        name: 'Excluir: Conteúdo revisado',
+        exact: true,
+      })
       .click();
     await page
       .getByRole('button', { name: 'Confirmar exclusão', exact: true })
@@ -342,6 +371,11 @@ test('publication requires editorial confirmation and management remains respons
   await editor
     .getByLabel('Nome na URL', { exact: true })
     .fill('categoria-fixture-2');
+  await editor
+    .getByLabel('Fontes do conteúdo (uma URL HTTPS por linha)', {
+      exact: true,
+    })
+    .fill('https://example.invalid/editorial');
   await editor.getByLabel('Publicado no catálogo').check();
   await editor
     .getByRole('button', { name: 'Salvar conteúdo', exact: true })
@@ -515,7 +549,9 @@ test('concurrent editing reports a conflict instead of overwriting a newer recor
     .getByRole('button', { name: 'Salvar conteúdo', exact: true })
     .click();
   await expect(
-    page.getByText('O conteúdo mudou desde que você o abriu', { exact: false }),
+    page.getByText('O conteúdo mudou desde que você o abriu', {
+      exact: false,
+    }),
   ).toBeVisible();
   expect(state.tables.categories[0].name).toBe('Newer server change');
 });
@@ -555,13 +591,11 @@ test('event image upload, replacement and deletion preserve the event and clean 
     await page
       .getByLabel('Descrição acessível da fotografia')
       .fill('Event image fixture ' + i);
-    await page
-      .getByLabel('Arquivo de imagem')
-      .setInputFiles({
-        name: 'fixture.png',
-        mimeType: 'image/png',
-        buffer: Buffer.from(png, 'base64'),
-      });
+    await page.getByLabel('Arquivo de imagem').setInputFiles({
+      name: 'fixture.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(png, 'base64'),
+    });
     await page
       .getByLabel('Autor ou instituição responsável')
       .fill('Fixture author');
@@ -590,4 +624,99 @@ test('event image upload, replacement and deletion preserve the event and clean 
   await expect.poll(() => state.storageDeletes).toBe(2);
   await expect(page.getByText('Nenhuma fotografia vinculada.')).toBeVisible();
   expect(state.tables.events[0].image_path).toBeNull();
+});
+
+test('publishing an attraction remains blocked until its sources, pending fields and address are reviewed', async ({
+  page,
+}) => {
+  const state = await backend(page);
+  await login(page);
+  await page.goto('/admin?secao=places');
+  await page
+    .locator('.admin-record')
+    .filter({
+      has: page.getByRole('heading', {
+        name: 'Local fixture 1',
+        exact: true,
+      }),
+    })
+    .getByRole('button', { name: 'Editar conteúdo' })
+    .click();
+  const editor = page.getByRole('form', { name: 'Editar conteúdo' });
+  await editor
+    .getByLabel('Fontes do conteúdo (uma URL HTTPS por linha)', {
+      exact: true,
+    })
+    .fill('https://example.invalid/source');
+  await editor
+    .getByLabel('Campos pendentes (um por linha; vazio somente após revisão)', {
+      exact: true,
+    })
+    .fill('endereco');
+  await editor
+    .getByRole('combobox', { name: 'Estado editorial', exact: true })
+    .selectOption('published');
+  const review = editor.getByLabel(
+    'Revisei as fontes, o endereço, os direitos e a exatidão deste conteúdo antes de publicá-lo.',
+  );
+  await review.check();
+  await editor
+    .getByRole('button', { name: 'Salvar conteúdo', exact: true })
+    .click();
+  await expect(page.getByRole('alert')).toContainText('Publicação bloqueada');
+  expect(state.tables.places[0].status).toBe('draft');
+  await editor.getByLabel('Endereço', { exact: true }).fill('Fixture only');
+  await editor
+    .getByLabel('Campos pendentes (um por linha; vazio somente após revisão)', {
+      exact: true,
+    })
+    .fill('');
+  await review.check();
+  await editor
+    .getByRole('button', { name: 'Salvar conteúdo', exact: true })
+    .click();
+  await expect(
+    page.getByText('Conteúdo salvo.', { exact: false }),
+  ).toBeVisible();
+  expect(state.tables.places[0]).toMatchObject({
+    status: 'published',
+    source_urls: ['https://example.invalid/source'],
+    pending_fields: [],
+  });
+});
+
+test('missing editorial migration is explicit and does not hide the versioned draft proposal', async ({
+  page,
+}) => {
+  const state = await backend(page);
+  state.schemaReady = false;
+  await login(page);
+  await expect(
+    page.getByText('O banco ainda não oferece todos os recursos editoriais.', {
+      exact: false,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Novo conteúdo', exact: true }),
+  ).toHaveCount(0);
+  await page.goto('/admin?secao=catalog');
+  await expect(
+    page.getByRole('heading', {
+      name: 'Maria Fumaça — passeio ferroviário',
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Endereço confirmado na referência fornecida pelo usuário', {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByText(
+        'Referência oficial fornecida em outra sessão; não acessada neste ambiente',
+        { exact: true },
+      )
+      .first(),
+  ).toBeVisible();
 });

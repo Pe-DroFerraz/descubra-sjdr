@@ -26,9 +26,11 @@ export function fail(error: { code?: string } | null) {
           ? 'duplicate'
           : error.code === '40001'
             ? 'conflict'
-            : error.code === 'PGRST202'
+            : ['PGRST202', 'PGRST204', '42703'].includes(error.code ?? '')
               ? 'migrationRequired'
-              : 'requestError',
+              : error.code === '23514'
+                ? 'publicationIncomplete'
+                : 'requestError',
   );
 }
 // Revalidate with Auth and the role RPC on every operation. RLS makes the final
@@ -74,7 +76,7 @@ export async function listContent(entity: Entity, signal?: AbortSignal) {
   for (let from = 0; from < 100000; from += 250) {
     let query = db
       .from(entityName(entity))
-      .select(projections[entity])
+      .select(projections[entity] + ',source_urls,pending_fields')
       .order('id')
       .range(from, from + 249);
     if (signal) query = query.abortSignal(signal);
@@ -106,7 +108,9 @@ export async function saveContent(
         .eq('id', original.id)
         .eq('updated_at', original.updated_at)
     : db.from(entityName(entity)).insert(payload);
-  const { data, error } = await query.select(projections[entity]).maybeSingle();
+  const { data, error } = await query
+    .select(projections[entity] + ',source_urls,pending_fields')
+    .maybeSingle();
   fail(error);
   if (!data) throw new AdminError('conflict');
   return rows.parse([data])[0];

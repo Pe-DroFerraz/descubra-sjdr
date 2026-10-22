@@ -27,8 +27,8 @@ insert into auth.users(id,email) values
 insert into public.user_roles(user_id,role) values ('10000000-0000-4000-8000-000000000003','admin');
 update public.advertisers set owner_id='10000000-0000-4000-8000-000000000001',status='approved' where id='00000000-0000-4000-0003-000000000001';
 update public.advertisers set owner_id='10000000-0000-4000-8000-000000000002',status='approved' where id='00000000-0000-4000-0003-000000000002';
-update public.categories set published=true;
-update public.places set advertiser_id='00000000-0000-4000-0003-000000000001',is_demo=false,status='published' where id='00000000-0000-4000-0004-000000000001';
+update public.categories set published=true,source_urls=array['https://example.invalid/fixture'];
+update public.places set advertiser_id='00000000-0000-4000-0003-000000000001',is_demo=false,status='published',source_urls=array['https://example.invalid/fixture'],address='Fixture only',description='Fixture only' where id='00000000-0000-4000-0004-000000000001';
 update public.places set advertiser_id='00000000-0000-4000-0003-000000000002',is_demo=false,status='draft' where id='00000000-0000-4000-0004-000000000002';
 update public.places set advertiser_id='00000000-0000-4000-0003-000000000001',is_demo=false,status='draft' where id='00000000-0000-4000-0004-000000000003';
 insert into public.place_views(place_id) values ('00000000-0000-4000-0004-000000000001');
@@ -80,7 +80,7 @@ select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000003'
 set local role authenticated;
 select pg_temp.assert_true(public.has_role('admin'),'admin role resolves without recursion');
 select pg_temp.assert_true((select count(*)=26 from public.places),'admin sees all places');
-update public.places set status='published' where slug='owner-draft';
+update public.places set status='published',source_urls=array['https://example.invalid/fixture'],address='Fixture only',description='Fixture only' where slug='owner-draft';
 insert into storage.objects(bucket_id,name) values('event-images','admin.webp');
 select pg_temp.assert_true((select count(*)=1 from public.place_views),'admin raw access');
 reset role;
