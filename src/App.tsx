@@ -1,13 +1,227 @@
-import { supabaseConfigError } from './lib/supabase';
-import { Button } from './components/ui/button';
-import { useState } from 'react';
-import { Link, Route, Routes, useParams } from 'react-router-dom';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Compass, MapPinned, CalendarDays, Heart, ArrowRight, Languages, Landmark, UtensilsCrossed, BedDouble, ShoppingBag } from 'lucide-react';
-const categories = [{id:'historia',label:'Igrejas e Museus',Icon:Landmark},{id:'comer',label:'Onde Comer',Icon:UtensilsCrossed},{id:'hospedar',label:'Onde Ficar',Icon:BedDouble},{id:'artesanato',label:'Compras e Artesanato',Icon:ShoppingBag}];
-function Header(){const {t,i18n}=useTranslation();return <header className="sticky top-0 z-20 border-b border-colonial/10 bg-ivory/95 backdrop-blur"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4"><Link to="/" className="flex items-center gap-2 text-xl font-bold"><Landmark className="text-clay"/> Descubra <span className="text-clay">SJDR</span></Link><nav aria-label="Navegação principal" className="flex flex-wrap items-center gap-4 text-sm"><Link to="/lugares">{t('places')}</Link><Link to="/mapa">{t('map')}</Link><Link to="/roteiros">{t('routes')}</Link><Link to="/eventos">{t('events')}</Link><Link to="/favoritos">{t('favorites')}</Link><label className="flex items-center gap-1"><Languages size={16}/><span className="sr-only">Idioma</span><select className="bg-transparent" value={i18n.language} onChange={e=>void i18n.changeLanguage(e.target.value)}><option value="pt">PT</option><option value="en">EN</option><option value="es">ES</option></select></label></nav></div></header>}
-function Home(){const {t}=useTranslation();return <><section className="relative overflow-hidden bg-colonial text-white"><div className="pointer-events-none absolute -right-28 top-[-110px] h-96 w-96 rounded-full border-[70px] border-ochre/15"/><div className="relative mx-auto max-w-6xl px-5 py-24 md:py-32"><p className="mb-4 text-sm font-semibold uppercase tracking-[.22em] text-ochre">{t('welcome')}</p><h1 className="max-w-3xl font-display text-5xl leading-tight md:text-7xl">{t('intro')}</h1><p className="mt-6 max-w-xl text-lg text-white/80">{t('subtitle')}</p><div className="mt-10 flex flex-wrap gap-4"><Link className="inline-flex items-center gap-2 rounded-lg bg-ochre px-6 py-3 font-semibold text-colonial hover:bg-amber-300" to="/lugares">{t('explore')} <ArrowRight size={18}/></Link><Link className="inline-flex items-center gap-2 rounded-lg border border-white/40 px-6 py-3 font-semibold hover:bg-white/10" to="/roteiros">{t('routes')}</Link></div></div></section><section className="mx-auto max-w-6xl px-5 py-14"><div className="mb-7 flex items-end justify-between"><div><p className="text-sm font-semibold uppercase tracking-[.2em] text-clay">Explore a cidade</p><h2 className="mt-2 font-display text-3xl">Encontre sua próxima descoberta</h2></div><Compass className="text-ochre" size={32}/></div><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{categories.map(({id,label,Icon})=><Link key={id} to={'/lugares?categoria='+id} className="group rounded-2xl border border-colonial/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"><Icon className="mb-8 text-clay" size={30}/><h3 className="font-display text-xl">{label}</h3><p className="mt-3 flex items-center gap-2 text-sm text-colonial/60">Descobrir <ArrowRight size={15} className="transition group-hover:translate-x-1"/></p></Link>)}</div></section><section className="border-t border-colonial/10 bg-white/60 px-5 py-10"><div className="mx-auto max-w-6xl py-12"><h2 className="font-display text-3xl">Roteiros para cada viagem</h2><p className="mt-3 text-colonial/70">Explore experiências históricas, gastronomia e passeios em família.</p><Link to="/roteiros" className="mt-6 inline-flex items-center gap-2 font-semibold text-clay">Planejar meu roteiro <ArrowRight size={18}/></Link></div></section></>}
-function Placeholder({title,description}:{title:string;description:string}){return <main className="mx-auto min-h-[55vh] max-w-6xl px-5 py-16"><p className="text-xs font-bold uppercase tracking-widest text-clay">Descubra SJDR</p><h1 className="mt-3 font-display text-4xl">{title}</h1><p className="mt-4 max-w-2xl text-colonial/75">{description}</p><div className="mt-10 rounded-xl border border-dashed border-colonial/30 bg-white p-8"><p className="font-medium">Módulo ainda não publicado</p><p className="mt-2 text-sm">A interface inicial está pronta. A integração com o Supabase e os dados verificados serão implementados nas próximas etapas.</p></div><Link to="/" className="mt-8 inline-block font-semibold text-clay">← Voltar ao início</Link></main>}
-function QRedirect(){const {code}=useParams();return <Placeholder title="QR Code" description={'O código '+(code||'')+' será resolvido de maneira segura pela Edge Function na etapa de QR Codes.'}/>}
-function App(){const [consent,setConsent]=useState(localStorage.getItem('sjdr-consent')==='ok');return <div className="min-h-screen"><Header/>{supabaseConfigError && <p role="alert" className="bg-white p-4 text-colonial">{supabaseConfigError}</p>}<Routes><Route path="/" element={<Home/>}/><Route path="/lugares" element={<Placeholder title="Lugares" description="Conheça os estabelecimentos e pontos turísticos cadastrados."/>}/><Route path="/mapa" element={<Placeholder title="Mapa interativo" description="Mapa com filtros por categoria e localização do turista."/>}/><Route path="/roteiros" element={<Placeholder title="Roteiros" description="Roteiros por duração, interesse e clima."/>}/><Route path="/eventos" element={<Placeholder title="Eventos" description="Agenda cultural com datas validadas."/>}/><Route path="/favoritos" element={<Placeholder title="Favoritos" description="Guarde seus lugares favoritos neste dispositivo."/>}/><Route path="/q/:code" element={<QRedirect/>}/><Route path="*" element={<Placeholder title="Página não encontrada" description="A rota solicitada não existe."/>}/></Routes><footer className="bg-colonial px-5 py-8 text-center text-sm text-white/80">Descubra SJDR · São João del-Rei, Minas Gerais · Conteúdo em construção <div className="mt-2 flex justify-center gap-4"><MapPinned size={15}/><CalendarDays size={15}/><Heart size={15}/></div></footer>{!consent&&<div role="dialog" aria-label="Privacidade" className="fixed bottom-4 left-4 right-4 z-30 mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 rounded-xl border border-colonial/20 bg-white p-4 shadow-2xl"><p className="max-w-lg text-sm">Este protótipo armazena apenas sua preferência local de privacidade. Consulte a política antes de habilitar analytics.</p><Button onClick={()=>{localStorage.setItem('sjdr-consent','ok');setConsent(true)}}>Entendi</Button></div>}</div>}
-export default App;
+import { ArrowRight, Heart, Landmark, Menu, X } from 'lucide-react';
+import { ClockProvider } from './hooks/clock';
+import { TripProvider, useTrip } from './trip-context';
+import { Page } from './components/tourism/common';
+const Home = lazy(() => import('./pages/home'));
+const Places = lazy(() => import('./pages/places'));
+const PlaceDetail = lazy(() => import('./pages/place-detail'));
+const RoutesPage = lazy(() => import('./pages/routes'));
+const RouteDetail = lazy(() =>
+  import('./pages/routes').then((module) => ({ default: module.RouteDetail })),
+);
+const Events = lazy(() => import('./pages/events'));
+const EventDetail = lazy(() =>
+  import('./pages/events').then((module) => ({ default: module.EventDetail })),
+);
+const Tips = lazy(() => import('./pages/tips'));
+const Trip = lazy(() => import('./pages/trip'));
+const navigation = [
+  ['/lugares', 'places'],
+  ['/mapa', 'map'],
+  ['/roteiros', 'routes'],
+  ['/eventos', 'events'],
+  ['/dicas', 'tips'],
+] as const;
+function Layout() {
+  const { t, i18n } = useTranslation();
+  const trip = useTrip();
+  const location = useLocation();
+  const [menu, setMenu] = useState(false),
+    [privacy, setPrivacy] = useState(false);
+  useEffect(() => {
+    setMenu(false);
+    window.scrollTo({ top: 0 });
+  }, [location.pathname]);
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+    document.title = `${t(navigation.find(([url]) => location.pathname.startsWith(url))?.[1] ?? 'home')} · Descubra SJDR`;
+  }, [i18n.language, location.pathname, t]);
+  function language(value: string) {
+    void i18n.changeLanguage(value);
+    try {
+      localStorage.setItem('sjdr-language', value);
+    } catch {
+      /* Language still works for this session. */
+    }
+  }
+  return (
+    <>
+      <a className="skip-link" href="#main">
+        {t('skip')}
+      </a>
+      <header className="site-header">
+        <div className="header-inner">
+          <Link to="/" className="brand" aria-label="Descubra SJDR">
+            <span className="brand-icon">
+              <Landmark size={28} strokeWidth={1.4} />
+            </span>
+            <span>
+              descubra<span className="brand-city">SÃO JOÃO DEL-REI</span>
+            </span>
+          </Link>
+          <nav className="desktop-nav" aria-label={t('menu')}>
+            {navigation.map(([to, key]) => (
+              <NavLink key={to} to={to}>
+                {t(key)}
+              </NavLink>
+            ))}
+          </nav>
+          <div className="flex items-center gap-3">
+            <label className="language-select">
+              <span className="sr-only">{t('language')}</span>
+              <select
+                value={i18n.language.slice(0, 2)}
+                onChange={(e) => language(e.target.value)}
+              >
+                <option value="pt">PT</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+              </select>
+            </label>
+            <Link
+              to="/favoritos"
+              className="trip-link"
+              aria-label={t('favorites')}
+            >
+              <Heart size={18} />
+              <span className="hidden sm:inline">{t('favorites')}</span>
+              {trip.items.length > 0 && (
+                <span className="trip-count">{trip.items.length}</span>
+              )}
+            </Link>
+            <button
+              className="icon-button lg:hidden"
+              aria-label={t('menu')}
+              aria-expanded={menu}
+              aria-controls="mobile-navigation"
+              onClick={() => setMenu(!menu)}
+            >
+              {menu ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </div>
+        {menu && (
+          <nav
+            id="mobile-navigation"
+            className="mobile-nav"
+            aria-label={t('menu')}
+          >
+            {navigation.map(([to, key]) => (
+              <NavLink key={to} to={to}>
+                {t(key)}
+              </NavLink>
+            ))}
+          </nav>
+        )}
+      </header>
+      <main id="main" tabIndex={-1}>
+        {i18n.language !== 'pt' && (
+          <p className="bg-white px-5 py-3 text-center text-xs text-colonial/80">
+            {t('contentLanguage')}
+          </p>
+        )}
+        <Suspense
+          fallback={
+            <div className="state-panel" role="status">
+              {t('loading')}
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/lugares" element={<Places />} />
+            <Route path="/lugares/:slug" element={<PlaceDetail />} />
+            <Route path="/mapa" element={<Places map />} />
+            <Route path="/roteiros" element={<RoutesPage />} />
+            <Route path="/roteiros/:slug" element={<RouteDetail />} />
+            <Route path="/eventos" element={<Events />} />
+            <Route path="/eventos/:id" element={<EventDetail />} />
+            <Route path="/dicas" element={<Tips />} />
+            <Route path="/favoritos" element={<Trip />} />
+            <Route
+              path="/q/:code"
+              element={<Page title="QR Code" description={t('qrPending')} />}
+            />
+            <Route
+              path="*"
+              element={
+                <Page title={t('notFound')}>
+                  <Link className="text-link" to="/">
+                    {t('back')} <ArrowRight size={16} />
+                  </Link>
+                </Page>
+              }
+            />
+          </Routes>
+        </Suspense>
+      </main>
+      <footer className="site-footer">
+        <div className="page-shell">
+          <div className="footer-grid">
+            <div>
+              <Link to="/" className="brand">
+                <Landmark size={30} />
+                <span>
+                  descubra<span className="brand-city">SÃO JOÃO DEL-REI</span>
+                </span>
+              </Link>
+              <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
+                {t('footerText')}
+              </p>
+            </div>
+            <nav
+              className="grid grid-cols-2 gap-x-10 gap-y-3 text-sm"
+              aria-label={t('discover')}
+            >
+              {navigation.map(([to, key]) => (
+                <Link key={to} to={to}>
+                  {t(key)}
+                </Link>
+              ))}
+              <Link to="/favoritos">{t('favorites')}</Link>
+            </nav>
+            <div className="max-w-xs">
+              <p className="text-sm leading-relaxed text-white/70">
+                {t('footerNote')}
+              </p>
+              <button
+                onClick={() => setPrivacy(!privacy)}
+                aria-expanded={privacy}
+                className="mt-4 text-sm underline underline-offset-4"
+              >
+                {t('privacy')}
+              </button>
+              {privacy && (
+                <p className="mt-4 text-sm text-white/80">{t('privacyText')}</p>
+              )}
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span>São João del-Rei · Minas Gerais · Brasil</span>
+            <span>© {new Date().getFullYear()} Descubra SJDR</span>
+          </div>
+        </div>
+      </footer>
+      {trip.storageError && (
+        <div
+          className="fixed bottom-4 left-4 right-4 z-[1100] rounded-xl bg-white p-4 shadow-xl"
+          role="alert"
+        >
+          {t('storageError')}
+        </div>
+      )}
+    </>
+  );
+}
+export default function App() {
+  return (
+    <ClockProvider>
+      <TripProvider>
+        <Layout />
+      </TripProvider>
+    </ClockProvider>
+  );
+}

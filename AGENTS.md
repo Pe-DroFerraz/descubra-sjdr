@@ -12,4 +12,4 @@ Leia `docs/ESPECIFICACAO.md` antes de toda implementação. O projeto é uma PWA
 - Dividir alterações em branches/PRs para revisão. Não promover funcionalidades à produção sem testes.
 
 ## Estado
-Etapa 0: scaffold configurado com build, lint, testes, lockfile e base shadcn/ui. Etapa 1: migrations, RLS, Storage e seed demonstrativo implementados; veja docs/BANCO.md e docs/REVISAO.md para validação e limites. Home/rotas continuam demonstrativas. Próximo: Etapa 2 (frontend turista) e validação de integrações externas pendentes.
+Etapas 0/1 implementadas, PR #1 sem merge automático. Etapa 2 implementada na branch `work/etapa-2-turista`: catálogo turístico real via Supabase, Home, Leaflet, lugares/detalhes, roteiros, viagem/favoritos, eventos e dicas. Leia docs/ETAPA2.md e docs/REVISAO.md para testes e limites. Sem variáveis públicas Supabase, não apresentar dados de demonstração como produção. Próximo: homologação Cloud e Etapa 3 (QR, tracking, submissão de avaliações e resgate de cupons).

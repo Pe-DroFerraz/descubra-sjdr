@@ -17,4 +17,4 @@ Não configure webhooks ou pagamentos reais antes das Edge Functions, migrations
 
 ## Banco e validação
 
-Consulte [BANCO.md](BANCO.md). Execute `npm run lint`, `npm test`, `npm run build` e, com Docker, `npm run test:db`. Nunca aplique `supabase/tests/bootstrap.sql` em um projeto Supabase. O frontend continua demonstrativo; pagamentos, IA e módulos turísticos serão integrados nas próximas etapas.
+Consulte [BANCO.md](BANCO.md). Execute `npm run lint`, `npm test`, `npm run build` e, com Docker, `npm run test:db`. Nunca aplique `supabase/tests/bootstrap.sql` em um projeto Supabase. O frontend turístico usa somente conteúdo publicado real do Supabase. Sem URL/chave pública, o catálogo indica indisponibilidade. Veja [ETAPA2.md](ETAPA2.md) para configuração Cloud, migração adicional e testes de navegador. Pagamentos, IA, tracking e operações de cupom/avaliação permanecem nas próximas etapas.
