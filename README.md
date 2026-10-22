@@ -51,4 +51,8 @@ Primeira prévia Vercel da PR #3: [docs/VERCEL_PREVIEW.md](docs/VERCEL_PREVIEW.m
 
 Painel responsivo em `/admin`, restrito ao papel admin verificado no backend. CRUD de categorias, lugares, fotografias, roteiros/paradas, eventos e dicas. Guia, segurança, limites de Storage e aprovações: [docs/GESTAO_CONTEUDO.md](docs/GESTAO_CONTEUDO.md).
 
-O [catálogo editorial](docs/CATALOGO_EDITORIAL.md) tem 24 candidatos em rascunho, 15 endereços provisórios, nove pendentes e seis roteiros preliminares. `npm run catalog:check` valida; `npm run catalog:sql` gera proposta SQL sem executar no banco. Nenhum conteúdo foi importado no Cloud. A gravação atômica das paradas depende da nova migration RPC, preparada apenas localmente e sujeita a reconciliação/revisão antes de aplicação remota.
+O [catálogo editorial](docs/CATALOGO_EDITORIAL.md) tem 28 candidatos em rascunho, um endereço confirmado externamente, 14 provisórios e 13 ausentes e seis roteiros preliminares. `npm run catalog:check` valida; `npm run catalog:sql` gera proposta SQL sem executar no banco. Nenhum conteúdo foi importado no Cloud. O painel depende da nova migration de proveniência; a gravação atômica das paradas depende também da migration RPC, preparada apenas localmente e sujeita a reconciliação/revisão antes de aplicação remota.
+
+### Revisão editorial com referências oficiais externas
+
+O catálogo de revisão agora contém 28 candidatos e seis roteiros em rascunho. O Museu Regional tem endereço confirmado na referência fornecida pelo usuário; seus horários continuam pendentes. Fontes externas não são tratadas como portais acessados neste ambiente. Formulários administrativos persistem URLs/pendências e exigem a migration adicional de proveniência, preparada somente para revisão local. [Catálogo e fontes](docs/CATALOGO_EDITORIAL.md), [dependências e aprovações](docs/GESTAO_CONTEUDO.md). Nenhuma importação ou publicação no banco ocorre automaticamente.

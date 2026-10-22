@@ -5,11 +5,32 @@ const source = z
     id: z.string(),
     title: z.string(),
     url: z.string().url().startsWith('https://'),
-    consulted: z.literal(true),
+    consulted: z.boolean(),
     kind: z.string(),
     note: z.string(),
   })
-  .passthrough();
+  .passthrough()
+  .superRefine((value, ctx) => {
+    if (
+      !value.consulted &&
+      (value.kind !== 'external-official-reference' ||
+        value.verification_origin !== 'user_external_session' ||
+        value.accessed_here !== false)
+    )
+      ctx.addIssue({
+        code: 'custom',
+        message: 'untracked external evidence',
+      });
+    if (value.kind === 'external-official-reference' && value.consulted)
+      ctx.addIssue({
+        code: 'custom',
+        message: 'external reference was not accessed here',
+      });
+  });
+const provenance = {
+  source_urls: z.array(z.string().url().startsWith('https://')).max(20),
+  pending_fields: z.array(z.string().min(1).max(160)).min(1).max(30),
+};
 const editorial = z
   .object({
     review_required: z.literal(true),
@@ -29,6 +50,7 @@ export const proposalSchema = z
           slug: z.string().regex(/^[a-z0-9-]+$/),
           name: z.string().min(1),
           published: z.literal(false),
+          ...provenance,
         }),
       )
       .min(1),
@@ -40,6 +62,7 @@ export const proposalSchema = z
           category_id: uuid,
           name: z.string().min(1),
           description: z.string(),
+          ...provenance,
           address: z.string().nullable(),
           latitude: z.null(),
           longitude: z.null(),
@@ -57,6 +80,7 @@ export const proposalSchema = z
             address_state: z.enum([
               'not-confirmed',
               'secondary-evidence-needs-review',
+              'external-official-reference',
             ]),
           }),
         }),
@@ -69,6 +93,7 @@ export const proposalSchema = z
           slug: z.string(),
           name: z.string(),
           description: z.string(),
+          ...provenance,
           duration_minutes: z.null(),
           weather: z.enum(['any', 'rain', 'dry']),
           status: z.literal('draft'),
@@ -113,8 +138,28 @@ export const proposalSchema = z
     const categories = new Set(value.categories.map((c) => c.id)),
       places = new Set(value.places.map((p) => p.id)),
       sources = new Set(value.sources.map((s) => s.id));
+    check(sources.size === value.sources.length, 'duplicate source ids');
     for (const place of value.places) {
       check(categories.has(place.category_id), 'missing category');
+      check(
+        place.source_urls.includes(place.editorial.primary_url),
+        'primary reference not persisted',
+      );
+      check(
+        place.pending_fields.join('\n') ===
+          place.editorial.pending_fields?.join('\n'),
+        'pending fields drift',
+      );
+      if (place.editorial.identity_state === 'external-official-reference')
+        check(
+          value.sources.some(
+            (source) =>
+              place.editorial.source_ids.includes(source.id) &&
+              source.kind === 'external-official-reference' &&
+              !source.consulted,
+          ),
+          'missing external identity evidence',
+        );
       for (const id of place.editorial.source_ids)
         check(sources.has(id), 'missing source');
       check(
@@ -123,6 +168,13 @@ export const proposalSchema = z
       );
     }
     for (const route of value.routes) {
+      for (const stop of route.stops) {
+        const place = value.places.find((p) => p.id === stop.place_id);
+        check(
+          place?.editorial.identity_state === 'external-official-reference',
+          'route stop identity needs official external evidence',
+        );
+      }
       check(
         new Set(route.stops.map((s) => s.place_id)).size === route.stops.length,
         'duplicate stop',
@@ -142,11 +194,14 @@ export function proposalSql(input) {
         ? String(value)
         : typeof value === 'number'
           ? String(value)
-          : "'" + String(value).replaceAll("'", "''") + "'";
+          : Array.isArray(value)
+            ? 'array[' + value.map(quote).join(',') + ']::text[]'
+            : "'" + String(value).replaceAll("'", "''") + "'";
   const lines = [
     '-- EDITORIAL PROPOSAL ONLY. REVIEW ALL SOURCES/ADDRESSES BEFORE ANY REMOTE IMPORT.',
     '-- Not a migration, not the demonstration seed. No automatic remote execution.',
     '-- All records remain draft/unpublished. Existing IDs are preserved, never overwritten.',
+    '-- Requires reviewed editorial_provenance migration; do not run against the current Cloud schema.',
     'begin;',
   ];
   function insert(table, columns, rows) {
@@ -155,7 +210,11 @@ export function proposalSql(input) {
         `insert into public.${table}(${columns.join(',')}) values (${columns.map((c) => quote(row[c])).join(',')}) on conflict(id) do nothing;`,
       );
   }
-  insert('categories', ['id', 'slug', 'name', 'published'], data.categories);
+  insert(
+    'categories',
+    ['id', 'slug', 'name', 'published', 'source_urls', 'pending_fields'],
+    data.categories,
+  );
   insert(
     'places',
     [
@@ -170,6 +229,8 @@ export function proposalSql(input) {
       'status',
       'is_demo',
       'verified_at',
+      'source_urls',
+      'pending_fields',
     ],
     data.places,
   );
@@ -182,6 +243,8 @@ export function proposalSql(input) {
     'weather',
     'status',
     'is_demo',
+    'source_urls',
+    'pending_fields',
   ];
   const stops = data.routes.flatMap((route) =>
     route.stops.map((stop) => ({ ...stop, route_id: route.id })),

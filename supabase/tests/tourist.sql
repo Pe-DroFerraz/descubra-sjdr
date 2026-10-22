@@ -5,9 +5,11 @@ do $$ begin
 end $$;
 insert into auth.users(id,email) values ('50000000-0000-4000-8000-000000000001','tourist-test@example.invalid');
 insert into public.advertisers(id,owner_id,name,status) values ('50000000-0000-4000-8000-000000000002','50000000-0000-4000-8000-000000000001','Test advertiser','approved');
-update public.categories set published=true where id='00000000-0000-4000-0001-000000000001';
-insert into public.places(id,advertiser_id,category_id,slug,name,status) values ('50000000-0000-4000-8000-000000000003','50000000-0000-4000-8000-000000000002','00000000-0000-4000-0001-000000000001','tourist-test','Tourist test','published');
-insert into public.routes(id,slug,name,status,weather) values ('50000000-0000-4000-8000-000000000004','tourist-test','Tourist test','published','rain');
+update public.categories set published=true,source_urls=array['https://example.invalid/fixture'] where id='00000000-0000-4000-0001-000000000001';
+insert into public.places(id,advertiser_id,category_id,slug,name,status,source_urls,address,description) values ('50000000-0000-4000-8000-000000000003','50000000-0000-4000-8000-000000000002','00000000-0000-4000-0001-000000000001','tourist-test','Tourist test','published',array['https://example.invalid/fixture'],'Fixture only','Fixture only');
+insert into public.routes(id,slug,name,status,weather,source_urls,description) values ('50000000-0000-4000-8000-000000000004','tourist-test','Tourist test','draft','rain',array['https://example.invalid/fixture'],'Fixture only');
+insert into public.route_stops(route_id,place_id,position) values ('50000000-0000-4000-8000-000000000004','50000000-0000-4000-8000-000000000003',0);
+update public.routes set status='published' where id='50000000-0000-4000-8000-000000000004';
 insert into public.subscriptions(id,advertiser_id,plan_id,status,verified_at,current_period_end) values ('50000000-0000-4000-8000-000000000005','50000000-0000-4000-8000-000000000002','00000000-0000-4000-0002-000000000003','pending',null,now()+interval '1 month');
 insert into public.route_sponsors(id,route_id,advertiser_id,starts_at,ends_at,amount_cents,confirmed) values ('50000000-0000-4000-8000-000000000006','50000000-0000-4000-8000-000000000004','50000000-0000-4000-8000-000000000002',now()-interval '1 day',now()+interval '1 day',10000,false);
 set local role anon;

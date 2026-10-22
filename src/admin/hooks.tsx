@@ -1,3 +1,4 @@
+import { ZodError } from 'zod';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -36,8 +37,17 @@ export function useAction() {
       return result ?? true;
     } catch (error) {
       setFailed(true);
+      const key =
+        error instanceof AdminError
+          ? error.key
+          : error instanceof ZodError &&
+              error.issues.some(
+                (issue) => issue.message === 'publicationIncomplete',
+              )
+            ? 'publicationIncomplete'
+            : 'invalid';
       setMessage(
-        t(`admin.${error instanceof AdminError ? error.key : 'invalid'}`) +
+        t(`admin.${key}`) +
           (error instanceof AdminError && error.cleanupPath
             ? ' ' + error.cleanupPath
             : ''),

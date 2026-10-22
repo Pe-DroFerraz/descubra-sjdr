@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Check, Plus, Trash2 } from 'lucide-react';
 import { Notice, State } from '../components/tourism/common';
 import { Button } from '../components/ui/button';
-import { deleteContent, saveContent } from './api';
+import { AdminError, deleteContent, saveContent } from './api';
 import { fields, formValues, parseForm, type Entity, type Row } from './schema';
 import { title, useContent, useAction } from './hooks';
 export function ContentManager({
@@ -42,6 +42,17 @@ export function ContentManager({
     setSelected(row);
     setDeleting(null);
     setSaved(false);
+  }
+  if (
+    query.error instanceof AdminError &&
+    query.error.key === 'migrationRequired'
+  ) {
+    return (
+      <div className="mt-7">
+        <h2 className="section-title mb-5">{t(`admin.entities.${entity}`)}</h2>
+        <Notice>{t('admin.migrationRequired')}</Notice>
+      </div>
+    );
   }
   return (
     <div className="mt-7">
@@ -241,6 +252,9 @@ function Editor({
         )}
       </div>
       <p className="my-4 text-xs text-colonial/80">{t('admin.cityTime')}</p>
+      <p className="mb-5 text-sm text-colonial/80">
+        {t('admin.provenanceHelp')}
+      </p>
       <fieldset disabled={action.busy} className="admin-form-grid">
         {fields[entity].map((field) => {
           const key = field.key,
@@ -252,11 +266,14 @@ function Editor({
           return (
             <label
               key={key}
+              htmlFor={`admin-field-${key}`}
               className={`filter-label ${field.type === 'textarea' ? 'sm:col-span-2' : ''}`}
             >
-              {t(`admin.fields.${key}`)}
+              <span id={`admin-label-${key}`}>{t(`admin.fields.${key}`)}</span>
               {field.type === 'textarea' ? (
                 <textarea
+                  id={`admin-field-${key}`}
+                  aria-labelledby={`admin-label-${key}`}
                   value={String(values[key] ?? '')}
                   onChange={(e) => change(e.target.value)}
                   maxLength={20000}
@@ -265,12 +282,16 @@ function Editor({
                 />
               ) : field.type === 'checkbox' ? (
                 <input
+                  id={`admin-field-${key}`}
+                  aria-labelledby={`admin-label-${key}`}
                   type="checkbox"
                   checked={values[key] === true}
                   onChange={(e) => change(e.target.checked)}
                 />
               ) : field.type === 'select' ? (
                 <select
+                  id={`admin-field-${key}`}
+                  aria-labelledby={`admin-label-${key}`}
                   value={String(values[key] ?? '')}
                   onChange={(e) => change(e.target.value)}
                   required={field.required}
@@ -294,6 +315,8 @@ function Editor({
                 </select>
               ) : (
                 <input
+                  id={`admin-field-${key}`}
+                  aria-labelledby={`admin-label-${key}`}
                   type={field.type ?? 'text'}
                   value={String(values[key] ?? '')}
                   onChange={(e) => change(e.target.value)}

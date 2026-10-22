@@ -11,9 +11,16 @@ try {
       'Review-only SQL generated. No database connection or remote writes.',
     );
   }
-  const addresses = data.places.filter((place) => place.address).length;
+  const confirmed = data.places.filter(
+    (p) => p.editorial.address_state === 'external-official-reference',
+  ).length;
+  const provisional = data.places.filter(
+    (p) =>
+      p.address && p.editorial.address_state !== 'external-official-reference',
+  ).length;
+  const missing = data.places.filter((p) => !p.address).length;
   console.log(
-    `${data.places.length} draft candidates, ${addresses} provisional addresses, ${data.routes.length} draft routes. All require editorial review. No verified operating information or licensed photos imported.`,
+    `${data.places.length} draft candidates, ${confirmed} externally confirmed address, ${provisional} provisional addresses, ${missing} missing addresses, ${data.routes.length} draft routes. All require editorial review. No verified operating information or licensed photos imported.`,
   );
 } catch {
   console.error(

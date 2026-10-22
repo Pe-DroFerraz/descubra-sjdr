@@ -116,3 +116,66 @@ describe('editorial payloads', () => {
     ).toEqual([{ place_id: category, duration_minutes: null }]);
   });
 });
+
+describe('public provenance and publication readiness', () => {
+  const draft = {
+    ...formValues('places'),
+    name: 'Fixture',
+    slug: 'fixture',
+    category_id: category,
+  };
+  it('round trips references and pending fields without treating a draft as verified', () => {
+    const parsed = parseForm('places', {
+      ...draft,
+      source_urls:
+        'https://example.invalid/source\nhttps://example.invalid/source\nhttps://example.invalid/second',
+      pending_fields: 'endereco\n horario\n',
+    });
+    expect(parsed).toMatchObject({
+      source_urls: [
+        'https://example.invalid/source',
+        'https://example.invalid/second',
+      ],
+      pending_fields: ['endereco', 'horario'],
+      verified_at: null,
+      status: 'draft',
+    });
+    const row = {
+      ...parsed,
+      id: category,
+      updated_at: '2026-10-22T12:00:00Z',
+    };
+    expect(parseForm('places', formValues('places', row))).toEqual(parsed);
+  });
+  it('rejects credentials and unsafe source protocols even on drafts', () => {
+    for (const source_urls of [
+      'javascript:alert(1)',
+      'http://example.invalid',
+      'https://user:password@example.invalid',
+    ])
+      expect(() => parseForm('places', { ...draft, source_urls })).toThrow();
+  });
+  it('blocks publication with missing sources, pending fields or an absent address', () => {
+    const complete = {
+      ...draft,
+      status: 'published',
+      description: 'Verified fixture only',
+      address: 'Fixture address',
+      source_urls: 'https://example.invalid/source',
+    };
+    expect(parseForm('places', complete)).toMatchObject({
+      status: 'published',
+      latitude: null,
+      price_description: null,
+    });
+    for (const missing of [
+      { source_urls: '' },
+      { pending_fields: 'horarios_divergentes' },
+      { address: '' },
+      { description: '' },
+    ])
+      expect(() => parseForm('places', { ...complete, ...missing })).toThrow(
+        'publicationIncomplete',
+      );
+  });
+});

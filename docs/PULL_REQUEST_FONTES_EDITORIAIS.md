@@ -1,0 +1,18 @@
+O painel anterior exigia apenas uma confirmação visual para publicar e não persistia as referências do pacote editorial. Esta entrega adiciona fontes HTTPS e campos pendentes aos cinco formulários, bloqueia publicação incompleta e prepara a validação equivalente no PostgreSQL.
+
+Base incremental: `work/gestao-conteudo-turistico`, commit `d325646` (PR #4, ainda aberta). Nova branch `work/fontes-oficiais-editorial`; herda Auth/CRUD/Storage já implementados sobre `work/cloud-auth-homologacao`. Rascunho para revisão, sem merge automático.
+
+- Cinco referências oficiais fornecidas pelo usuário registradas com procedência externa, sem alegar acesso aos portais nesta entrega. Identidade de dez atrações; somente o endereço do Museu Regional foi confirmado externamente. Seus horários divergentes permanecem pendentes.
+- Pacote com **28 candidatos em draft, um endereço confirmado externamente, 14 provisórios e 13 ausentes**, cinco categorias não publicadas e seis propostas de roteiro. Roteiros usam apenas pontos com identidade indicada nas referências oficiais externas. O gastronômico ainda precisa de estabelecimentos selecionados; percursos e condições de visita não estão homologados.
+- `source_urls` e `pending_fields` persistidos no SQL de revisão e nos cadastros, com PT/EN/ES. Notas detalhadas ficam versionadas, sem importar dados privados. As novas colunas podem ser lidas publicamente em registros publicados.
+- Migration adicional `20261022180000_editorial_provenance.sql` **somente preparada/testada localmente**: valida completude e fontes, recusa demonstrações, exige paradas publicadas e protege gravações diretas/remoção da última parada. Funções privadas SECURITY INVOKER, search_path fixo, sem novas permissões ou alterações de RLS. Não modifica `rls_auto_enable()`.
+- Preflight SQL somente leitura para revisar impacto em conteúdo publicado legado; colunas ausentes são informadas explicitamente no painel, sem fallback que descarte a procedência. Projeções públicas anteriores preservadas.
+- Rótulos explícitos corrigem a edição repetida de campos longos e a associação dos seletores.
+
+Validações finais e limitações detalhadas em `docs/REVISAO.md`: build, lint, 106 testes unitários, PostgreSQL 17 isolado com seis migrations locais e catálogo repetível; 25 E2E em Chromium aprovados, incluindo verificação automatizada de acessibilidade. Leitura HTTP real: 23 verificações anônimas passaram e dois cenários autenticados não executados por falta de sessões existentes autorizadas. Nenhuma escrita/upload/migration/alteração de Auth executada remotamente.
+
+Antes de habilitar a gestão no Cloud: reconciliar os três timestamps remotos conhecidos e revisar **separadamente** hardening, RPC de paradas e proveniência. A migration não corrige/despublica registros legados; futuras gravações publicadas sem fontes serão bloqueadas. Não usar db push/repair/reset/seed genérico. O CRUD desta versão depende das novas colunas e as paradas dependem da RPC.
+
+Antes de importar/publicar dados: aprovar o JSON/SQL e conflitos/agrupamento do conjunto ferroviário; autorizar separadamente importação dos rascunhos; concluir revisão de endereço, descrição, visitação, percursos, seleção gastronômica e direitos das imagens. Horários/preços/coordenadas desconhecidos continuam vazios. Auth/MFA/callback e Storage HTTP com conta admin real ainda exigem homologação. Fontes HTTPS e ausência de pendências não comprovam a veracidade de uma informação.
+
+Não houve merge das PRs anteriores, aplicação remota de migrations, publicação de registros ou deploy de produção. A integração Vercel existente pode gerar Preview automaticamente ao receber a branch.
