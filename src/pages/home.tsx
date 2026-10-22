@@ -169,7 +169,7 @@ export default function Home() {
           <img
             src="/heritage.svg"
             alt={t('attribution')}
-            fetchPriority="high"
+            {...{ fetchpriority: 'high' }}
           />
           <div className="hero-location">
             <Landmark size={20} />

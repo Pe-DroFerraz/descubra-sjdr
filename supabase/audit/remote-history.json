@@ -1,0 +1,11 @@
+{
+  "project_ref": "itegpsgjtuclbsatcdxr",
+  "source": "user_supplied_authorized_readonly_audit",
+  "evidence": "docs/RELATORIO_SUPABASE_CODEX.md",
+  "definition_equivalence_verified": false,
+  "migrations": [
+    { "local_version": "202610220001", "remote_version": "20261022141818", "name": "core" },
+    { "local_version": "202610220002", "remote_version": "20261022141828", "name": "storage" },
+    { "local_version": "202610220003", "remote_version": "20261022141835", "name": "tourist_catalog" }
+  ]
+}

@@ -13,11 +13,24 @@ done
 if [[ "$ready" != 1 ]]; then docker logs "$container"; exit 1; fi
 psql_run() { docker exec -i "$container" psql -X -U postgres -v ON_ERROR_STOP=1 -q; }
 psql_run < supabase/tests/bootstrap.sql
-for migration in supabase/migrations/*.sql; do psql_run < "$migration"; done
+for migration in supabase/migrations/*.sql; do
+  psql_run < "$migration"
+  migration_id=$(basename "$migration" .sql)
+  migration_version=${migration_id%%_*}
+  migration_name=${migration_id#*_}
+  [[ "$migration_version" =~ ^[0-9]+$ && "$migration_name" =~ ^[a-z_]+$ ]]
+  printf "insert into supabase_migrations.schema_migrations(version,name) values ('%s','%s');\n" "$migration_version" "$migration_name" | psql_run
+  if [[ "$migration_version" == 202610220003 ]]; then
+    mkdir -p .audit
+    docker exec -i "$container" psql -X -U postgres -v ON_ERROR_STOP=1 -qAt < supabase/audit/cloud-readonly.sql > .audit/local-baseline.json
+  fi
+done
 psql_run < supabase/seed.sql
 psql_run < supabase/seed.sql
 psql_run < supabase/tests/security.sql
 psql_run < supabase/tests/tourist.sql
+psql_run < supabase/tests/hardening.sql
+docker exec -i "$container" psql -X -U postgres -v ON_ERROR_STOP=1 -qAt < supabase/audit/cloud-readonly.sql > .audit/local-hardened.json
 psql_run < supabase/tests/concurrency-fixture.sql
 psql_run < supabase/tests/concurrent-redeem.sql &
 first_pid=$!

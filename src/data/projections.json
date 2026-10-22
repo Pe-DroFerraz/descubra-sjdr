@@ -1,0 +1,7 @@
+{
+  "places": "id,category_id,slug,name,description,address,latitude,longitude,phone,whatsapp,website,instagram,price_description,verified_at,place_translations(locale,name,description),place_photos(storage_path,alt_text,position),place_hours(weekday,opens_at,closes_at,closed,verified_at)",
+  "categories": "id,slug,name",
+  "routes": "id,slug,name,description,duration_minutes,weather,route_translations(locale,name,description),route_stops(place_id,position,duration_minutes)",
+  "events": "id,place_id,name,description,starts_at,ends_at,verified_at,image_path,event_translations(locale,name,description)",
+  "tips": "id,title,description,category,latitude,longitude"
+}

@@ -16,3 +16,7 @@ create table storage.objects(id uuid primary key default gen_random_uuid(),bucke
 alter table storage.objects enable row level security;
 grant usage on schema storage to anon,authenticated,service_role;
 grant select,insert,update,delete on storage.objects to anon,authenticated,service_role;
+
+-- Fixture history belongs only to the isolated local test DB.
+create schema supabase_migrations;
+create table supabase_migrations.schema_migrations(version text primary key,name text,statements text[]);

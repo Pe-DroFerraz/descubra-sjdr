@@ -1,15 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { readPublicConfig } from '../lib/config';
+import { publicSupabaseConfig } from '../lib/supabase-config';
 import * as model from './schema';
-const { config } = readPublicConfig(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-);
+import projections from './projections.json';
+const { config } = publicSupabaseConfig;
 // The tourist catalog MUST remain anonymous even when an advertiser logs in elsewhere.
 export const publicClient = config
   ? createClient(config.url, config.key, {
       auth: {
+        storageKey: 'sjdr-public-anonymous',
         persistSession: false,
         autoRefreshToken: false,
         detectSessionInUrl: false,
@@ -25,8 +24,7 @@ function client() {
   if (!publicClient) throw new CatalogUnavailable();
   return publicClient;
 }
-const placeColumns =
-  'id,category_id,slug,name,description,address,latitude,longitude,phone,whatsapp,website,instagram,price_description,verified_at,place_translations(locale,name,description),place_photos(storage_path,alt_text,position),place_hours(weekday,opens_at,closes_at,closed,verified_at)';
+
 // Explicit projections and stable pagination: PostgREST commonly limits responses to 1,000 rows.
 async function collect<T extends z.ZodTypeAny>(
   table: string,
@@ -54,30 +52,21 @@ async function collect<T extends z.ZodTypeAny>(
 }
 export const catalog = {
   places: (signal: AbortSignal) =>
-    collect('places', placeColumns, model.place, signal),
+    collect('places', projections.places, model.place, signal),
   categories: (signal: AbortSignal) =>
-    collect('categories', 'id,slug,name', model.category, signal, false),
+    collect(
+      'categories',
+      projections.categories,
+      model.category,
+      signal,
+      false,
+    ),
   routes: (signal: AbortSignal) =>
-    collect(
-      'routes',
-      'id,slug,name,description,duration_minutes,weather,route_translations(locale,name,description),route_stops(place_id,position,duration_minutes)',
-      model.route,
-      signal,
-    ),
+    collect('routes', projections.routes, model.route, signal),
   events: (signal: AbortSignal) =>
-    collect(
-      'events',
-      'id,place_id,name,description,starts_at,ends_at,verified_at,image_path,event_translations(locale,name,description)',
-      model.event,
-      signal,
-    ),
+    collect('events', projections.events, model.event, signal),
   tips: (signal: AbortSignal) =>
-    collect(
-      'tips',
-      'id,title,description,category,latitude,longitude',
-      model.tip,
-      signal,
-    ),
+    collect('tips', projections.tips, model.tip, signal),
   benefits: async (signal: AbortSignal) => {
     const { data, error } = await client()
       .rpc('public_place_benefits')

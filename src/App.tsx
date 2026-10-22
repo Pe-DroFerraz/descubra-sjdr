@@ -4,7 +4,21 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight, Heart, Landmark, Menu, X } from 'lucide-react';
 import { ClockProvider } from './hooks/clock';
 import { TripProvider, useTrip } from './trip-context';
+import { AuthProvider } from './auth/context';
 import { Page } from './components/tourism/common';
+const SignIn = lazy(() => import('./pages/auth'));
+const Account = lazy(() =>
+  import('./pages/auth').then((module) => ({ default: module.Account })),
+);
+const Recover = lazy(() =>
+  import('./pages/auth').then((module) => ({ default: module.Recover })),
+);
+const AuthCallback = lazy(() =>
+  import('./pages/auth').then((module) => ({ default: module.AuthCallback })),
+);
+const NewPassword = lazy(() =>
+  import('./pages/auth').then((module) => ({ default: module.NewPassword })),
+);
 const Home = lazy(() => import('./pages/home'));
 const Places = lazy(() => import('./pages/places'));
 const PlaceDetail = lazy(() => import('./pages/place-detail'));
@@ -132,6 +146,11 @@ function Layout() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/entrar" element={<SignIn />} />
+            <Route path="/conta" element={<Account />} />
+            <Route path="/recuperar-senha" element={<Recover />} />
+            <Route path="/auth/confirmar" element={<AuthCallback />} />
+            <Route path="/auth/nova-senha" element={<NewPassword />} />
             <Route path="/lugares" element={<Places />} />
             <Route path="/lugares/:slug" element={<PlaceDetail />} />
             <Route path="/mapa" element={<Places map />} />
@@ -182,6 +201,7 @@ function Layout() {
                 </Link>
               ))}
               <Link to="/favoritos">{t('favorites')}</Link>
+              <Link to="/conta">{t('auth.account')}</Link>
             </nav>
             <div className="max-w-xs">
               <p className="text-sm leading-relaxed text-white/70">
@@ -218,10 +238,12 @@ function Layout() {
 }
 export default function App() {
   return (
-    <ClockProvider>
-      <TripProvider>
-        <Layout />
-      </TripProvider>
-    </ClockProvider>
+    <AuthProvider>
+      <ClockProvider>
+        <TripProvider>
+          <Layout />
+        </TripProvider>
+      </ClockProvider>
+    </AuthProvider>
   );
 }

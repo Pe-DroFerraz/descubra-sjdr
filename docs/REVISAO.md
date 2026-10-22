@@ -1,3 +1,32 @@
+# Entrega atual — conexão Cloud, Auth e hardening
+
+Branch `work/cloud-auth-homologacao`, baseada em `work/etapa-2-turista`. Ver [CLOUD_HOMOLOGACAO.md](CLOUD_HOMOLOGACAO.md) para contexto, configuração segura, histórico e plano de revisão.
+
+- Implementados login/sessão verificada, senha, magic link PKCE, recuperação/troca, logout e consulta segura de papéis; catálogo permanece anônimo.
+- Migration adicional `20261022150000_security_hardening.sql` preparada/testada somente no banco local. As três migrations originais permanecem intactas e **não foram reaplicadas no Cloud**. Não aplicar a adicional remotamente antes da reconciliação/revisão.
+- Auditoria SQL READ ONLY e comparador de histórico/estrutura/funções/buckets preparados. Mapeamento dos três timestamps remotos registrado, com testes contra duplicação/colisão; equivalência das definições ainda pendente. `rls_auto_enable()` preservada conforme revisão externa.
+- PRs #1 e #2 consultadas nesta sessão: ambas abertas, CI `validate` com sucesso e sem comentários/revisões registrados; nenhum merge realizado.
+- URL pública configurada; chave pública/conectividade autorizada ainda faltam nesta sessão. Scripts de integração Cloud e Security Advisor oficial retornaram bloqueio (exit 2), não aprovação.
+- [RELATORIO_SUPABASE_CODEX.md](RELATORIO_SUPABASE_CODEX.md) registra os resultados reais fornecidos pelo usuário: 29 tabelas/RLS, buckets, histórico, negações para anon, ausência de CREATE e alertas do Advisor. Fonte externa autorizada, sem reexecução nesta sessão; não equivale a homologação HTTP completa.
+
+| Verificação desta entrega | Resultado |
+| --- | --- |
+| `npm run build` | Passou: TypeScript, Vite e PWA |
+| `npm run lint` | Passou |
+| `npm test` | 75 passaram; inclui Auth, storage de sessão, tradução e histórico |
+| `npm run test:db` | Passou: PostgreSQL 17 isolado, quatro migrations locais, seed repetível, RLS/grants, concorrência |
+| `npm run test:e2e` | Dez cenários passaram em Chromium; HTTP sintético exclusivo de teste |
+| Comparação baseline local × hardening local | Zero achados; revisão de `rls_auto_enable` pendente, pois não existe na fixture |
+| `npm run test:cloud` | Exit 2: chave pública não injetada neste runtime; nenhuma asserção HTTP remota |
+| `npm run cloud:advisors` | Exit 2: binding Management API ausente; resultados externos do Advisor preservados no relatório |
+| Migrações/seed remotos | Nenhum comando de aplicação/repair/reset/seed executado |
+
+Cenários de Auth cobrem verificação no servidor, metadados sem autoridade, negação por sessão inválida, logout, resposta genérica de e-mail, PKCE deduplicado, recuperação legítima, rejeição de recuperação forjada e de redirect externo, tradução e catálogo anônimo após login. Storage de sessão testa que logout em outra aba não restaura um token antigo do fallback. Corrigido o atributo de prioridade da imagem para compatibilidade com React 18. Asserções de banco confirmam que grants legítimos e triggers continuam funcionando após hardening local.
+
+Limites: Auth/Storage HTTP reais e papéis de contas reais ainda não homologados, Advisor sem reexecução, histórico sem comparação completa das definições, CSP preparada mas não observada em CDN, SMTP/CAPTCHA/MFA remotos pendentes. Nenhum dado fictício foi publicado. Os registros das etapas anteriores abaixo são históricos.
+
+---
+
 # Entrega atual para revisão — Etapa 2
 
 Branch `work/etapa-2-turista`, partindo do HEAD da PR #1. Relatório completo, revisão de código e configuração Cloud: [ETAPA2.md](ETAPA2.md).

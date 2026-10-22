@@ -25,3 +25,11 @@
 - Conteúdo traduzido consultado do banco com fallback PT explícito; labels PT/EN/ES. Tradução automática e integrações comerciais não foram antecipadas.
 - Ilustração vetorial editorial local no hero e placeholders neutros para mídia ausente. Não usamos fotos ou dados de estabelecimentos inventados.
 - Testes de navegador com fixtures HTTP estritamente de teste e PostgreSQL com fixtures isolados. Isso verifica frontend e políticas, sem alegar homologação do Supabase Cloud.
+
+## Cloud/Auth/hardening — entrega incremental
+- Usuário informou core/storage/tourist_catalog já aplicadas no Cloud. Nenhuma reaplicação, reset, seed ou DDL remota. Arquivos originais preservados. Resultados verificados de outra sessão autorizada transcritos pelo usuário e preservados em docs/RELATORIO_SUPABASE_CODEX.md, com procedência explícita. Não confundir com homologação HTTP completa.
+- Auth PKCE separado do catálogo anônimo, sem signup/admin automático. Identidade verificada via Auth e permissões obtidas da RLS/RPC, nunca de metadados editáveis. Erros públicos não enumeram contas.
+- Sessões/verificadores isolados por projeto no browser, fallback em memória, callback deduplicado e sem redirects externos. CSP/referrer preparados para a prévia, sem deploy.
+- Hardening aditivo preserva SECURITY DEFINER necessário e grants legítimos; fixa search_path/ACL/schema CREATE. Não muda defaults globais de postgres; futuras funções exigem revogações/grants explícitos (REVOKE por schema não supera o default global PUBLIC). Preservar rls_auto_enable: auditoria externa confirma postgres/event_trigger/search_path pg_catalog; corpo/ACL/dependências ainda precisam de inspeção.
+- Auditoria de metadados em READ ONLY, baseline antes/depois em PostgreSQL descartável e comparação sem repair automático. Mapeamento explícito das versões locais para 20261022141818/28/35; hardening adicional 20261022150000 posterior. Histórico de nomes/versões não prova equivalência do SQL.
+- Testes Cloud e Advisor oficial opt-in, sem dados fictícios ou escrita. Falta de chave/autorização/rede é bloqueio, não aprovação. Ver docs/CLOUD_HOMOLOGACAO.md.
