@@ -6,3 +6,8 @@ dist/
 .DS_Store
 coverage/
 .supabase/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+supabase/.temp/
+supabase/.branches/

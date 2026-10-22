@@ -12,4 +12,4 @@ Leia `docs/ESPECIFICACAO.md` antes de toda implementação. O projeto é uma PWA
 - Dividir alterações em branches/PRs para revisão. Não promover funcionalidades à produção sem testes.
 
 ## Estado
-Etapa 0: scaffold inicial para desbloquear Codex. A home inicial e as rotas são demonstrativas; os módulos ainda exigem implementação. Próximo: migrações, RLS e seed conforme especificação.
+Etapa 0: scaffold configurado com build, lint, testes, lockfile e base shadcn/ui. Etapa 1: migrations, RLS, Storage e seed demonstrativo implementados; veja docs/BANCO.md e docs/REVISAO.md para validação e limites. Home/rotas continuam demonstrativas. Próximo: Etapa 2 (frontend turista) e validação de integrações externas pendentes.

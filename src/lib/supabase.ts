@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
-// Durante a Etapa 0 a home funciona sem chaves; chamadas de backend devem aguardar configuração.
-export const supabase = url && anon ? createClient(url, anon) : null;
+import { readPublicConfig } from './config';
+const { config, error } = readPublicConfig(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
+export const supabaseConfigError = error;
+// Stage 0 runs without backend credentials. No requests until configured.
+export const supabase = config ? createClient(config.url, config.key) : null;
