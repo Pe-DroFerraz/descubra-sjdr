@@ -11,12 +11,14 @@ describe('authentication boundaries', () => {
     'https://evil.example',
     '//evil.example',
     '/\\evil.example',
-    '/admin',
+    '/admin/usuarios',
     '/conta?role=admin',
     'javascript:alert(1)',
   ])('rejects redirect %s', (value) =>
     expect(safeAuthNext(value)).toBe('/conta'),
   );
+  it('allows the guarded admin landing page, never arbitrary admin paths', () =>
+    expect(safeAuthNext('/admin')).toBe('/admin'));
   it('builds an exact same-origin callback', () =>
     expect(authCallbackUrl('https://preview.example', '/favoritos')).toBe(
       'https://preview.example/auth/confirmar?next=%2Ffavoritos',

@@ -165,6 +165,7 @@ export default function Places({ map = false }: { map?: boolean }) {
       {location.state === 'error' && <Notice>{t('locationError')}</Notice>}
       <p className="mb-5 text-sm text-colonial/80">{t('gpsPrivacy')}</p>
       <State
+        resource="places"
         pending={places.isPending}
         error={places.error}
         retry={() => void places.refetch()}
@@ -191,7 +192,11 @@ export default function Places({ map = false }: { map?: boolean }) {
             )}
           </div>
         )}
-        <State empty={!filtered.length}>
+        <State
+          resource="places"
+          filtered={!!places.data?.length && !!(search || category || open)}
+          empty={!filtered.length}
+        >
           <div className="card-grid">
             {filtered.map((place) => {
               const c = categories.data?.find(

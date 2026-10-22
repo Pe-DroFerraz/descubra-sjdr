@@ -46,6 +46,7 @@ export default function PlaceDetail() {
     return (
       <Page title={t('places')}>
         <State
+          resource="places"
           pending={places.isPending}
           error={places.error}
           retry={() => void places.refetch()}
@@ -250,6 +251,7 @@ export default function PlaceDetail() {
       </div>
       <Section title={t('coupons')}>
         <State
+          resource="places"
           pending={details.isPending}
           error={details.error}
           retry={() => void details.refetch()}
@@ -277,6 +279,7 @@ export default function PlaceDetail() {
       </Section>
       <Section title={t('reviews')}>
         <State
+          resource="places"
           pending={details.isPending}
           error={details.error}
           retry={() => void details.refetch()}

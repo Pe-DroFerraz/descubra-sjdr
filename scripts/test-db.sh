@@ -30,6 +30,7 @@ psql_run < supabase/seed.sql
 psql_run < supabase/tests/security.sql
 psql_run < supabase/tests/tourist.sql
 psql_run < supabase/tests/hardening.sql
+psql_run < supabase/tests/admin-content.sql
 docker exec -i "$container" psql -X -U postgres -v ON_ERROR_STOP=1 -qAt < supabase/audit/cloud-readonly.sql > .audit/local-hardened.json
 psql_run < supabase/tests/concurrency-fixture.sql
 psql_run < supabase/tests/concurrent-redeem.sql &
@@ -39,4 +40,14 @@ second_pid=$!
 wait "$first_pid"
 wait "$second_pid"
 psql_run < supabase/tests/concurrency-assert.sql
+psql_run < supabase/tests/catalog-empty-fixture.sql
+# Proposal is separate from migrations/seed, imported only into this isolated fixture DB.
+node scripts/catalog.mjs >/dev/null
+node --input-type=module -e "import fs from 'node:fs';import {proposalSql} from './scripts/catalog/proposal.mjs';if(fs.readFileSync('content/catalogo-inicial.sql','utf8')!==proposalSql(JSON.parse(fs.readFileSync('content/catalogo-inicial.json','utf8'))))process.exit(1);"
+psql_run < content/catalogo-inicial.sql
+psql_run < content/catalogo-inicial.sql
+psql_run < supabase/tests/catalog.sql
+psql_run < supabase/tests/catalog-local-edit.sql
+psql_run < content/catalogo-inicial.sql
+psql_run < supabase/tests/catalog-preserve.sql
 printf 'PostgreSQL migrations, repeatable seed and security checks passed.\n'

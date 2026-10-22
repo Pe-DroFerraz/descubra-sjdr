@@ -1,3 +1,28 @@
+# Entrega atual — gestão editorial e catálogo inicial
+
+Branch `work/gestao-conteudo-turistico`, baseada na versão atualizada `3d14509` de `work/cloud-auth-homologacao`. Funcionalidades, configuração e aprovações em [GESTAO_CONTEUDO.md](GESTAO_CONTEUDO.md). Pesquisa e pendências em [CATALOGO_EDITORIAL.md](CATALOGO_EDITORIAL.md).
+
+| Verificação desta entrega | Resultado |
+| --- | --- |
+| `npm run build` | Passou — TypeScript, Vite, PWA; chunks abaixo do limite de warning |
+| `npm run lint` | Passou |
+| `npm test` | 100 testes passaram, 15 arquivos |
+| `npm run test:db` | Passou — cinco migrations locais, seed demonstrativo repetível, políticas anteriores, CRUD administrativo, negação a anon/outros usuários, Storage SQL, resgate concorrente, RPC de paradas atômica/rollback/conflito |
+| Proposta de catálogo no banco descartável | Importada repetidamente após limpar apenas fixtures locais; nenhum overwrite editorial ou restauração de paradas removidas; candidatos em draft invisíveis a anon |
+| `npm run test:e2e` | 23 cenários passaram em Chromium com HTTP de fixtures locais |
+| axe — Home desktop/mobile e gestão mobile | Zero violações nas regras WCAG 2/2.1 A/AA executadas; contraste do novo endereço corrigido; não é auditoria manual completa |
+| Responsividade | Sem overflow horizontal nos cenários mobile; capturas da Home e painel inspecionadas |
+| `npm run catalog:check` | 24 candidatos, 15 endereços provisórios e nove ausentes, seis roteiros; validação sem conexão ao banco |
+| Migrations/dados/imagens remotos | Nenhuma alteração/aplicação/importação/upload executado |
+
+Cobertura nova: verificação real de usuário/papel pelo cliente antes de operações e RLS no PostgreSQL, rejeição de metadados com falso admin, papel revogado durante edição, comparação de updated_at, datas locais sem perda de precisão de campos inalterados, schemas/referências editoriais, direitos/MIME/tamanho de imagens e compensação de upload. E2E cobre CRUD das cinco entidades, galeria, imagem de evento (troca/limpeza), paradas, confirmação editorial e distinção vazio/filtro/erro. O teste SQL verifica rollback mesmo se uma falha ocorrer após DELETE das paradas.
+
+Limites: fontes primárias bloquearam acesso por proxy403/DNS; espelhos acadêmicos/MuseusBr/Wikipédia são secundários e históricos. Vinte endereços completos e atuais ainda não estão homologados. Todos os 24 candidatos e seis roteiros ficam em rascunho, sem verified_at, coordenadas, preços ou operação inventada; o gastronômico exige seleção de estabelecimentos. Não há imagens licenciadas fornecidas para o catálogo.
+
+A nova migration 20261022170000_admin_route_stops.sql só foi aplicada no PostgreSQL descartável; a gravação de paradas no Cloud depende de revisão e aplicação autorizada. Originais e hardening anterior não alterados nem reaplicados. Auth/Storage HTTP reais com conta administrativa, MFA/callback e políticas/definições efetivas ainda exigem homologação; fixtures não comprovam isso. O usuário informou Preview já existente; nenhum deploy de produção ou mudança remota ocorreu nesta tarefa.
+
+---
+
 # Atualização — leituras Cloud e preparo de Preview
 
 Base confirmada e sincronizada antes das alterações: `work/cloud-auth-homologacao`, commit `b8e45a93ca706cbb2eca96f39ee02dfb22145c39`. Ambos os jobs Validate da [PR #3](https://github.com/Pe-DroFerraz/descubra-sjdr/pull/3) concluíram SUCCESS. Não repetimos build/lint/75 testes unitários/banco/dez E2E já aprovados; esta atualização preserva código/configuração da aplicação e migrations, alterando documentação e ignore de `.vercel/`.

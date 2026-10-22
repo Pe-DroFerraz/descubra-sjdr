@@ -24,7 +24,7 @@ select jsonb_build_object(
   'authenticated_execute',has_function_privilege('authenticated',p.oid,'EXECUTE')
  ) order by n.nspname,p.proname),'[]'::jsonb)
  from pg_proc p join pg_namespace n on n.oid=p.pronamespace
- where (n.nspname='public' and p.proname in ('rls_auto_enable','has_role','public_place_benefits','public_route_sponsors','touch_updated_at','place_daily_metrics','redeem_coupon'))
+ where (n.nspname='public' and p.proname in ('rls_auto_enable','has_role','public_place_benefits','public_route_sponsors','touch_updated_at','place_daily_metrics','redeem_coupon','admin_set_route_stops'))
  or (n.nspname='private' and p.proname in ('owns_advertiser','owns_place','can_edit_place','published_place','path_place_id'))),
  'event_triggers',(select coalesce(jsonb_agg(jsonb_build_object('name',evtname,'enabled',evtenabled,'function',evtfoid::regprocedure::text)),'[]'::jsonb) from pg_event_trigger where evtfoid=to_regprocedure('public.rls_auto_enable()')),
  'policies',(select coalesce(jsonb_agg(jsonb_build_object('schema',schemaname,'table',tablename,'name',policyname,'roles',roles,'command',cmd,'using',qual,'check',with_check) order by schemaname,tablename,policyname),'[]'::jsonb) from pg_policies where schemaname='public' or (schemaname='storage' and tablename='objects')),

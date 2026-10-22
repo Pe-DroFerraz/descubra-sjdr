@@ -213,6 +213,7 @@ export default function Home() {
         </Section>
         <Section title={t('explore')} to="/lugares">
           <State
+            resource="places"
             pending={places.isPending}
             error={places.error}
             retry={() => void places.refetch()}
@@ -245,6 +246,7 @@ export default function Home() {
           <Section title={t('curated')} eyebrow={t('routes')} to="/roteiros">
             <p className="mb-7 max-w-xl text-colonial/80">{t('routeIntro')}</p>
             <State
+              resource="routes"
               pending={routes.isPending}
               error={routes.error}
               retry={() => void routes.refetch()}
@@ -279,6 +281,7 @@ export default function Home() {
           {location.position && (
             <div className="mt-7">
               <State
+                resource="places"
                 pending={places.isPending}
                 error={places.error}
                 empty={!nearby.length}
@@ -299,6 +302,7 @@ export default function Home() {
         </Section>
         <Section title={t('agenda')} eyebrow={t('events')} to="/eventos">
           <State
+            resource="events"
             pending={events.isPending}
             error={events.error}
             retry={() => void events.refetch()}

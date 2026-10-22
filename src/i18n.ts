@@ -1,3 +1,5 @@
+import { adminMessages } from './admin/messages';
+import { catalogMessages } from './components/tourism/messages';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 let stored: string | null = null;
@@ -18,6 +20,8 @@ void i18n.use(initReactI18next).init({
   resources: {
     pt: {
       translation: {
+        ...adminMessages.pt,
+        ...catalogMessages.pt,
         auth: {
   "signIn": "Entrar",
   "signInIntro": "Acesse sua conta com segurança. O catálogo turístico continua aberto a todos.",
@@ -48,7 +52,7 @@ void i18n.use(initReactI18next).init({
   "admin": "Administrador",
   "advertiser": "Anunciante aprovado",
   "visitor": "Conta de visitante",
-  "panelsPending": "Sua sessão foi verificada. Os painéis de gestão serão disponibilizados nas próximas etapas.",
+  "panelsPending": "Sua sessão foi verificada. O painel de conteúdo está disponível para administradores; outros painéis seguem em desenvolvimento.",
   "adminMfa": "Antes de usar um painel administrativo em produção, será necessária a homologação de MFA e dos controles de acesso no servidor.",
   "verifyError": "Não foi possível verificar sua sessão e permissões. Tente novamente ou saia deste navegador."
 },
@@ -208,6 +212,8 @@ void i18n.use(initReactI18next).init({
     },
     en: {
       translation: {
+        ...adminMessages.en,
+        ...catalogMessages.en,
         auth: {
   "signIn": "Sign in",
   "signInIntro": "Access your account securely. The tourist catalog remains open to everyone.",
@@ -238,7 +244,7 @@ void i18n.use(initReactI18next).init({
   "admin": "Administrator",
   "advertiser": "Approved advertiser",
   "visitor": "Visitor account",
-  "panelsPending": "Your session is verified. Management dashboards will be available in later stages.",
+  "panelsPending": "Your session is verified. Content management is available to administrators; other dashboards are still in development.",
   "adminMfa": "Before a production admin dashboard is used, MFA and server access controls must be validated.",
   "verifyError": "Could not verify your session and permissions. Retry or sign out of this browser."
 },
@@ -397,6 +403,8 @@ void i18n.use(initReactI18next).init({
     },
     es: {
       translation: {
+        ...adminMessages.es,
+        ...catalogMessages.es,
         auth: {
   "signIn": "Entrar",
   "signInIntro": "Accede a tu cuenta de forma segura. El catálogo turístico sigue abierto a todos.",
@@ -427,7 +435,7 @@ void i18n.use(initReactI18next).init({
   "admin": "Administrador",
   "advertiser": "Anunciante aprobado",
   "visitor": "Cuenta de visitante",
-  "panelsPending": "Tu sesión está verificada. Los paneles de gestión estarán disponibles en las próximas etapas.",
+  "panelsPending": "Tu sesión está verificada. La gestión de contenidos está disponible para administradores; los demás paneles siguen en desarrollo.",
   "adminMfa": "Antes de usar un panel administrativo en producción, se deben validar MFA y los controles de acceso del servidor.",
   "verifyError": "No se pudo verificar tu sesión y permisos. Reintenta o sal de este navegador."
 },

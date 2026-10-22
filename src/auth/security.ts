@@ -13,7 +13,9 @@ export const passwordSchema = z
   .regex(/[0-9]/);
 // Auth callbacks only redirect to destinations owned by this application.
 export function safeAuthNext(value: string | null) {
-  return value === '/favoritos' || value === '/conta' ? value : '/conta';
+  return value === '/favoritos' || value === '/conta' || value === '/admin'
+    ? value
+    : '/conta';
 }
 export function authCallbackUrl(origin: string, next = '/conta') {
   const url = new URL('/auth/confirmar', origin);

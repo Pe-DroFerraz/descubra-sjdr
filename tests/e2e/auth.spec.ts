@@ -76,7 +76,7 @@ test('existing password login verifies the user and server roles, while the cata
       publicRequests.push(request.headers().authorization);
   });
   await page.goto('/lugares');
-  await expect(page.getByText('Nenhum resultado por aqui')).toBeVisible();
+  await expect(page.getByText('Ainda não há locais publicados')).toBeVisible();
   expect(publicRequests.length).toBeGreaterThan(0);
   expect(
     publicRequests.every(

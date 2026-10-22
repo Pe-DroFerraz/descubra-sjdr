@@ -174,7 +174,9 @@ test('map clusters and attribution work even with unavailable tiles; category an
   await page
     .getByRole('checkbox', { name: 'Aberto agora', exact: true })
     .check();
-  await expect(page.getByText('Nenhum resultado por aqui')).toBeVisible();
+  await expect(
+    page.getByText('Nenhum resultado para estes filtros'),
+  ).toBeVisible();
   await expect(page).toHaveURL(/aberto=1/);
 });
 test('routes, calendar, tips and a shared itinerary use published response data', async ({
@@ -222,7 +224,7 @@ test('empty, loading, errors and retry do not become fake data', async ({
 }) => {
   await api(page, { places: [] });
   await page.goto('/lugares');
-  await expect(page.getByText('Nenhum resultado por aqui')).toBeVisible();
+  await expect(page.getByText('Ainda não há locais publicados')).toBeVisible();
   let fail = true;
   await page.route(
     'http://127.0.0.1:54399/rest/v1/places?**',
@@ -235,11 +237,13 @@ test('empty, loading, errors and retry do not become fake data', async ({
   );
   await page.reload();
   await expect(
-    page.getByRole('status').filter({ hasText: 'Buscando novas descobertas' }),
+    page
+      .getByRole('status')
+      .filter({ hasText: 'Consultando os locais publicados' }),
   ).toBeVisible();
   await expect(
     page.getByRole('heading', {
-      name: 'Não conseguimos carregar este conteúdo',
+      name: 'Não foi possível carregar os locais',
     }),
   ).toBeVisible();
   fail = false;
@@ -348,4 +352,21 @@ test('home is responsive and passes automated WCAG checks', async ({
     path: test.info().outputPath('home-mobile.png'),
     fullPage: true,
   });
+});
+
+test('routes and events explain empty published catalogs without reporting a network failure', async ({
+  page,
+}) => {
+  await api(page, { places: [], routes: [], events: [] });
+  await page.goto('/roteiros');
+  await expect(page.getByText('Os roteiros estão em preparação')).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await page.goto('/eventos');
+  await expect(
+    page.getByText('Nenhum evento publicado neste período'),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('group', { name: 'Calendário mensal' }),
+  ).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
 });

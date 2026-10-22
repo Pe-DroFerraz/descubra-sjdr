@@ -39,3 +39,11 @@
 - Variáveis públicas agora ativas; Node precisa de proxy nativo neste ambiente. Runner somente leitura com --use-env-proxy passou 23 verificações, papéis reais não executados. Métricas privadas negaram anon (401/42501).
 - Auth público confirma e-mail habilitado, signup habilitado e autoconfirmação desabilitada. Não alterar remotamente sem acesso; registrar revisão de signup para contas existentes. Isso não comprova SMTP/CAPTCHA/MFA/callbacks.
 - Preview Vercel preparado por guia específico, sem vínculo/acesso/deployment. Registrar as variantes reais de callback com next e preservar origem do PKCE. Variáveis Codex não são copiadas automaticamente para Preview. Nenhuma mudança no banco/hardening remoto.
+
+## Gestão editorial e catálogo inicial
+- Branch work/gestao-conteudo-turistico a partir de work/cloud-auth-homologacao (3d14509), conforme nova prioridade do usuário. Painel `/admin`, autorização por getUser/has_role a cada operação e RLS como limite final; sem service_role ou contas automáticas.
+- CRUD em tabelas existentes, controle otimista updated_at e cache administrativo por usuário. Publicação requer confirmação editorial; data operacional desconhecida não é preenchida automaticamente. UI PT/EN/ES e estados públicos específicos por recurso.
+- Nova RPC de paradas é SECURITY INVOKER, transacional e restrita a admin real, preservando RLS. Migration preparada/testada apenas localmente; originais e hardening anterior preservados e sem aplicação remota.
+- Upload reprocessa imagem, valida tamanho/assinatura e confirma direitos, registra licença no Storage e compensa falha de vínculo; falha de limpeza é visível. Licenças com crédito obrigatório ficam fora até implementar créditos públicos. Buckets públicos não são cofres para rascunhos.
+- Fontes primárias bloquearam HTTP por proxy403; fontes secundárias versionadas foram consultadas. Inconsistências SICG rejeitadas. Pacote separado do seed fictício: 24 candidatos, 15 endereços provisórios, nove ausentes, todos draft sem verified_at, seis roteiros preliminares. Gastronômico não recomenda estabelecimentos sem pesquisa.
+- SQL de proposta preserva edições e não ressuscita paradas de roteiros existentes. Só geração/validação e execução no PostgreSQL descartável. Revisão humana e autorização separadas para importar rascunhos e publicar conteúdo real.
