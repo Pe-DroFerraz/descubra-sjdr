@@ -386,6 +386,11 @@ export function Account() {
             : t('auth.visitor')}
         </p>
         <Notice>{t('auth.panelsPending')}</Notice>
+        {auth.roles.includes('admin') && (
+          <Link to="/admin" className="text-link">
+            {t('admin.access')}
+          </Link>
+        )}
         {auth.roles.includes('admin') && <Notice>{t('auth.adminMfa')}</Notice>}
         <Button
           variant="outline"

@@ -6,6 +6,7 @@ import { ClockProvider } from './hooks/clock';
 import { TripProvider, useTrip } from './trip-context';
 import { AuthProvider } from './auth/context';
 import { Page } from './components/tourism/common';
+const Admin = lazy(() => import('./admin/panel'));
 const SignIn = lazy(() => import('./pages/auth'));
 const Account = lazy(() =>
   import('./pages/auth').then((module) => ({ default: module.Account })),
@@ -146,6 +147,7 @@ function Layout() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/admin/*" element={<Admin />} />
             <Route path="/entrar" element={<SignIn />} />
             <Route path="/conta" element={<Account />} />
             <Route path="/recuperar-senha" element={<Recover />} />

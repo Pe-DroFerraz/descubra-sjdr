@@ -97,6 +97,7 @@ export default function Events() {
         )}
       </div>
       <State
+        resource="events"
         pending={events.isPending}
         error={events.error}
         retry={() => void events.refetch()}
@@ -139,7 +140,11 @@ export default function Events() {
           </div>
         </div>
         <div className="mt-8">
-          <State empty={!matching.length}>
+          <State
+            resource="events"
+            filtered={!!events.data?.length}
+            empty={!matching.length}
+          >
             <div className="card-grid">
               {matching.map((event) => {
                 const content = translated(
@@ -197,6 +202,7 @@ export function EventDetail() {
     return (
       <Page title={t('events')}>
         <State
+          resource="events"
           pending={events.isPending}
           error={events.error}
           retry={() => void events.refetch()}

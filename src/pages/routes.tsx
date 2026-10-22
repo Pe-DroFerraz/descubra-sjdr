@@ -24,6 +24,7 @@ export default function RoutesPage() {
       description={t('routeIntro')}
     >
       <State
+        resource="routes"
         pending={routes.isPending}
         error={routes.error}
         retry={() => void routes.refetch()}
@@ -51,6 +52,7 @@ export function RouteDetail() {
     return (
       <Page title={t('routes')}>
         <State
+          resource="routes"
           pending={routes.isPending}
           error={routes.error}
           retry={() => void routes.refetch()}
@@ -106,6 +108,7 @@ export function RouteDetail() {
       </div>
       {saved && <Notice>{t('routeSaved')}</Notice>}
       <State
+        resource="routes"
         pending={places.isPending}
         error={places.error}
         retry={() => void places.refetch()}
@@ -156,6 +159,7 @@ export function RouteDetail() {
       </State>
       <Section title={t('sponsors')}>
         <State
+          resource="routes"
           pending={sponsors.isPending}
           error={sponsors.error}
           retry={() => void sponsors.refetch()}

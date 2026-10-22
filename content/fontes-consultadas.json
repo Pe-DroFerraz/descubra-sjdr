@@ -1,0 +1,128 @@
+{
+  "consulted_on": "2026-10-22",
+  "not_a_current_operating_directory": true,
+  "sicg": [
+    {
+      "Nome": "Imóvel situado a Praça Severiano de Rezende, esquina com a Rua Marechal Deodoro, nº12, Centro",
+      "Nome_popular": "Sobrado à Praça Severiano de Rezende; Sobrado à Rua Marechal Deodoro, 12",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Ministro Gabriel Passos",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1123"
+    },
+    {
+      "Nome": "Passo da Rua Getúlio Vargas",
+      "Nome_popular": "Não informado",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Ministro Gabriel Passos",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1127"
+    },
+    {
+      "Nome": "Passo da Rua Duque de Caxias",
+      "Nome_popular": "Passos das Ruas Duque de Caxias e Getúlio Vargas",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Ministro Gabriel Passos",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1129"
+    },
+    {
+      "Nome": "Igreja de Nossa Senhora do Carmo",
+      "Nome_popular": "Igreja do Carmo",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Ministro Gabriel Passos",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1131"
+    },
+    {
+      "Nome": "Igreja Matriz de Nossa Senhora do Pilar",
+      "Nome_popular": "Igreja Matriz do Pilar;Matriz do Pilar; Catedral Basílica de Nossa Senhora do Pilar",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Ministro Gabriel Passos",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1134"
+    },
+    {
+      "Nome": "Igreja de São Francisco de Assis",
+      "Nome_popular": "Não informado",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Ministro Gabriel Passos",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1136"
+    },
+    {
+      "Nome": "Estação Ferroviária de São João Del Rei",
+      "Nome_popular": "Não informado",
+      "Município": "São João Del Rei",
+      "Endereço": "Rua Hermílio Alves, Nº 462 - 600, Centro",
+      "Página": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1469"
+    }
+  ],
+  "museusbr": [
+    {
+      "id": 6109,
+      "name": "Museu Regional de São João Del Rei",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Rua Marechal Deodoro 12, Centro, 36300-074, São João del Rei, MG"
+    },
+    {
+      "id": 6762,
+      "name": "Museu Municipal Histórico e Cultural Tomé Portes del- Rei",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Praça Frei Orlando 90, Centro, 36307-352, São João del Rei, MG"
+    },
+    {
+      "id": 7005,
+      "name": "Museu Ferroviário de São João del Rei",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Rua Hermílio Alves 366, Centro, 36307-328, São João del Rei, MG"
+    },
+    {
+      "id": 7458,
+      "name": "Fundação Centro de Referência Musicológica José Maria Neves - Universidade Federal de São João del-Rei - UFSJ",
+      "En_Municipio": "São João Del Rei",
+      "endereco": "Rua Marechal Bittencourt, 24 , Centro, 36300-070, São João Del Rei, MG"
+    },
+    {
+      "id": 7461,
+      "name": "Instituto Histórico e Geográfico de São João del Rei",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Rua Santa Teresa 127, Centro, 36300-114, São João del Rei, MG"
+    },
+    {
+      "id": 7694,
+      "name": "Museu de Arte Sacra de São João del Rei",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Praça Embaixador Gastão da Cunha, 8 , Centro, 36300-084, São João del Rei, MG"
+    },
+    {
+      "id": 7751,
+      "name": "Fundação Memorial Cardeal Dom Lucas Moreira Neves",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Rua Getúlio Vargas 52, Centro, 36300-086, São João del Rei, MG"
+    },
+    {
+      "id": 8450,
+      "name": "Memorial Tancredo Neves",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Rua Padre José Maria Xavier 7, Centro, 36307-340, São João del Rei, MG"
+    },
+    {
+      "id": 8455,
+      "name": "Museu de Estanho John Somers",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Avenida Leite de Castro 1150, Fábricas, 36301-180, São João del Rei, MG"
+    },
+    {
+      "id": 19649,
+      "name": "Centro Cultural da Universidade Federal de São João del Rei",
+      "En_Municipio": "São João del Rei",
+      "endereco": "Praça Doutor Augusto das Chagas Viegas, 17 , Largo do Carmo, 36300-088, São João del Rei, MG"
+    },
+    {
+      "id": 19650,
+      "name": "Centro de Referência de Cultura Popular Max Justo Guedes - Fortim dos Emboabas - Universidade Federal de São João del-Rei - UFSJ",
+      "En_Municipio": "São João Del-Rei",
+      "endereco": "Rua Altamiro Flor, s/n , Alto das Mercês, 36300-212, São João Del-Rei, MG"
+    }
+  ],
+  "source_links": [
+    "https://github.com/tainacan/data_science/blob/885114f20e2c441db87dcfcc534d1247e6633b9d/FAPESP/DADOS%20COLETADOS/iphan_sicg_material.csv",
+    "https://github.com/CarwilB/wiki-graph/blob/4f0fb152f2d9d4174e90c8b08b2f33977500afb3/wikipedia-pages/sa_admin/pt/S%C3%A3o%20Jo%C3%A3o%20del-Rei.txt",
+    "https://github.com/fgabreu/azure-databricks-pipeline-museusbr/blob/7d5cf42dd743fef8c6ae84d5ffa6b3738742c4f3/03%20-%20notebook_jupyter(API%20to%20Blob)/arquivos%20extra%C3%ADdos%20-%20Blob%20Storage/space.json"
+  ]
+}

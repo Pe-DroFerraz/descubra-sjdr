@@ -20,6 +20,7 @@ a {
 }
 button,
 input,
+textarea,
 select {
   font: inherit;
 }
@@ -338,4 +339,20 @@ input[type='checkbox'] {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+@layer components {
+  .admin-layout { @apply mb-16 grid items-start gap-7 lg:grid-cols-[210px_minmax(0,1fr)]; }
+  .admin-banner { @apply mb-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-colonial/10 bg-white p-5 text-sm; }
+  .admin-nav { @apply flex gap-2 overflow-x-auto pb-3 lg:sticky lg:top-28 lg:grid lg:overflow-visible; }
+  .admin-nav button { @apply shrink-0 rounded-xl px-4 py-3 text-left text-sm font-semibold hover:bg-colonial/5; }
+  .admin-nav button[aria-current='page'] { @apply bg-colonial text-ivory; }
+  .admin-editor { @apply rounded-2xl border border-colonial/15 bg-white p-5 shadow-sm sm:p-7; }
+  .admin-form-grid { @apply grid min-w-0 gap-5 sm:grid-cols-2; }
+  .admin-editor .filter-label input, .admin-editor .filter-label select, .admin-editor .filter-label textarea { @apply w-full min-w-0; }
+  .admin-editor textarea { @apply rounded-lg border border-colonial/20 bg-white p-3 text-sm font-normal normal-case tracking-normal text-colonial; }
+  .admin-editor input[type='checkbox'] { @apply w-4 shrink-0; }
+  .admin-record { @apply flex flex-wrap items-center justify-between gap-4 rounded-xl border border-colonial/10 bg-white p-5; }
+  .admin-stop { @apply flex flex-wrap items-start gap-4 rounded-xl border border-colonial/10 p-4; }
+  .admin-feedback { @apply my-4 break-words rounded-xl border p-4 text-sm; }
 }

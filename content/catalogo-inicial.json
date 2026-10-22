@@ -1,0 +1,1151 @@
+{
+  "version": 1,
+  "city": "São João del-Rei — MG",
+  "prepared_on": "2026-10-22",
+  "remote_writes_authorized": false,
+  "sources": [
+    {
+      "id": "sicg-mirror",
+      "title": "Cópia acadêmica de dados SICG/IPHAN — Tainacan/FAPESP",
+      "url": "https://github.com/tainacan/data_science/blob/885114f20e2c441db87dcfcc534d1247e6633b9d/FAPESP/DADOS%20COLETADOS/iphan_sicg_material.csv",
+      "consulted": true,
+      "kind": "secondary-mirror-of-official-data",
+      "primary_host": "sicg.iphan.gov.br",
+      "note": "Cópia consultada; páginas primárias bloqueadas pelo proxy. Inconsistências de endereço detectadas. Não comprova situação de visitação atual."
+    },
+    {
+      "id": "wikipedia-mirror",
+      "title": "Cópia da Wikipédia — artigo São João del-Rei",
+      "url": "https://github.com/CarwilB/wiki-graph/blob/4f0fb152f2d9d4174e90c8b08b2f33977500afb3/wikipedia-pages/sa_admin/pt/S%C3%A3o%20Jo%C3%A3o%20del-Rei.txt",
+      "consulted": true,
+      "kind": "secondary-mirror",
+      "primary_host": "pt.wikipedia.org",
+      "note": "Cópia consultada para identificar candidatos. Requer corroboração institucional de nomes, sede e funcionamento antes da publicação."
+    },
+    {
+      "id": "museusbr-mirror",
+      "title": "Cópia de extração da API MuseusBr — registros de São João del-Rei",
+      "url": "https://github.com/fgabreu/azure-databricks-pipeline-museusbr/blob/7d5cf42dd743fef8c6ae84d5ffa6b3738742c4f3/03%20-%20notebook_jupyter(API%20to%20Blob)/arquivos%20extra%C3%ADdos%20-%20Blob%20Storage/space.json",
+      "consulted": true,
+      "kind": "secondary-mirror-of-official-data",
+      "primary_host": "museus.cultura.gov.br",
+      "note": "Extração histórica disponibilizada em projeto de dados. Confere nomes e endereços registrados, não funcionamento, acessibilidade ou contato atuais; requer confirmação institucional."
+    }
+  ],
+  "blocked_primary_sources": [
+    {
+      "url": "https://www.minasgerais.com.br/pt/destinos/sao-joao-del-rei",
+      "consulted": false,
+      "error": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "url": "https://museuregionaldesaojoaodelrei.museus.gov.br/",
+      "consulted": false,
+      "error": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "url": "https://portal.iphan.gov.br/",
+      "consulted": false,
+      "error": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1136",
+      "consulted": false,
+      "error": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "url": "https://museus.cultura.gov.br/",
+      "consulted": false,
+      "error": "Tunnel connection failed: 403 Forbidden"
+    },
+    {
+      "url": "https://ufsj.edu.br/centrocultural/",
+      "consulted": false,
+      "error": "Tunnel connection failed: 403 Forbidden"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "slug": "historia",
+      "name": "Igrejas e patrimônio",
+      "published": false
+    },
+    {
+      "id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "slug": "museus",
+      "name": "Museus e memoriais",
+      "published": false
+    },
+    {
+      "id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "slug": "cultura",
+      "name": "Espaços culturais",
+      "published": false
+    },
+    {
+      "id": "cd0a051d-e11c-5acd-aa27-ac67ef25f86f",
+      "slug": "passeios",
+      "name": "Pontes e paisagens",
+      "published": false
+    },
+    {
+      "id": "7f434302-cdc2-57b8-ac7c-59d3ebfb828b",
+      "slug": "comer",
+      "name": "Gastronomia",
+      "published": false
+    }
+  ],
+  "places": [
+    {
+      "id": "50c389a0-9609-56af-be0f-47403010b10e",
+      "slug": "sao-francisco-assis",
+      "name": "Igreja de São Francisco de Assis",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Igreja de São Francisco de Assis, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1136",
+        "source_name": "Igreja de São Francisco de Assis",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "O campo Endereço da cópia SICG repete Rua Ministro Gabriel Passos para bens distintos; não foi aceito como endereço de visita. Quando há endereço, deriva do título/síntese do bem, sujeito a confirmação."
+        ]
+      }
+    },
+    {
+      "id": "1077ec41-6eda-5338-9af8-14526e620be2",
+      "slug": "catedral-pilar",
+      "name": "Catedral Basílica de Nossa Senhora do Pilar",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Catedral Basílica de Nossa Senhora do Pilar, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1134",
+        "source_name": "Igreja Matriz de Nossa Senhora do Pilar",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "O campo Endereço da cópia SICG repete Rua Ministro Gabriel Passos para bens distintos; não foi aceito como endereço de visita. Quando há endereço, deriva do título/síntese do bem, sujeito a confirmação."
+        ]
+      }
+    },
+    {
+      "id": "3f58bb99-30a9-538b-90f0-c88ec1589dfd",
+      "slug": "igreja-carmo",
+      "name": "Igreja de Nossa Senhora do Carmo",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Igreja de Nossa Senhora do Carmo, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1131",
+        "source_name": "Igreja de Nossa Senhora do Carmo",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "O campo Endereço da cópia SICG repete Rua Ministro Gabriel Passos para bens distintos; não foi aceito como endereço de visita. Quando há endereço, deriva do título/síntese do bem, sujeito a confirmação."
+        ]
+      }
+    },
+    {
+      "id": "fc59171c-94dd-5382-a688-69ada8acfa8c",
+      "slug": "igreja-merces",
+      "name": "Igreja de Nossa Senhora das Mercês",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Igreja de Nossa Senhora das Mercês, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Igreja de Nossa Senhora das Mercês",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência."
+        ]
+      }
+    },
+    {
+      "id": "33fc8d99-811c-5ede-a9d2-66d559db9fe6",
+      "slug": "igreja-rosario",
+      "name": "Igreja de Nossa Senhora do Rosário",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Igreja de Nossa Senhora do Rosário, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Igreja de Nossa Senhora do Rosário",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência."
+        ]
+      }
+    },
+    {
+      "id": "d3ddd01e-1dbc-5961-816a-1fa4a18b4efe",
+      "slug": "senhor-bom-jesus-monte",
+      "name": "Igreja do Senhor Bom Jesus do Monte",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Igreja do Senhor Bom Jesus do Monte, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Igreja do Senhor Bom Jesus do Monte",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência."
+        ]
+      }
+    },
+    {
+      "id": "0f4508e9-b97e-53ed-b9c8-19cc6eff3de7",
+      "slug": "museu-regional",
+      "name": "Museu Regional de São João del-Rei",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Museu Regional de São João del-Rei, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Marechal Deodoro 12, Centro, 36300-074, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror",
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1123",
+        "source_name": "Imóvel situado a Praça Severiano de Rezende, esquina com a Rua Marechal Deodoro, nº12, Centro",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "O campo Endereço da cópia SICG repete Rua Ministro Gabriel Passos para bens distintos; não foi aceito como endereço de visita. Quando há endereço, deriva do título/síntese do bem, sujeito a confirmação.",
+          "Endereço registrado em extração histórica da API MuseusBr; confirmar sede e funcionamento atuais com o responsável."
+        ],
+        "museum_registry_id": 6109
+      }
+    },
+    {
+      "id": "07c17706-e833-5c81-ac83-e051f1c7efbb",
+      "slug": "museu-ferroviario",
+      "name": "Museu Ferroviário de São João del-Rei",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Museu Ferroviário de São João del-Rei, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Hermílio Alves 366, Centro, 36307-328, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror",
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Museu Ferroviário de São João del-Rei",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Endereço registrado em extração histórica da API MuseusBr; confirmar sede e funcionamento atuais com o responsável."
+        ],
+        "museum_registry_id": 7005
+      }
+    },
+    {
+      "id": "801d1043-3df0-5593-9947-30a7e685cfe3",
+      "slug": "museu-arte-sacra",
+      "name": "Museu de Arte Sacra de São João del-Rei",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Museu de Arte Sacra de São João del-Rei, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Praça Embaixador Gastão da Cunha, 8 , Centro, 36300-084, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror",
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Museu de Arte Sacra de São João del-Rei",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Endereço registrado em extração histórica da API MuseusBr; confirmar sede e funcionamento atuais com o responsável."
+        ],
+        "museum_registry_id": 7694
+      }
+    },
+    {
+      "id": "16553215-b312-5ee4-a74a-7a235749b03d",
+      "slug": "memorial-tancredo-neves",
+      "name": "Memorial Tancredo Neves",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Memorial Tancredo Neves, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Padre José Maria Xavier 7, Centro, 36307-340, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror",
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Memorial Tancredo Neves",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Endereço registrado em extração histórica da API MuseusBr; confirmar sede e funcionamento atuais com o responsável."
+        ],
+        "museum_registry_id": 8450
+      }
+    },
+    {
+      "id": "e5667bc8-e1a4-562f-a597-892baa65800b",
+      "slug": "memorial-cardeal-lucas",
+      "name": "Memorial Cardeal Dom Lucas Moreira Neves",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Memorial Cardeal Dom Lucas Moreira Neves, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Getúlio Vargas 52, Centro, 36300-086, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror",
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Memorial Cardeal Dom Lucas Moreira Neves",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Endereço registrado em extração histórica da API MuseusBr; confirmar sede e funcionamento atuais com o responsável."
+        ],
+        "museum_registry_id": 7751
+      }
+    },
+    {
+      "id": "29e5f5cf-211a-52f0-9b05-411f58516621",
+      "slug": "museu-tome-portes",
+      "name": "Museu Municipal Tomé Portes del-Rei",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Museu Municipal Tomé Portes del-Rei, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Praça Frei Orlando 90, Centro, 36307-352, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror",
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Museu Municipal Tomé Portes del-Rei",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Menção em fonte secundária não confirma funcionamento atual ou sede; bloqueio editorial até verificação institucional.",
+          "Endereço registrado em extração histórica da API MuseusBr; confirmar sede e funcionamento atuais com o responsável."
+        ],
+        "museum_registry_id": 6762
+      }
+    },
+    {
+      "id": "5af2d2a3-33eb-5de7-a1d4-054de5df3630",
+      "slug": "teatro-municipal",
+      "name": "Teatro Municipal de São João del-Rei",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Teatro Municipal de São João del-Rei, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Teatro Municipal de São João del-Rei",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência."
+        ]
+      }
+    },
+    {
+      "id": "55053c58-517e-5268-9993-bf442640e223",
+      "slug": "solar-baronesa",
+      "name": "Solar da Baronesa",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Solar da Baronesa, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Solar da Baronesa",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência."
+        ]
+      }
+    },
+    {
+      "id": "3d7b1b9b-5b32-5bec-8dcd-ddaa32775e12",
+      "slug": "ponte-cadeia",
+      "name": "Ponte da Cadeia",
+      "category_id": "cd0a051d-e11c-5acd-aa27-ac67ef25f86f",
+      "description": "Ponte da Cadeia, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Ponte da Cadeia",
+        "address_state": "not-confirmed",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência."
+        ]
+      }
+    },
+    {
+      "id": "6ecd4dfd-f4e1-55cf-8f53-b0b7b4afbcf2",
+      "slug": "biblioteca-baptista",
+      "name": "Biblioteca Municipal Baptista Caetano d’Almeida",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Biblioteca Municipal Baptista Caetano d’Almeida, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Praça Frei Orlando, 90, Centro, São João del-Rei — MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "wikipedia-mirror"
+        ],
+        "primary_url": "https://pt.wikipedia.org/wiki/S%C3%A3o_Jo%C3%A3o_del-Rei",
+        "source_name": "Biblioteca Municipal Baptista Caetano d’Almeida",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Endereço em cópia da Wikipédia com referência a lista estadual; lista original bloqueada nesta sessão."
+        ]
+      }
+    },
+    {
+      "id": "2ed353e6-20d6-5d38-ab7d-b49e6a44f68d",
+      "slug": "passo-getulio-vargas",
+      "name": "Passo da Rua Getúlio Vargas",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Passo da Rua Getúlio Vargas, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Getúlio Vargas, São João del-Rei — MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1127",
+        "source_name": "Passo da Rua Getúlio Vargas",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "O campo Endereço da cópia SICG repete Rua Ministro Gabriel Passos para bens distintos; não foi aceito como endereço de visita. Quando há endereço, deriva do título/síntese do bem, sujeito a confirmação."
+        ]
+      }
+    },
+    {
+      "id": "e25aec8b-138e-5034-a1ec-3519212d8780",
+      "slug": "passo-duque-caxias",
+      "name": "Passo da Rua Duque de Caxias",
+      "category_id": "1be37cd1-79fa-5418-9a21-1f1aa4227356",
+      "description": "Passo da Rua Duque de Caxias, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Duque de Caxias, São João del-Rei — MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1129",
+        "source_name": "Passo da Rua Duque de Caxias",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "O campo Endereço da cópia SICG repete Rua Ministro Gabriel Passos para bens distintos; não foi aceito como endereço de visita. Quando há endereço, deriva do título/síntese do bem, sujeito a confirmação."
+        ]
+      }
+    },
+    {
+      "id": "c8ed6701-12d2-5487-ae30-6089d9aa27b4",
+      "slug": "estacao-sjdr",
+      "name": "Estação Ferroviária de São João del-Rei",
+      "category_id": "cd0a051d-e11c-5acd-aa27-ac67ef25f86f",
+      "description": "Estação Ferroviária de São João del-Rei, em São João del-Rei. Texto editorial, acesso e funcionamento pendentes de revisão.",
+      "address": "Rua Hermílio Alves, Centro, São João del-Rei — MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "sicg-mirror"
+        ],
+        "primary_url": "https://sicg.iphan.gov.br/sicg/bem/visualizar/1469",
+        "source_name": "Estação Ferroviária de São João Del Rei",
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Confirmar endereço atual e entrada de visitação com o responsável.",
+          "Confirmar condições de acesso e identidade do equipamento antes de publicação.",
+          "Horários, valores, coordenadas, fotografias e acessibilidade não verificados; não preencher por inferência.",
+          "Endereço geral do complexo no SICG; confirmar entrada pública e diferenciar da operação comercial do trem. Não há horário, tarifa ou passeio confirmado."
+        ]
+      }
+    },
+    {
+      "id": "d43f122e-ce84-5f58-87a4-b35ea4ff2365",
+      "slug": "centro-referencia-musicologica",
+      "name": "Fundação Centro de Referência Musicológica José Maria Neves - Universidade Federal de São João del-Rei - UFSJ",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Fundação Centro de Referência Musicológica José Maria Neves - Universidade Federal de São João del-Rei - UFSJ, em São João del-Rei. Texto editorial e visitação pendentes de revisão.",
+      "address": "Rua Marechal Bittencourt, 24 , Centro, 36300-070, São João Del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://www.gov.br/museus/pt-br",
+        "source_name": "Fundação Centro de Referência Musicológica José Maria Neves - Universidade Federal de São João del-Rei - UFSJ",
+        "museum_registry_id": 7458,
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Nome e endereço obtidos de extração histórica da API MuseusBr, consultada em espelho versionado.",
+          "Confirmar sede, acesso público, funcionamento e condições de visita com a instituição. Nenhum horário, preço ou relação comercial foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "e8ea4c18-9dd4-5d7a-b7c8-db1bbd7f8a85",
+      "slug": "instituto-historico-geografico",
+      "name": "Instituto Histórico e Geográfico de São João del Rei",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Instituto Histórico e Geográfico de São João del Rei, em São João del-Rei. Texto editorial e visitação pendentes de revisão.",
+      "address": "Rua Santa Teresa 127, Centro, 36300-114, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://www.gov.br/museus/pt-br",
+        "source_name": "Instituto Histórico e Geográfico de São João del Rei",
+        "museum_registry_id": 7461,
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Nome e endereço obtidos de extração histórica da API MuseusBr, consultada em espelho versionado.",
+          "Confirmar sede, acesso público, funcionamento e condições de visita com a instituição. Nenhum horário, preço ou relação comercial foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "714a807e-a111-5e9f-81a4-aada6ccf2770",
+      "slug": "museu-estanho",
+      "name": "Museu de Estanho John Somers",
+      "category_id": "97ff6156-7c16-5d57-954f-d55795447f9b",
+      "description": "Museu de Estanho John Somers, em São João del-Rei. Texto editorial e visitação pendentes de revisão.",
+      "address": "Avenida Leite de Castro 1150, Fábricas, 36301-180, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://www.gov.br/museus/pt-br",
+        "source_name": "Museu de Estanho John Somers",
+        "museum_registry_id": 8455,
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Nome e endereço obtidos de extração histórica da API MuseusBr, consultada em espelho versionado.",
+          "Confirmar sede, acesso público, funcionamento e condições de visita com a instituição. Nenhum horário, preço ou relação comercial foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "35edef62-faf8-5198-b170-d919dde6078b",
+      "slug": "centro-cultural-ufsj",
+      "name": "Centro Cultural da Universidade Federal de São João del Rei",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Centro Cultural da Universidade Federal de São João del Rei, em São João del-Rei. Texto editorial e visitação pendentes de revisão.",
+      "address": "Praça Doutor Augusto das Chagas Viegas, 17 , Largo do Carmo, 36300-088, São João del Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://www.gov.br/museus/pt-br",
+        "source_name": "Centro Cultural da Universidade Federal de São João del Rei",
+        "museum_registry_id": 19649,
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Nome e endereço obtidos de extração histórica da API MuseusBr, consultada em espelho versionado.",
+          "Confirmar sede, acesso público, funcionamento e condições de visita com a instituição. Nenhum horário, preço ou relação comercial foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "2342810e-6af6-54ab-8434-6291416c0847",
+      "slug": "fortim-emboabas",
+      "name": "Centro de Referência de Cultura Popular Max Justo Guedes - Fortim dos Emboabas - Universidade Federal de São João del-Rei - UFSJ",
+      "category_id": "46074f7a-5721-5cd8-b544-d85f365818ad",
+      "description": "Centro de Referência de Cultura Popular Max Justo Guedes - Fortim dos Emboabas - Universidade Federal de São João del-Rei - UFSJ, em São João del-Rei. Texto editorial e visitação pendentes de revisão.",
+      "address": "Rua Altamiro Flor, s/n , Alto das Mercês, 36300-212, São João Del-Rei, MG",
+      "latitude": null,
+      "longitude": null,
+      "status": "draft",
+      "is_demo": false,
+      "verified_at": null,
+      "phone": null,
+      "whatsapp": null,
+      "website": null,
+      "instagram": null,
+      "price_description": null,
+      "editorial": {
+        "source_ids": [
+          "museusbr-mirror"
+        ],
+        "primary_url": "https://www.gov.br/museus/pt-br",
+        "source_name": "Centro de Referência de Cultura Popular Max Justo Guedes - Fortim dos Emboabas - Universidade Federal de São João del-Rei - UFSJ",
+        "museum_registry_id": 19650,
+        "address_state": "secondary-evidence-needs-review",
+        "review_required": true,
+        "notes": [
+          "Nome e endereço obtidos de extração histórica da API MuseusBr, consultada em espelho versionado.",
+          "Confirmar sede, acesso público, funcionamento e condições de visita com a instituição. Nenhum horário, preço ou relação comercial foi presumido."
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "id": "471bd7a0-6623-5cf1-9401-c976d9024229",
+      "slug": "um-dia-sjdr",
+      "name": "1 dia em SJDR",
+      "description": "Proposta de roteiro para revisão editorial. Não representa programação, reserva ou disponibilidade confirmada.",
+      "duration_minutes": null,
+      "weather": "any",
+      "status": "draft",
+      "is_demo": false,
+      "stops": [
+        {
+          "place_id": "50c389a0-9609-56af-be0f-47403010b10e",
+          "position": 0,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3d7b1b9b-5b32-5bec-8dcd-ddaa32775e12",
+          "position": 1,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "0f4508e9-b97e-53ed-b9c8-19cc6eff3de7",
+          "position": 2,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "1077ec41-6eda-5338-9af8-14526e620be2",
+          "position": 3,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3f58bb99-30a9-538b-90f0-c88ec1589dfd",
+          "position": 4,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "c8ed6701-12d2-5487-ae30-6089d9aa27b4",
+          "position": 5,
+          "duration_minutes": null
+        }
+      ],
+      "editorial": {
+        "review_required": true,
+        "notes": [
+          "Sequência editorial preliminar; validar deslocamentos, acessibilidade, segurança, entradas e visitação.",
+          "Nenhum horário ou duração de visita foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "8853161d-52dc-5db4-8130-3ba70cdc76aa",
+      "slug": "historico",
+      "name": "Roteiro histórico",
+      "description": "Proposta de roteiro para revisão editorial. Não representa programação, reserva ou disponibilidade confirmada.",
+      "duration_minutes": null,
+      "weather": "dry",
+      "status": "draft",
+      "is_demo": false,
+      "stops": [
+        {
+          "place_id": "1077ec41-6eda-5338-9af8-14526e620be2",
+          "position": 0,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "2ed353e6-20d6-5d38-ab7d-b49e6a44f68d",
+          "position": 1,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "0f4508e9-b97e-53ed-b9c8-19cc6eff3de7",
+          "position": 2,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3d7b1b9b-5b32-5bec-8dcd-ddaa32775e12",
+          "position": 3,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3f58bb99-30a9-538b-90f0-c88ec1589dfd",
+          "position": 4,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "50c389a0-9609-56af-be0f-47403010b10e",
+          "position": 5,
+          "duration_minutes": null
+        }
+      ],
+      "editorial": {
+        "review_required": true,
+        "notes": [
+          "Sequência editorial preliminar; validar deslocamentos, acessibilidade, segurança, entradas e visitação.",
+          "Nenhum horário ou duração de visita foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "82570b05-289a-52b7-b830-7762ac025387",
+      "slug": "gastronomico",
+      "name": "Roteiro gastronômico",
+      "description": "Proposta de roteiro para revisão editorial. Não representa programação, reserva ou disponibilidade confirmada.",
+      "duration_minutes": null,
+      "weather": "any",
+      "status": "draft",
+      "is_demo": false,
+      "stops": [
+        {
+          "place_id": "3d7b1b9b-5b32-5bec-8dcd-ddaa32775e12",
+          "position": 0,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "0f4508e9-b97e-53ed-b9c8-19cc6eff3de7",
+          "position": 1,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "1077ec41-6eda-5338-9af8-14526e620be2",
+          "position": 2,
+          "duration_minutes": null
+        }
+      ],
+      "editorial": {
+        "review_required": true,
+        "notes": [
+          "Sequência editorial preliminar; validar deslocamentos, acessibilidade, segurança, entradas e visitação.",
+          "Nenhum horário ou duração de visita foi presumido.",
+          "As paradas atuais são referências urbanas para planejamento. Restaurantes, mercados e cafés ainda não foram pesquisados/selecionados. NÃO é uma recomendação gastronômica pronta para publicação."
+        ]
+      }
+    },
+    {
+      "id": "5fccf3f8-4ff5-5662-b0bd-87aade191420",
+      "slug": "com-criancas",
+      "name": "SJDR com crianças",
+      "description": "Proposta de roteiro para revisão editorial. Não representa programação, reserva ou disponibilidade confirmada.",
+      "duration_minutes": null,
+      "weather": "dry",
+      "status": "draft",
+      "is_demo": false,
+      "stops": [
+        {
+          "place_id": "c8ed6701-12d2-5487-ae30-6089d9aa27b4",
+          "position": 0,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "07c17706-e833-5c81-ac83-e051f1c7efbb",
+          "position": 1,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3d7b1b9b-5b32-5bec-8dcd-ddaa32775e12",
+          "position": 2,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "6ecd4dfd-f4e1-55cf-8f53-b0b7b4afbcf2",
+          "position": 3,
+          "duration_minutes": null
+        }
+      ],
+      "editorial": {
+        "review_required": true,
+        "notes": [
+          "Sequência editorial preliminar; validar deslocamentos, acessibilidade, segurança, entradas e visitação.",
+          "Nenhum horário ou duração de visita foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "616ad6b9-fcba-54f4-8afe-514d4a95af88",
+      "slug": "fim-semana-romantico",
+      "name": "Fim de semana romântico",
+      "description": "Proposta de roteiro para revisão editorial. Não representa programação, reserva ou disponibilidade confirmada.",
+      "duration_minutes": null,
+      "weather": "dry",
+      "status": "draft",
+      "is_demo": false,
+      "stops": [
+        {
+          "place_id": "50c389a0-9609-56af-be0f-47403010b10e",
+          "position": 0,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "55053c58-517e-5268-9993-bf442640e223",
+          "position": 1,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3d7b1b9b-5b32-5bec-8dcd-ddaa32775e12",
+          "position": 2,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "3f58bb99-30a9-538b-90f0-c88ec1589dfd",
+          "position": 3,
+          "duration_minutes": null
+        }
+      ],
+      "editorial": {
+        "review_required": true,
+        "notes": [
+          "Sequência editorial preliminar; validar deslocamentos, acessibilidade, segurança, entradas e visitação.",
+          "Nenhum horário ou duração de visita foi presumido."
+        ]
+      }
+    },
+    {
+      "id": "b369448d-09b8-5eee-947f-85e4838680ba",
+      "slug": "dia-chuva",
+      "name": "SJDR em dia de chuva",
+      "description": "Proposta de roteiro para revisão editorial. Não representa programação, reserva ou disponibilidade confirmada.",
+      "duration_minutes": null,
+      "weather": "rain",
+      "status": "draft",
+      "is_demo": false,
+      "stops": [
+        {
+          "place_id": "0f4508e9-b97e-53ed-b9c8-19cc6eff3de7",
+          "position": 0,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "801d1043-3df0-5593-9947-30a7e685cfe3",
+          "position": 1,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "16553215-b312-5ee4-a74a-7a235749b03d",
+          "position": 2,
+          "duration_minutes": null
+        },
+        {
+          "place_id": "35edef62-faf8-5198-b170-d919dde6078b",
+          "position": 3,
+          "duration_minutes": null
+        }
+      ],
+      "editorial": {
+        "review_required": true,
+        "notes": [
+          "Sequência editorial preliminar; validar deslocamentos, acessibilidade, segurança, entradas e visitação.",
+          "Nenhum horário ou duração de visita foi presumido."
+        ]
+      }
+    }
+  ],
+  "events": [],
+  "tips": [],
+  "photos": []
+}

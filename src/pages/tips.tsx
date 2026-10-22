@@ -50,9 +50,11 @@ export default function Tips() {
         </label>
       </form>
       <State
+        resource="tips"
         pending={tips.isPending}
         error={tips.error}
         retry={() => void tips.refetch()}
+        filtered={!!tips.data?.length && !!(search || category)}
         empty={!filtered.length}
       >
         <div className="card-grid">

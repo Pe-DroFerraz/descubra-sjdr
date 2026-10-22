@@ -1,4 +1,4 @@
-import type { PropsWithChildren, ReactNode } from 'react';
+import { useState, type PropsWithChildren, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -65,19 +65,23 @@ export function State({
   error,
   empty,
   retry,
+  resource,
+  filtered,
   children,
 }: PropsWithChildren<{
   pending?: boolean;
   error?: Error | null;
   empty?: boolean;
   retry?: () => void;
+  resource?: 'places' | 'routes' | 'events' | 'tips';
+  filtered?: boolean;
 }>) {
   const { t } = useTranslation();
   if (pending)
     return (
       <div role="status" className="state-panel">
         <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-colonial/15 border-t-clay" />
-        {t('loading')}
+        {t(resource ? `catalogState.${resource}.loading` : 'loading')}
       </div>
     );
   if (error)
@@ -86,14 +90,20 @@ export function State({
         <Landmark className="mx-auto mb-4 text-clay" />
         <h3>
           {t(
-            error instanceof CatalogUnavailable ? 'unavailable' : 'errorTitle',
+            error instanceof CatalogUnavailable
+              ? 'unavailable'
+              : resource
+                ? `catalogState.${resource}.error`
+                : 'errorTitle',
           )}
         </h3>
         <p>
           {t(
             error instanceof CatalogUnavailable
               ? 'unavailableText'
-              : 'errorText',
+              : resource
+                ? 'catalogState.network'
+                : 'errorText',
           )}
         </p>
         {retry && (
@@ -108,8 +118,24 @@ export function State({
     return (
       <div className="state-panel">
         <Search className="mx-auto mb-4 text-clay" />
-        <h3>{t('empty')}</h3>
-        <p>{t('emptyText')}</p>
+        <h3>
+          {t(
+            filtered
+              ? 'catalogState.filtered'
+              : resource
+                ? `catalogState.${resource}.empty`
+                : 'empty',
+          )}
+        </h3>
+        <p>
+          {t(
+            filtered
+              ? 'catalogState.filteredText'
+              : resource
+                ? `catalogState.${resource}.text`
+                : 'emptyText',
+          )}
+        </p>
       </div>
     );
   return children;
@@ -127,26 +153,34 @@ export function Photo({
 }) {
   const { t } = useTranslation();
   const url = mediaUrl(bucket, path);
-  return url ? (
+  const [failedUrl, setFailedUrl] = useState<string>();
+  return url && failedUrl !== url ? (
     <img
       src={url}
       alt={alt}
       loading="lazy"
       decoding="async"
       className={`h-full w-full object-cover ${className}`}
-      onError={(e) => {
-        e.currentTarget.onerror = null;
-        e.currentTarget.src = '/heritage.svg';
-      }}
+      onError={() => setFailedUrl(url)}
     />
   ) : (
     <div
       role="img"
-      aria-label={t('photoMissing')}
+      aria-label={t(
+        failedUrl === url && url
+          ? 'catalogState.photoUnavailable'
+          : 'photoMissing',
+      )}
       className={`photo-placeholder ${className}`}
     >
       <Landmark size={38} strokeWidth={1} />
-      <span>{t('photoMissing')}</span>
+      <span>
+        {t(
+          failedUrl === url && url
+            ? 'catalogState.photoUnavailable'
+            : 'photoMissing',
+        )}
+      </span>
     </div>
   );
 }
@@ -186,8 +220,8 @@ export function PlaceCard({
   )[0];
   const state = openingState(place, useClock());
   return (
-    <article className="place-card">
-      <div className="relative h-52 overflow-hidden">
+    <article className="place-card group">
+      <div className="relative aspect-[4/3] overflow-hidden bg-colonial/5">
         <Link
           to={`/lugares/${encodeURIComponent(place.slug)}`}
           tabIndex={-1}
@@ -196,6 +230,7 @@ export function PlaceCard({
           <Photo
             path={photo?.storage_path}
             alt={photo?.alt_text ?? content.name}
+            className="transition-transform duration-500 motion-safe:group-hover:scale-105"
           />
         </Link>
         <div className="absolute left-4 top-4 flex gap-2">
@@ -221,6 +256,12 @@ export function PlaceCard({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-colonial/80">
           {content.description}
         </p>
+        {place.address && (
+          <p className="mt-3 flex items-start gap-2 text-xs leading-relaxed text-colonial/80">
+            <MapPin size={14} className="mt-0.5 shrink-0" />
+            <span className="line-clamp-2">{place.address}</span>
+          </p>
+        )}
         <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-colonial/10 pt-4 text-xs">
           <span
             className={

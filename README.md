@@ -46,3 +46,9 @@ Login e recuperação estão em `/entrar`, `/recuperar-senha`, `/auth/confirmar`
 A auditoria externa verificada está em [docs/RELATORIO_SUPABASE_CODEX.md](docs/RELATORIO_SUPABASE_CODEX.md). O mapeamento das três versões remotas não autoriza reaplicação nem prova equivalência integral do SQL. Auth/Storage HTTP permanecem pendentes de homologação autorizada.
 
 Primeira prévia Vercel da PR #3: [docs/VERCEL_PREVIEW.md](docs/VERCEL_PREVIEW.md), incluindo variáveis Preview, comandos/limites e URLs exatas para magic link, recuperação e PKCE. Nenhum deployment Vercel foi criado nesta sessão.
+
+## Gestão do conteúdo turístico
+
+Painel responsivo em `/admin`, restrito ao papel admin verificado no backend. CRUD de categorias, lugares, fotografias, roteiros/paradas, eventos e dicas. Guia, segurança, limites de Storage e aprovações: [docs/GESTAO_CONTEUDO.md](docs/GESTAO_CONTEUDO.md).
+
+O [catálogo editorial](docs/CATALOGO_EDITORIAL.md) tem 24 candidatos em rascunho, 15 endereços provisórios, nove pendentes e seis roteiros preliminares. `npm run catalog:check` valida; `npm run catalog:sql` gera proposta SQL sem executar no banco. Nenhum conteúdo foi importado no Cloud. A gravação atômica das paradas depende da nova migration RPC, preparada apenas localmente e sujeita a reconciliação/revisão antes de aplicação remota.

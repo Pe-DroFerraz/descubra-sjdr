@@ -103,3 +103,7 @@ Esse foi o comando aprovado nesta sessão, com 23 verificações passando. Não 
 - Verificar catálogo/estados vazios, mapa/atribuição, PT/EN/ES e favoritos locais. O catálogo pode permanecer vazio; não criar conteúdo fictício nem assinaturas.
 - Após configurar Auth/SMTP/redirects, homologar login/logout, magic link e recuperação com conta existente autorizada; verificar código removido da URL e recusa de redirect externo. Esses fluxos e Storage HTTP ainda não foram homologados remotamente.
 - Registrar URL/commit/resultados/pendências para revisão. Manter PRs #1, #2 e #3 sem merge automático, hardening não aplicado e pagamentos/produção sem publicação.
+
+## Complemento — módulo de gestão editorial
+
+O usuário informou posteriormente que a versão anterior já está publicada em Preview e integrada ao Cloud. A entrega da branch `work/gestao-conteudo-turistico` acrescenta `/admin`, sem deployment de produção nesta tarefa. Para login direcionado ao novo painel, adicionar na origem real da prévia também `/auth/confirmar?next=%2Fadmin`; preservar as variantes existentes. Não é autorização para aplicar migrations/importar dados. Ver [GESTAO_CONTEUDO.md](GESTAO_CONTEUDO.md).

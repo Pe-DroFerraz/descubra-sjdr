@@ -15,7 +15,9 @@
     "cloud:configure": "node scripts/configure-cloud.mjs",
     "test:cloud": "node --env-file-if-exists=.env.local scripts/cloud-smoke.mjs",
     "cloud:advisors": "node scripts/cloud-advisors.mjs",
-    "cloud:audit": "node scripts/cloud-audit.mjs"
+    "cloud:audit": "node scripts/cloud-audit.mjs",
+    "catalog:check": "node scripts/catalog.mjs",
+    "catalog:sql": "node scripts/catalog.mjs --sql"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.5.0",
