@@ -38,3 +38,17 @@ export function cloudClient(token) {
     },
   });
 }
+
+// Public flags only; absence remains unknown. Never serialize arbitrary settings.
+export function publicAuthSettings(settings) {
+  const boolean = (value) => (typeof value === 'boolean' ? value : null);
+  return {
+    email_enabled: boolean(settings?.external?.email),
+    signup_enabled:
+      typeof settings?.disable_signup === 'boolean'
+        ? !settings.disable_signup
+        : null,
+    email_autoconfirm: boolean(settings?.mailer_autoconfirm),
+    smtp_callbacks_pkce_mfa_verified: false,
+  };
+}

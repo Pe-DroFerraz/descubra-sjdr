@@ -1,0 +1,43 @@
+{
+  "generated_from_source": true,
+  "remote_execution_authorized": false,
+  "original_migrations_replayed": false,
+  "migrations": [
+    {
+      "file": "202610220001_core.sql",
+      "version": "202610220001",
+      "name": "core",
+      "sha256": "5931af0aab2c770f55c312553c855b79f4d86cd897ec00b11a0b6db306b1c1df"
+    },
+    {
+      "file": "202610220002_storage.sql",
+      "version": "202610220002",
+      "name": "storage",
+      "sha256": "48b9742922c44d211417c543cf6cd2720d5a769afcc35de433af33d551b5070a"
+    },
+    {
+      "file": "202610220003_tourist_catalog.sql",
+      "version": "202610220003",
+      "name": "tourist_catalog",
+      "sha256": "5225174fc6d6de82fa8a35f4e5c7f20262d88c89e6eebb0fe279c2c099b46ee3"
+    },
+    {
+      "file": "20261022150000_security_hardening.sql",
+      "version": "20261022150000",
+      "name": "security_hardening",
+      "sha256": "92399df11e221c0846cfecc72581bdb04d5dfbf2a5226fc080922009676585ba"
+    },
+    {
+      "file": "20261022170000_admin_route_stops.sql",
+      "version": "20261022170000",
+      "name": "admin_route_stops",
+      "sha256": "00e9491d0a82524e6f83b3b2bf86483114abf7372dce69dd0887d3c3fd09a671"
+    },
+    {
+      "file": "20261022180000_editorial_provenance.sql",
+      "version": "20261022180000",
+      "name": "editorial_provenance",
+      "sha256": "43de5452a7cf58aa85f8b823314b9f26b8f0b08924c41ebee7de3bde09794432"
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+> Atualização de 27/10/2026: revisão final das três adicionais, correção de versão de roteiros, ACL do handler de evento e procedimento de implantação em [INFRA_HOMOLOGACAO.md](INFRA_HOMOLOGACAO.md). Nenhuma adicional aplicada no Cloud; os resultados anteriores abaixo preservam seu contexto histórico.
+
 # Supabase Cloud, autenticação e hardening — entrega incremental
 
 Branch: `work/cloud-auth-homologacao`, baseada em `work/etapa-2-turista` (`01c152e5c943c70202cfa776d07ec0a0f8e134ae`). Projeto informado pelo usuário: `descubra-sjdr`, ref `itegpsgjtuclbsatcdxr`, URL `https://itegpsgjtuclbsatcdxr.supabase.co`.

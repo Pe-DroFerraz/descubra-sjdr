@@ -1,5 +1,6 @@
 import process from 'node:process';
 import { compareHistory } from './cloud/history.mjs';
+import { compareSecurityMetadata } from './cloud/security-metadata.mjs';
 import { readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 try {
@@ -38,6 +39,9 @@ try {
   const mapping = JSON.parse(
     readFileSync('supabase/audit/remote-history.json', 'utf8'),
   );
+  const securityReview = compareSecurityMetadata(report, baseline);
+  findings.push(...securityReview.findings);
+  pending.push(...securityReview.pending);
   const historyReview = compareHistory(local, report.history, mapping);
   findings.push(...historyReview.findings);
   pending.push(...historyReview.pending);

@@ -1,6 +1,13 @@
 -- ADDITIONAL / LOCAL REVIEW ONLY. Reconcile remote versions before any application.
 -- No imports, publication, historical migration replay, RLS changes or SECURITY DEFINER.
 begin;
+do $$ begin
+  if not exists(select 1 from pg_trigger where tgrelid='public.routes'::regclass
+    and tgname='set_updated_at' and tgfoid=to_regprocedure('private.touch_route_updated_at()') and tgenabled='O')
+    or to_regprocedure('public.admin_set_route_stops(uuid,timestamptz,jsonb)') is null then
+    raise exception 'reviewed route version/RPC migration must be applied first';
+  end if;
+end $$;
 do $$ declare relation text; begin
   foreach relation in array array['categories','places','routes','events','tips'] loop
     execute format('alter table public.%I add column source_urls text[] not null default ''{}'', add column pending_fields text[] not null default ''{}''',relation);
@@ -41,7 +48,10 @@ begin
     end if;
   end if;
   -- Serialize route publication against withdrawal of its places. RLS remains active.
-  if tg_table_name='routes' and published then
+  if tg_table_name='routes' and published and not (
+    tg_op='UPDATE' and pg_trigger_depth()>1
+    and content-'updated_at'=to_jsonb(old)-'updated_at'
+  ) then
     perform p.id from public.places p join public.route_stops s on s.place_id=p.id
       where s.route_id=new.id order by p.id for share of p;
     if not exists(select 1 from public.route_stops where route_id=new.id)
@@ -58,7 +68,7 @@ begin
   end if;
   return new;
 end $$;
-revoke all on function private.validate_editorial_content() from public,anon,authenticated;
+revoke all on function private.validate_editorial_content() from public,anon,authenticated,service_role;
 do $$ declare relation text; begin
   foreach relation in array array['categories','places','routes','events','tips'] loop
     execute format('create trigger validate_editorial_content before insert or update on public.%I for each row execute function private.validate_editorial_content()',relation);
@@ -80,6 +90,18 @@ begin
   end if;
   if tg_op='DELETE' then return old; else return new; end if;
 end $$;
+create function private.mark_route_changed() returns trigger
+language plpgsql security invoker set search_path='' as $$
+declare target uuid;
+begin
+  for target in select distinct id from unnest(array[
+    case when tg_op<>'INSERT' then old.route_id end,
+    case when tg_op<>'DELETE' then new.route_id end
+  ]) id where id is not null order by id loop
+    update public.routes set updated_at=updated_at where id=target;
+  end loop;
+  return null;
+end $$;
 create function private.check_editorial_stops() returns trigger
 language plpgsql security invoker set search_path='' as $$
 declare target uuid;
@@ -96,10 +118,13 @@ begin
   end loop;
   return null;
 end $$;
-revoke all on function private.lock_editorial_route() from public,anon,authenticated;
-revoke all on function private.check_editorial_stops() from public,anon,authenticated;
+revoke all on function private.mark_route_changed() from public,anon,authenticated,service_role;
+revoke all on function private.lock_editorial_route() from public,anon,authenticated,service_role;
+revoke all on function private.check_editorial_stops() from public,anon,authenticated,service_role;
 create trigger lock_editorial_route before insert or update or delete on public.route_stops
   for each row execute function private.lock_editorial_route();
+create trigger mark_route_changed after insert or update or delete on public.route_stops
+  for each row execute function private.mark_route_changed();
 create constraint trigger check_editorial_stops after insert or update or delete on public.route_stops
   deferrable initially deferred for each row execute function private.check_editorial_stops();
 commit;

@@ -11,7 +11,7 @@ vi.mock('../lib/supabase', () => ({
     from: mocks.from,
   },
 }));
-import { adminClient, saveContent, deleteContent } from './api';
+import { adminClient, saveContent, deleteContent, saveStops } from './api';
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.user.mockResolvedValue({
@@ -70,5 +70,19 @@ describe('server-verified management operations', () => {
         updated_at: '2026-10-22T12:00:00Z',
       }),
     ).rejects.toMatchObject({ key: 'removePhotosFirst' });
+  });
+});
+
+it('keeps the complete PostgreSQL microsecond version when saving stops', async () => {
+  const version = '2026-10-27T12:00:00.123456+00:00';
+  const route = {
+    id: '10000000-0000-4000-8000-000000000002',
+    updated_at: version,
+  };
+  await saveStops(route, []);
+  expect(mocks.role).toHaveBeenCalledWith('admin_set_route_stops', {
+    target_route: route.id,
+    expected_updated_at: version,
+    stops: [],
   });
 });

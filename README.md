@@ -56,3 +56,7 @@ O [catálogo editorial](docs/CATALOGO_EDITORIAL.md) tem 28 candidatos em rascunh
 ### Revisão editorial com referências oficiais externas
 
 O catálogo de revisão agora contém 28 candidatos e seis roteiros em rascunho. O Museu Regional tem endereço confirmado na referência fornecida pelo usuário; seus horários continuam pendentes. Fontes externas não são tratadas como portais acessados neste ambiente. Formulários administrativos persistem URLs/pendências e exigem a migration adicional de proveniência, preparada somente para revisão local. [Catálogo e fontes](docs/CATALOGO_EDITORIAL.md), [dependências e aprovações](docs/GESTAO_CONTEUDO.md). Nenhuma importação ou publicação no banco ocorre automaticamente.
+
+### Infraestrutura e homologação segura
+
+[Revisão de 27/10/2026](docs/INFRA_HOMOLOGACAO.md): correção de versão de roteiros, auditoria de funções/RLS/Storage, preflight/postflight somente leitura e artefatos de implantação para aprovação. Nenhuma migration adicional foi aplicada no Cloud. Gerar artefatos com `node scripts/prepare-reviewed-deployment.mjs` não executa SQL nem conecta ao banco. Auth/Storage autenticados reais, MFA/AAL2 e política de mídia pública permanecem condições de liberação.

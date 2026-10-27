@@ -1,5 +1,10 @@
 -- Isolated fixture database only. All assertions roll back.
 begin;
+do $$ begin
+ if not exists(select 1 from pg_default_acl d cross join lateral aclexplode(d.defaclacl) a
+   where d.defaclnamespace=0 and d.defaclobjtype='f' and a.grantee='service_role'::regrole and a.privilege_type='EXECUTE') then
+   raise exception 'unrelated global defaults changed';end if;
+end $$;
 do $$
 declare target regprocedure;
 begin
@@ -30,6 +35,7 @@ begin
     or has_function_privilege('authenticated','public.redeem_coupon(uuid,uuid,uuid)','EXECUTE') then
     raise exception 'Client redemption ACL';
   end if;
+  if has_function_privilege('anon','private.owns_advertiser(uuid)','EXECUTE') or has_function_privilege('anon','private.can_edit_place(uuid)','EXECUTE') then raise exception 'Unnecessary anonymous owner/write helper grant';end if;
   if has_function_privilege('anon','public.touch_updated_at()','EXECUTE') then
     raise exception 'Public trigger helper grant';
   end if;
