@@ -1,3 +1,39 @@
+# Entrega atual — revisão da infraestrutura e preparo de homologação (27/10/2026)
+
+Base confirmada e atualizada: `work/fontes-oficiais-editorial`, commit `76459adec66c1c1ddeafdff9d6a301f4cc95a982`. Nova branch `work/revisao-infra-homologacao`, sem partir da main e sem desenvolver módulos de negócio. Relatório completo, diferenças, classificação de segurança e procedimentos em [INFRA_HOMOLOGACAO.md](INFRA_HOMOLOGACAO.md).
+
+Confirmados localmente: `now()` sobrescrevia a versão tentada pela RPC; versões colidiam em uma transação; paradas editadas diretamente não invalidavam a versão do pai. A correção usa um handler específico e monotônico em `routes`, preserva os outros 28 handlers e a precisão do token no cliente. Locks/CAS e rollback foram testados com sessões PostgreSQL concorrentes. As três adicionais pendentes foram revisadas nos próprios arquivos, sem tocar nas originais.
+
+| Verificação final desta entrega | Resultado |
+| --- | --- |
+| `npm run build` | Passou — TypeScript, Vite e PWA |
+| `npm run lint` | Passou |
+| `npm test` | 113 testes passaram, 18 arquivos |
+| `npm run test:db` | Passou — PostgreSQL 17 descartável, originais + três adicionais revisadas, 29 tabelas/RLS, seed repetível e regressões anteriores |
+| Versões de roteiro | Atualizações sucessivas na mesma transação, transação longa, relógio anterior a uma versão futura, token completo de microssegundos, timestamp arbitrário ignorado e versão antiga recusada |
+| Concorrência PostgreSQL | Dois escritores reais: B espera lock de A e recebe `40001`; paradas/versão vencedoras preservadas. Erro após DELETE e rollback explícito preservam o estado anterior |
+| Publicação / paradas diretas | Gravações diretas invalidam o pai; substituição publicada aceita somente estado final válido; retirar a última parada ou referenciar rascunho continua bloqueado |
+| Event trigger | Substituto local com contrato informado: sem EXECUTE de API, DDL por outro papel continua habilitando RLS; corpo/owner/evento preservados. **Não é teste do corpo remoto** |
+| Implantação / histórico | Replay exato idempotente; fonte divergente recusada sem repair; precondição inválida reverte ACL/DDL e não grava histórico. Defaults globais amplos simulados/preservados, grants removidos por objeto |
+| Preflight/postflight | SQLs somente leitura executados localmente; snapshot ampliado exportado e comparador exercitado. **Sem consulta privilegiada ao Cloud** |
+| `npm run test:e2e` | 26 cenários passaram em Chromium, incluindo login/papel, CRUD, publicação, mídia, paradas e conflito de roteiro que preserva a edição local |
+| HTTP Cloud real | 24 verificações de leitura passaram; métricas privadas negadas a anon (`42501`) |
+| Colunas editoriais Cloud | Dez sondagens individuais `SELECT coluna LIMIT 0`: `source_urls` e `pending_fields` ausentes nas cinco tabelas; pendência de migration, não aprovação pós-implantação |
+| Auth público observado | E-mail habilitado, signup habilitado e autoconfirmação desabilitada; sem confirmação de SMTP/callbacks/MFA |
+| HTTP autenticado admin/anunciante | Dois cenários `not_run`; não há sessões existentes autorizadas disponíveis |
+| Advisor oficial | Exit 2: `BLOCKED: no authorized Supabase Management API binding in this session. Official Security Advisors were not executed.` |
+| Cloud, catálogo e produção | Nenhuma migration/repair/reset/importação/upload/alteração de Auth, usuário criado, merge ou deploy de produção |
+
+O primeiro Vitest encontrou timeout na importação lazy; a espera limitada foi ajustada sem remover a asserção. Um E2E herdado navegava antes de o login terminar; o helper agora aguarda a verificação de papel antes de mudar de página. As suítes finais acima passaram. Permanecem avisos não impeditivos de migração futura do React Router e NO_COLOR/FORCE_COLOR, sem falha de build.
+
+Segurança preparada: restrição de EXECUTE do handler de RLS sob validação de contrato, dois grants anônimos de helpers desnecessários removidos e RPC de paradas restrita a authenticated com admin real. Nenhuma conversão indiscriminada de SECURITY DEFINER, mudança de corpo/owner/vínculo de `rls_auto_enable()` ou alteração de defaults globais de plataforma. Avisos de funções públicas necessárias não são eliminados quebrando a aplicação.
+
+**Pendências que impedem homologação remota completa:** corpos/owners/ACLs/policies/buckets efetivos ainda precisam da exportação privilegiada e do Advisor. Os nove alertas conhecidos são evidência externa anterior. As três originais têm aliases de timestamp conhecidos, mas isso não prova equivalência das definições. O envelope `supabase/deploy/reviewed-additions.sql` é proposta para revisão, com manifesto de fonte, transação/histórico por etapa e recusa de divergência; não autoriza execução remota e não deve ser combinado com migration up/db push/repair.
+
+Antes de liberar a administração: aprovar aplicação e recuperação, homologar contas reais/Storage/SMTP/callbacks, revisar signup e exigir MFA/AAL2 no servidor com fluxo compatível no cliente. **Hoje o painel não exige AAL2 e não inclui desafio MFA.** RLS não torna imagens de buckets públicos confidenciais; mídia draft por URL conhecida continua pública. Nenhuma fotografia nova foi enviada. Essas limitações permanecem abertas e não foram escondidas por testes de fixtures.
+
+---
+
 # Entrega atual — referências oficiais externas e publicação editorial
 
 Branch `work/fontes-oficiais-editorial`, criada após atualizar e confirmar `work/gestao-conteudo-turistico` no commit `d325646f70d57b278bbeae2d330da0b95f8e7ba0`. A base do módulo permanece descendente de `work/cloud-auth-homologacao`; não iniciamos da main. As entregas anteriores abaixo são históricas.

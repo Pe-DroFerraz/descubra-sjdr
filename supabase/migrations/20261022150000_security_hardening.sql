@@ -23,7 +23,7 @@ alter function public.redeem_coupon(uuid,uuid,uuid) set search_path = '';
 -- migrations must explicitly REVOKE PUBLIC and GRANT the intended roles for each function.
 
 -- Revoke the implicit PUBLIC grant, not legitimate explicit application grants.
-revoke all on function public.touch_updated_at() from public, anon, authenticated;
+revoke all on function public.touch_updated_at() from public, anon, authenticated, service_role;
 revoke all on function public.has_role(public.app_role) from public;
 grant execute on function public.has_role(public.app_role) to anon, authenticated, service_role;
 revoke all on function public.public_place_benefits() from public;
@@ -35,8 +35,24 @@ revoke all on function public.redeem_coupon(uuid,uuid,uuid) from public, anon, a
 grant execute on function public.redeem_coupon(uuid,uuid,uuid) to service_role;
 revoke all on function private.owns_advertiser(uuid), private.owns_place(uuid), private.can_edit_place(uuid), private.published_place(uuid), private.path_place_id(text) from public;
 
--- Do not replace/disable rls_auto_enable(): its remote implementation and event-trigger
--- bindings are not in the repository. External audit confirmed postgres ownership,
--- event_trigger return and search_path=pg_catalog. Inspect the full dependencies first; SECURITY DEFINER can be necessary
--- for a DDL event trigger. No conversion to INVOKER or blind search_path change here.
+-- These helpers are used by authenticated write/owner policies, not anonymous reads.
+-- Keep owns_place/published_place/path_place_id for the anonymous Storage/read policies.
+revoke all on function private.owns_advertiser(uuid), private.can_edit_place(uuid) from anon;
+
+-- Event-trigger dispatch does not require client EXECUTE on its handler. Preserve
+-- body, owner, search_path and binding; only restrict the unnecessary API ACL.
+-- The optional platform object must match the externally audited shape, otherwise abort.
+do $$ declare handler oid; begin
+  handler:=to_regprocedure('public.rls_auto_enable()');
+  if handler is not null then
+    if not exists(select 1 from pg_proc p where p.oid=handler
+        and pg_get_userbyid(p.proowner)='postgres' and p.prorettype='event_trigger'::regtype
+        and p.prosecdef and p.proconfig @> array['search_path=pg_catalog'])
+      or not exists(select 1 from pg_event_trigger where evtname='ensure_rls'
+        and evtfoid=handler and evtenabled in ('O','A')) then
+      raise exception 'platform RLS handler differs: review dependencies before hardening';
+    end if;
+    revoke all on function public.rls_auto_enable() from public,anon,authenticated,service_role;
+  end if;
+end $$;
 commit;

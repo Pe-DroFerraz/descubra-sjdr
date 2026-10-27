@@ -25,6 +25,8 @@ insert into public.routes(id,slug,name,description,source_urls) values
 select pg_temp.expect_incomplete($q$update public.routes set status='published' where slug='editorial-fixture'$q$);
 select public.admin_set_route_stops('82000000-0000-4000-8000-000000000003',(select updated_at from public.routes where slug='editorial-fixture'),'[{"place_id":"82000000-0000-4000-8000-000000000002"}]');
 update public.routes set status='published' where slug='editorial-fixture';
+-- A published route can replace its stops atomically without rejecting the intermediate empty list.
+select public.admin_set_route_stops('82000000-0000-4000-8000-000000000003',(select updated_at from public.routes where slug='editorial-fixture'),'[{"place_id":"82000000-0000-4000-8000-000000000002"}]');
 select pg_temp.expect_incomplete($q$select public.admin_set_route_stops('82000000-0000-4000-8000-000000000003',(select updated_at from public.routes where slug='editorial-fixture'),'[]')$q$);
 select pg_temp.expect_incomplete($q$update public.places set status='suspended' where slug='editorial-fixture'$q$);
 -- Direct REST deletion cannot bypass the RPC's published-route checks.

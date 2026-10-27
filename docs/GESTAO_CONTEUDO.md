@@ -1,3 +1,5 @@
+> Revisão de infraestrutura em 27/10/2026: as três migrations adicionais pendentes foram revisadas; versões de roteiros agora são monotônicas e mudanças diretas de paradas invalidam o pai. A proposta restringe apenas EXECUTE do handler de RLS, preservando corpo/owner/evento. Ver [INFRA_HOMOLOGACAO.md](INFRA_HOMOLOGACAO.md) para fontes, testes, limites e implantação segura. Não aplicar remotamente sem aprovação.
+
 # Gestão de conteúdo turístico — revisão incremental
 
 Base: `work/cloud-auth-homologacao`, commit `3d14509e954b142c793a88f4319d60ef7f26b412`, atualizada antes das alterações. Nova branch: `work/gestao-conteudo-turistico`. O usuário informou que a versão anterior já está em Preview Vercel integrada ao Cloud, sem conteúdo cadastrado. Esta entrega não publica produção nem altera banco, Auth, Storage ou dados remotos durante o desenvolvimento.

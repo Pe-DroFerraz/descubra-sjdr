@@ -30,7 +30,12 @@ afterEach(() => {
 describe('tourist application without Cloud configuration', () => {
   it('renders the home without inventing a live catalog', async () => {
     app();
-    await screen.findByRole('heading', { name: /Uma cidade para sentir/ });
+    // A cold lazy import can exceed Testing Library's 1 s default under CI load.
+    await screen.findByRole(
+      'heading',
+      { name: /Uma cidade para sentir/ },
+      { timeout: 3000 },
+    );
     expect(
       (await screen.findAllByText('Este conteúdo ainda não está disponível'))
         .length,

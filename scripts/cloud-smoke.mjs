@@ -3,7 +3,12 @@ import process from 'node:process';
 import { URL } from 'node:url';
 import { z } from 'zod';
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
-import { cloudClient, projectUrl, projectRef } from './cloud/common.mjs';
+import {
+  cloudClient,
+  projectUrl,
+  projectRef,
+  publicAuthSettings,
+} from './cloud/common.mjs';
 const projections = JSON.parse(
   readFileSync(
     new URL('../src/data/projections.json', import.meta.url),
@@ -140,6 +145,36 @@ await check('public sponsors safe projection', async () => {
 await check('public Auth settings readable', async () => {
   ok(typeof settings === 'object' && settings !== null);
 });
+await check('anonymous private metrics denied', async () => {
+  const { error } = await db.rpc('place_daily_metrics', {
+    target_place: null,
+    from_date: '2026-10-27',
+    to_date: '2026-10-27',
+  });
+  ok(error?.code === '42501');
+});
+// Non-mutating SELECT ... LIMIT 0: absence of new columns is a deployment prerequisite,
+// not a claim that the missing migration has already passed Cloud homologation.
+const editorialColumns = [];
+for (const table of ['categories', 'places', 'routes', 'events', 'tips']) {
+  const columns = [];
+  for (const column of ['source_urls', 'pending_fields']) {
+    try {
+      const { error } = await db.from(table).select(column).limit(0);
+      columns.push({
+        column,
+        status: !error
+          ? 'available'
+          : ['42703', 'PGRST204'].includes(error.code)
+            ? 'pending_migration'
+            : 'unverified',
+      });
+    } catch {
+      columns.push({ column, status: 'unverified' });
+    }
+  }
+  editorialColumns.push({ table, columns });
+}
 for (const role of ['advertiser', 'admin']) {
   const token = process.env[`CLOUD_${role.toUpperCase()}_ACCESS_TOKEN`];
   if (!token) {
@@ -178,7 +213,14 @@ mkdirSync('.audit', { recursive: true });
 writeFileSync(
   '.audit/cloud-smoke.json',
   JSON.stringify(
-    { project_ref: projectRef, source: 'real_cloud_readonly_http', results },
+    {
+      project_ref: projectRef,
+      source: 'real_cloud_readonly_http',
+      observed_at: new Date().toISOString(),
+      auth_public_settings: publicAuthSettings(settings),
+      editorial_columns: editorialColumns,
+      results,
+    },
     null,
     2,
   ),

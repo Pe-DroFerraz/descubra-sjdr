@@ -122,6 +122,11 @@ async function backend(page: Page, admin = true) {
           status: 403,
           json: { code: '42501', message: 'Test-only denied' },
         });
+      if (body.expected_updated_at !== state.tables.routes[0].updated_at)
+        return route.fulfill({
+          status: 409,
+          json: { code: '40001', message: 'Fixture stale route' },
+        });
       state.order = body.stops;
       state.tables.route_stops = body.stops.map((s: RecordRow, i: number) => ({
         ...s,
@@ -235,6 +240,12 @@ async function login(page: Page) {
     .fill('cms-fixture@example.invalid');
   await page.getByLabel('Senha', { exact: true }).fill('FixturePassword123');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  // Navigation must wait for the login and server role verification to finish.
+  await expect(
+    page.getByRole('heading', {
+      name: /^(Ateliê do conteúdo|Acesso restrito à administração)$/,
+    }),
+  ).toBeVisible();
 }
 test('anonymous and a forged metadata administrator cannot open management or issue content writes', async ({
   page,
@@ -415,7 +426,9 @@ test('ordered route stops are sent in one transactional operation and support ke
   await login(page);
   await page.goto('/admin?secao=stops');
   await page
-    .getByLabel('Selecione um roteiro para organizar as paradas.')
+    .getByRole('combobox', {
+      name: 'Selecione um roteiro para organizar as paradas.',
+    })
     .selectOption(routeId);
   const adding = page.getByRole('combobox', { name: 'Adicionar parada' });
   await adding.selectOption(placeId);
@@ -719,4 +732,44 @@ test('missing editorial migration is explicit and does not hide the versioned dr
       )
       .first(),
   ).toBeVisible();
+});
+
+test('a stale route editor preserves its draft while the server retains the concurrent winner', async ({
+  page,
+}) => {
+  const state = await backend(page);
+  state.tables.route_stops = [
+    {
+      id: '76000000-0000-4000-8000-000000000001',
+      route_id: routeId,
+      place_id: placeId,
+      position: 0,
+      duration_minutes: 10,
+    },
+  ];
+  await login(page);
+  await page.goto('/admin?secao=stops');
+  await page
+    .getByRole('combobox', {
+      name: 'Selecione um roteiro para organizar as paradas.',
+    })
+    .selectOption(routeId);
+  await expect(page.locator('.admin-stop')).toHaveCount(1);
+  await page
+    .getByRole('combobox', { name: 'Adicionar parada' })
+    .selectOption(secondId);
+  await page
+    .getByRole('button', { name: 'Adicionar parada', exact: true })
+    .click();
+  state.tables.routes[0].updated_at = '2026-10-27T12:00:00.123456Z';
+  state.tables.route_stops[0].duration_minutes = 20;
+  await page
+    .getByRole('button', { name: 'Salvar paradas', exact: true })
+    .click();
+  await expect(page.getByRole('alert')).toContainText(
+    'O conteúdo mudou desde que você o abriu',
+  );
+  await expect(page.locator('.admin-stop')).toHaveCount(2);
+  expect(state.tables.route_stops).toHaveLength(1);
+  expect(state.tables.route_stops[0].duration_minutes).toBe(20);
 });
