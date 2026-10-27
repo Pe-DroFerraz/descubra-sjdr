@@ -37,7 +37,7 @@ if docker exec -i "$container" psql -X -U postgres -d infra_guard -v ON_ERROR_ST
   echo 'Mismatched platform handler was unexpectedly accepted' >&2
   exit 1
 fi
-rg -q 'platform RLS handler differs' .audit/deploy-guard.log
+grep -q 'platform RLS handler differs' .audit/deploy-guard.log
 docker exec -i "$container" psql -X -U postgres -d infra_guard -v ON_ERROR_STOP=1 -q < supabase/tests/deploy-guard-assert.sql
 
 docker exec -i "$container" psql -X -U postgres -d infra_guard -v ON_ERROR_STOP=1 -q < supabase/tests/deploy-ledger-setup.sql
@@ -45,7 +45,7 @@ if docker exec -i "$container" psql -X -U postgres -d infra_guard -v ON_ERROR_ST
   echo 'Recorded source drift was unexpectedly accepted' >&2
   exit 1
 fi
-rg -q 'recorded migration differs' .audit/deploy-ledger.log
+grep -q 'recorded migration differs' .audit/deploy-ledger.log
 docker exec -i "$container" psql -X -U postgres -d infra_guard -v ON_ERROR_STOP=1 -q < supabase/tests/deploy-ledger-assert.sql
 # Manual envelopes are exercised locally: exact replay skips DDL and keeps ledger unchanged.
 psql_run < supabase/deploy/reviewed-additions.sql
@@ -76,7 +76,7 @@ if psql_run < supabase/tests/route-writer-b.sql > .audit/route-writer-b.log 2>&1
   exit 1
 fi
 wait "$route_writer_pid"
-rg -q '40001' .audit/route-writer-b.log
+grep -q '40001' .audit/route-writer-b.log
 psql_run < supabase/tests/route-concurrency-assert.sql
 psql_run < supabase/tests/concurrency-fixture.sql
 psql_run < supabase/tests/concurrent-redeem.sql &

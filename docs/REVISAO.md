@@ -24,6 +24,8 @@ Confirmados localmente: `now()` sobrescrevia a versão tentada pela RPC; versõe
 | Advisor oficial | Exit 2: `BLOCKED: no authorized Supabase Management API binding in this session. Official Security Advisors were not executed.` |
 | Cloud, catálogo e produção | Nenhuma migration/repair/reset/importação/upload/alteração de Auth, usuário criado, merge ou deploy de produção |
 
+A primeira execução remota do Actions terminou com exit 127 na suíte PostgreSQL. A suíte introduzia dependência de `rg`, disponível no ambiente local; as buscas do harness foram trocadas pelo `grep` padrão para portabilidade do runner. O download de logs retornou `Forbidden` em results-receiver.actions.githubusercontent.com; as anotações da API confirmaram a etapa e o código de saída, sem reproduzir URLs assinadas neste relatório. A nova execução do CI será verificada pela API.
+
 O primeiro Vitest encontrou timeout na importação lazy; a espera limitada foi ajustada sem remover a asserção. Um E2E herdado navegava antes de o login terminar; o helper agora aguarda a verificação de papel antes de mudar de página. As suítes finais acima passaram. Permanecem avisos não impeditivos de migração futura do React Router e NO_COLOR/FORCE_COLOR, sem falha de build.
 
 Segurança preparada: restrição de EXECUTE do handler de RLS sob validação de contrato, dois grants anônimos de helpers desnecessários removidos e RPC de paradas restrita a authenticated com admin real. Nenhuma conversão indiscriminada de SECURITY DEFINER, mudança de corpo/owner/vínculo de `rls_auto_enable()` ou alteração de defaults globais de plataforma. Avisos de funções públicas necessárias não são eliminados quebrando a aplicação.
