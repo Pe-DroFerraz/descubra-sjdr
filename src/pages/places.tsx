@@ -166,8 +166,8 @@ export default function Places({ map = false }: { map?: boolean }) {
       <p className="mb-5 text-sm text-colonial/80">{t('gpsPrivacy')}</p>
       <State
         resource="places"
-        pending={places.isPending}
-        error={places.error}
+        pending={map ? false : places.isPending}
+        error={map ? null : places.error}
         retry={() => void places.refetch()}
       >
         <div className="mb-5 flex items-center justify-between gap-4">
@@ -178,6 +178,7 @@ export default function Places({ map = false }: { map?: boolean }) {
             {t('clear')}
           </button>
         </div>
+        {map && places.error && <p role="status" className="mb-5 rounded-xl bg-ivory p-4 text-sm">O catálogo não carregou, mas o mapa continua disponível para exploração.</p>}
         {map && (
           <div className="mb-8">
             <MapPanel
