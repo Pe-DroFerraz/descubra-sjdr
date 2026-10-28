@@ -12,6 +12,10 @@ import {
   ShoppingBag,
   UtensilsCrossed,
   Compass,
+  Layers3,
+  FileText,
+  Megaphone,
+  ShieldCheck,
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -160,6 +164,7 @@ export default function Home() {
               <MapPin size={17} />
               {t('map')} <ArrowRight size={15} />
             </Link>
+            <Link to="/mapa-3d" className="inline-flex items-center gap-2"><Layers3 size={17} /> Mapa 3D <ArrowRight size={15} /></Link>
             <a href="#discover" className="inline-flex items-center gap-2">
               {t('discover')} <ArrowDown size={15} />
             </a>
@@ -186,6 +191,12 @@ export default function Home() {
         </div>
       </section>
       <div className="page-shell" id="discover">
+        <section className="experience-rail" aria-label="Explore as experiências disponíveis">
+          <Link to="/mapa-3d" className="experience-tile"><Layers3 size={24}/><span><b>Explore em 3D</b><small>Relevo e vistas da região</small></span><ArrowRight size={18}/></Link>
+          <Link to="/servicos-oficiais" className="experience-tile"><ShieldCheck size={24}/><span><b>Fontes oficiais</b><small>Informações com procedência</small></span><ArrowRight size={18}/></Link>
+          <Link to="/editais" className="experience-tile"><FileText size={24}/><span><b>Editais públicos</b><small>Links para consultar na origem</small></span><ArrowRight size={18}/></Link>
+          <Link to="/anuncie" className="experience-tile"><Megaphone size={24}/><span><b>Anuncie aqui</b><small>Apresente seu negócio</small></span><ArrowRight size={18}/></Link>
+        </section>
         <Section title={t('discover')} eyebrow="SÃO JOÃO DEL-REI">
           <State
             pending={categories.isPending}
