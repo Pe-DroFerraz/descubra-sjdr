@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Compass, Layers3, MapPinned, RotateCcw } from 'lucide-react';
 import { usePlaces } from '../data/queries';
 import { coordinates } from '../lib/tourism';
-import { Page, State } from '../components/tourism/common';
+import { Page } from '../components/tourism/common';
 
 type MapInstance = {
   on: (type: string, callback: () => void) => void;
