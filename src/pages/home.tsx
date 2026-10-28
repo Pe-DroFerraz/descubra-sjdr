@@ -42,6 +42,7 @@ import {
 } from '../lib/tourism';
 import { useClock } from '../hooks/clock';
 import { useLocation } from '../hooks/local-state';
+import { EditorialShowcase } from '../components/tourism/editorial-showcase';
 const icons: Record<string, typeof Landmark> = {
   historia: Landmark,
   comer: UtensilsCrossed,
@@ -172,8 +173,9 @@ export default function Home() {
         </div>
         <div className="hero-art">
           <img
-            src="/heritage.svg"
-            alt={t('attribution')}
+            src="https://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20de%20S%C3%A3o%20Francisco%20de%20Assis%2C%20em%20S%C3%A3o%20Joao%20Del%20Rei.jpg?width=1280"
+            onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = '/heritage.svg'; }}
+            alt="Igreja de São Francisco de Assis, São João del-Rei"
             {...{ fetchpriority: 'high' }}
           />
           <div className="hero-location">
@@ -197,6 +199,7 @@ export default function Home() {
           <Link to="/editais" className="experience-tile"><FileText size={24}/><span><b>Editais públicos</b><small>Links para consultar na origem</small></span><ArrowRight size={18}/></Link>
           <Link to="/anuncie" className="experience-tile"><Megaphone size={24}/><span><b>Anuncie aqui</b><small>Apresente seu negócio</small></span><ArrowRight size={18}/></Link>
         </section>
+        <EditorialShowcase />
         <Section title={t('discover')} eyebrow="SÃO JOÃO DEL-REI">
           <State
             pending={categories.isPending}

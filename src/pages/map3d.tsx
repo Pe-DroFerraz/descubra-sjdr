@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Compass, Layers3, MapPinned, RotateCcw } from 'lucide-react';
 import { usePlaces } from '../data/queries';
 import { coordinates } from '../lib/tourism';
-import { Page, State } from '../components/tourism/common';
+import { Page } from '../components/tourism/common';
 
 type MapInstance = {
   on: (type: string, callback: () => void) => void;
@@ -60,10 +60,11 @@ export default function Map3D() {
   const mapRef = useRef<MapInstance | null>(null);
   const [mode, setMode] = useState<'3d' | '2d'>('3d');
   const [failure, setFailure] = useState(false);
+  const [show3d, setShow3d] = useState(false);
   const [ready, setReady] = useState(false);
   const places = usePlaces();
   useEffect(() => {
-    if (!ref.current || places.isPending) return;
+    if (!ref.current || !show3d) return;
     let alive = true;
     let instance: MapInstance | null = null;
     void loadEngine().then((libre) => {
@@ -129,7 +130,7 @@ export default function Map3D() {
       if (mapRef.current === instance) mapRef.current = null;
     };
     // The published attractions are loaded once for this map instance.
-  }, [places.data, places.isPending]);
+  }, [places.data, show3d]);
   function toggleMode() {
     const next = mode === '3d' ? '2d' : '3d';
     setMode(next);
@@ -144,16 +145,19 @@ export default function Map3D() {
         <div className="map3d-toolbar">
           <span className="inline-flex items-center gap-2 text-sm font-semibold"><MapPinned size={17} /> São João del-Rei · MG</span>
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={toggleMode} disabled={!ready}
-              className="map3d-control"><Layers3 size={17}/>{mode === '3d' ? 'Ver plano' : 'Ativar 3D'}</button>
+            <button type="button" onClick={() => { if (!show3d) { setShow3d(true); setFailure(false); } else toggleMode(); }}
+              className="map3d-control"><Layers3 size={17}/>{!show3d ? 'Ativar 3D' : mode === '3d' ? 'Ver plano' : 'Ativar 3D'}</button>
             <button type="button" onClick={() => mapRef.current?.easeTo({ pitch: mode === '3d' ? 62 : 0, bearing: mode === '3d' ? -14 : 0, zoom: 13.1 })}
               className="map3d-control" disabled={!ready}><RotateCcw size={16}/> Recentrar</button>
           </div>
         </div>
-        {failure ? <div role="alert" className="state-panel">Não foi possível carregar o motor 3D. Você ainda pode usar o <Link className="text-link" to="/mapa">mapa tradicional</Link>.</div> :
-          <State pending={places.isPending} error={places.error} retry={() => void places.refetch()}>
-            <div ref={ref} className="map3d-canvas" role="region" aria-label="Mapa 3D de São João del-Rei" />
-          </State>}
+        <div className="visual-map-fallback">
+          <iframe title="Mapa de São João del-Rei" loading="eager" referrerPolicy="no-referrer"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-44.30%2C-21.16%2C-44.22%2C-21.11&layer=mapnik&marker=-21.135%2C-44.262" />
+          {show3d && !failure && <div ref={ref} className="map3d-canvas" style={{position:'absolute',inset:0,height:'100%'}} role="region" aria-label="Mapa 3D de São João del-Rei" />}
+          {failure && <div role="alert" className="visual-map-caption">A visualização 3D não está disponível neste aparelho. O mapa plano continua ativo.</div>}
+          {!show3d && <div className="visual-map-caption">Mapa visível imediatamente. Toque em “Ativar 3D” para carregar o relevo inclinado.</div>}
+        </div>
         <p className="map3d-credit">Relevo real com dados de elevação; não é uma reconstrução 3D dos edifícios. Mapas © OpenStreetMap; elevação Mapterhorn. Informações de lugares dependem de publicação editorial.</p>
       </section>
       <div className="my-10 grid gap-4 md:grid-cols-2">
