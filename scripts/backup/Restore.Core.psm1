@@ -39,7 +39,7 @@ function Invoke-SjdrProcess {
 function Get-SjdrNativeTools {
     $found = [Collections.Generic.List[object]]::new()
     foreach ($name in @('pg_restore','pg_dump','psql')) {
-        $paths = @((Get-Command $name -CommandType Application -All -ErrorAction SilentlyContinue | ForEach-Object Source))
+        $paths = @((Get-Command $name -CommandType Application -All -ErrorAction SilentlyContinue | ForEach-Object Path))
         if ($IsWindows -and $env:ProgramFiles) {
             $paths += @(Get-ChildItem -LiteralPath (Join-Path $env:ProgramFiles 'PostgreSQL') -Directory -ErrorAction SilentlyContinue |
                 ForEach-Object { Join-Path $_.FullName ('bin\' + $name + '.exe') } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf })
@@ -165,9 +165,9 @@ function Invoke-SjdrBackupValidation {
         $report['backup'] = @{ bytes = $file.Length; sha256 = (Get-FileHash -LiteralPath $BackupPath -Algorithm SHA256).Hash; expected_entries = $ExpectedEntries }
         $tools = @(Get-SjdrNativeTools)
         $report.native_tools = @($tools | ForEach-Object { @{name=$_.name; version=$_.version} }) # Never store paths, profiles, environment or passwords.
-        $command = Get-Command docker -CommandType Application -ErrorAction SilentlyContinue
+        $command = Get-Command docker -CommandType Application -All -ErrorAction SilentlyContinue | Select-Object -First 1
         if (-not $command) { throw 'docker_desktop_missing' }
-        $docker = $command.Source
+        $docker = $command.Path
         foreach ($candidate in @(Get-SjdrLocalDockerHosts)) {
             $endpoint = $candidate
             $info = Docker @('info','--format','{{.OSType}}') 15

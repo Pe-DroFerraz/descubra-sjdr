@@ -6,7 +6,7 @@ if($IsWindows){throw 'CI integration uses a local Linux Docker socket; Windows e
 Import-Module (Join-Path $PSScriptRoot '../Restore.Core.psm1') -Force
 function Assert($Condition,[string]$Message){if(-not $Condition){throw $Message}}
 function Docker([string[]]$Arguments){
-    & (Get-Module Restore.Core) {param($a) Invoke-SjdrProcess -File (Get-Command docker -CommandType Application).Source -Arguments (@('--host','unix:///var/run/docker.sock')+$a)} $Arguments
+    & (Get-Module Restore.Core) {param($a) Invoke-SjdrProcess -File (Get-Command docker -CommandType Application -All | Select-Object -First 1).Path -Arguments (@('--host','unix:///var/run/docker.sock')+$a)} $Arguments
 }
 function Checked([string[]]$Arguments){$r=Docker $Arguments;if($r.code -ne 0){
     $category = if ($r.stderr -match 'manifest unknown|manifest.*not found') { 'image_unavailable' }
