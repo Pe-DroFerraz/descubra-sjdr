@@ -16,17 +16,6 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run test:db
-      - name: PowerShell backup safety checks
-        shell: pwsh
-        run: ./scripts/backup/tests/Test-BackupCore.ps1
-      - name: Synthetic PostgreSQL 17.11 backup restore
-        shell: pwsh
-        run: |
-          try { ./scripts/backup/tests/Test-BackupIntegration.ps1 }
-          catch {
-            Write-Host ("::error title=Backup integration exception::type=" + $_.Exception.GetType().FullName + "; script_line=" + $_.InvocationInfo.ScriptLineNumber)
-            throw
-          }
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
@@ -42,3 +31,19 @@ jobs:
       - name: Windows PowerShell parsing and safety checks (no real backup)
         shell: pwsh
         run: ./scripts/backup/tests/Test-BackupCore.ps1
+
+  backup-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PowerShell backup safety checks
+        shell: pwsh
+        run: ./scripts/backup/tests/Test-BackupCore.ps1
+      - name: Synthetic PostgreSQL 17.11 backup restore
+        shell: pwsh
+        run: |
+          try { ./scripts/backup/tests/Test-BackupIntegration.ps1 }
+          catch {
+            Write-Host ("::error title=Backup integration exception::type=" + $_.Exception.GetType().FullName + "; script=" + [IO.Path]::GetFileName($_.InvocationInfo.ScriptName) + "; script_line=" + $_.InvocationInfo.ScriptLineNumber)
+            throw
+          }

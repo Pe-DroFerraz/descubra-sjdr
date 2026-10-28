@@ -17,7 +17,14 @@ function Invoke-SjdrProcess {
     $process = [Diagnostics.Process]::new()
     $process.StartInfo = $info
     try {
-        [void]$process.Start()
+        try { [void]$process.Start() } catch {
+            if ($env:GITHUB_ACTIONS -eq 'true') {
+                $inner=$_.Exception.InnerException
+                $nativeCode=if ($inner -and $inner.PSObject.Properties['NativeErrorCode']) { $inner.NativeErrorCode } else { 0 }
+                Write-Host ('::error title=Local native process::program='+[IO.Path]::GetFileName($File)+'; native_code='+$nativeCode)
+            }
+            throw 'native_start_failed'
+        }
         $stdout = $process.StandardOutput.ReadToEndAsync()
         $stderr = $process.StandardError.ReadToEndAsync()
         if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
@@ -106,7 +113,7 @@ function Get-SjdrFailureCode {
         'archive_header_mismatch','application_tables_missing','unexpected_public_table_inventory',
         'application_table_data_entries_missing','unclassified_foreign_key_dependency',
         'application_integrity_check_failed','restored_object_inventory_mismatch','invalid_aggregate_count',
-        'backup_changed_during_validation','native_timeout')
+        'backup_changed_during_validation','native_timeout','native_start_failed')
     if ($Message -in $known -or $Message -match '^failed_(pull_image|container_start|server_version|archive_list|extension_inventory|create_database|bootstrap_dependencies|inspect_fk_ddl|restore_pre_data|restore_data|restore_post_data|integrity_metadata|count_table)$') { return $Message }
     return 'unexpected_local_error_details_suppressed'
 }
