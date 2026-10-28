@@ -21,7 +21,12 @@ jobs:
         run: ./scripts/backup/tests/Test-BackupCore.ps1
       - name: Synthetic PostgreSQL 17.11 backup restore
         shell: pwsh
-        run: ./scripts/backup/tests/Test-BackupIntegration.ps1
+        run: |
+          try { ./scripts/backup/tests/Test-BackupIntegration.ps1 }
+          catch {
+            Write-Host ("::error title=Backup integration exception::type=" + $_.Exception.GetType().FullName + "; script_line=" + $_.InvocationInfo.ScriptLineNumber)
+            throw
+          }
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4

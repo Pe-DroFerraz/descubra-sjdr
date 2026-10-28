@@ -8,7 +8,14 @@ function Assert($Condition,[string]$Message){if(-not $Condition){throw $Message}
 function Docker([string[]]$Arguments){
     & (Get-Module Restore.Core) {param($a) Invoke-SjdrProcess -File (Get-Command docker -CommandType Application).Source -Arguments (@('--host','unix:///var/run/docker.sock')+$a)} $Arguments
 }
-function Checked([string[]]$Arguments){$r=Docker $Arguments;if($r.code -ne 0){throw ('Synthetic fixture setup failed: '+$Arguments[0]+'; exit '+$r.code+'; raw output suppressed')};return $r}
+function Checked([string[]]$Arguments){$r=Docker $Arguments;if($r.code -ne 0){
+    $category = if ($r.stderr -match 'manifest unknown|manifest.*not found') { 'image_unavailable' }
+        elseif ($r.stderr -match 'Cannot connect|permission denied|docker.sock') { 'local_socket_unavailable' }
+        elseif ($r.stderr -match 'unauthorized|denied|rate limit|toomanyrequests') { 'registry_access_or_limit' }
+        else { 'native_error_suppressed' }
+    Write-Host ('::error title=Synthetic backup setup::stage='+$Arguments[0]+'; exit='+$r.code+'; category='+$category)
+    throw 'Synthetic fixture setup failed; details suppressed'
+};return $r}
 $root=(Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
 $temp=Join-Path ([IO.Path]::GetTempPath()) ('sjdr-synthetic-' + [Guid]::NewGuid().ToString('N'))
 [void](New-Item -ItemType Directory -Path $temp)
