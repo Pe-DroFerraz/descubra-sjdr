@@ -15,6 +15,7 @@ import type { Place, Route } from '../../data/schema';
 import { openingState, translated } from '../../lib/tourism';
 import { useClock } from '../../hooks/clock';
 import { useTrip } from '../../trip-context';
+import { HeritagePhoto } from './heritage-photo';
 export function Page({
   title,
   eyebrow,
@@ -227,11 +228,7 @@ export function PlaceCard({
           tabIndex={-1}
           aria-hidden="true"
         >
-          <Photo
-            path={photo?.storage_path}
-            alt={photo?.alt_text ?? content.name}
-            className="transition-transform duration-500 motion-safe:group-hover:scale-105"
-          />
+          {photo?.storage_path ? <Photo path={photo.storage_path} alt={photo.alt_text ?? content.name} className="transition-transform duration-500 motion-safe:group-hover:scale-105" /> : <HeritagePhoto slug={place.slug} alt={content.name} />}
         </Link>
         <div className="absolute left-4 top-4 flex gap-2">
           {featured && (
