@@ -1,4 +1,4 @@
-import { commonsFile, commonsAttribution } from './editorial-showcase';
+import { commonsFile } from './editorial-showcase';
 const photos: Record<string,string> = {
   'igreja-sao-francisco-de-assis-sjdr':'Igreja de São Francisco de Assis, em São Joao Del Rei.jpg',
   'museu-regional-sao-joao-del-rei':'Museu Regional de São João Del-Rei.jpg',
@@ -11,6 +11,6 @@ export function HeritagePhoto({slug, alt}:{slug:string;alt:string}) {
   return <div className="relative h-full w-full">
     <img className="h-full w-full object-cover" src={commonsFile(file)} alt={alt} loading="lazy"
       onError={e=>{const img=e.currentTarget;img.onerror=null;img.src='/heritage.svg';}}/>
-    <a href={commonsAttribution(file)} target="_blank" rel="noopener noreferrer" className="heritage-credit" onClick={e=>e.stopPropagation()}>Imagem: Wikimedia Commons · créditos</a>
+    <span className="heritage-credit">Imagem: Wikimedia Commons · créditos na galeria</span>
   </div>;
 }
