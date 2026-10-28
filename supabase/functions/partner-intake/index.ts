@@ -66,10 +66,13 @@ Deno.serve(async (req) => {
   const { error } = await db.from('leads').insert({
     name: business,
     contact: email,
+    contact_name: contact,
+    phone: phone || null,
+    message: message || null,
+    plan_slug: plan || null,
+    consent_at: new Date().toISOString(),
     stage: 'prospect',
   });
   if (error) return json({ error:'service_unavailable' }, 503, origin);
-  // Store optional context as an audit record only if a future opt-in schema is designed.
-  // The current CRM leads schema cannot store the message/phone/consent details safely.
   return json({ received:true }, 202, origin);
 });

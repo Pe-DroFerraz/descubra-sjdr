@@ -90,6 +90,7 @@ export default function Map3D() {
             terrain: {
               type: 'raster-dem',
               url: 'https://tiles.mapterhorn.com/tilejson.json',
+              encoding: 'terrarium',
               attribution: 'Elevation © Mapterhorn',
             },
           },
