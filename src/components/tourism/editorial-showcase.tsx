@@ -12,7 +12,7 @@ export const commonsAttribution = (file:string) => 'https://commons.wikimedia.or
 export function EditorialShowcase() {
   return <section className="editorial-showcase" aria-label="Galeria de São João del-Rei">
     <div className="flex flex-wrap items-end justify-between gap-4">
-      <div><p className="eyebrow">CONHEÇA A CIDADE</p><h2 className="section-title">Uma cidade para <em>sentir.</em></h2>
+      <div><p className="eyebrow">CONHEÇA A CIDADE</p><h2 className="section-title">O patrimônio em <em>imagens.</em></h2>
         <p className="mt-3 max-w-2xl leading-7 text-colonial/70">Uma primeira viagem visual pelo patrimônio de São João del-Rei. Fotos de acervos com fonte identificada; confira detalhes antes de visitar.</p>
       </div><Link className="text-link" to="/lugares">Descobrir mais lugares <ArrowUpRight size={17}/></Link>
     </div>
