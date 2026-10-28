@@ -145,8 +145,8 @@ export default function Map3D() {
         <div className="map3d-toolbar">
           <span className="inline-flex items-center gap-2 text-sm font-semibold"><MapPinned size={17} /> São João del-Rei · MG</span>
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={() => { setShow3d(true); setFailure(false); if (ready) toggleMode(); }}
-              className="map3d-control"><Layers3 size={17}/>{mode === '3d' ? 'Ver plano' : 'Ativar 3D'}</button>
+            <button type="button" onClick={() => { if (!show3d) { setShow3d(true); setFailure(false); } else toggleMode(); }}
+              className="map3d-control"><Layers3 size={17}/>{!show3d ? 'Ativar 3D' : mode === '3d' ? 'Ver plano' : 'Ativar 3D'}</button>
             <button type="button" onClick={() => mapRef.current?.easeTo({ pitch: mode === '3d' ? 62 : 0, bearing: mode === '3d' ? -14 : 0, zoom: 13.1 })}
               className="map3d-control" disabled={!ready}><RotateCcw size={16}/> Recentrar</button>
           </div>
