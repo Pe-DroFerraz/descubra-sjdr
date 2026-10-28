@@ -1,7 +1,7 @@
 import { ArrowUpRight, ExternalLink, FileSearch, FileText, Info } from 'lucide-react';
 import { Page } from '../components/tourism/common';
 const listings = [
-  { title: 'Licitações e contratos — Transparência', url: 'https://ptn.imp.saojoaodelrei.mg.gov.br/', description: 'Consulte processos, licitações e contratos divulgados pela administração.' },
+  { title: 'Licitações e contratos — Transparência', url: 'https://ptn.saojoaodelrei.mg.gov.br/', description: 'Consulte processos, licitações e contratos divulgados pela administração.' },
   { title: 'Portal institucional da Prefeitura', url: 'https://www.saojoaodelrei.mg.gov.br/', description: 'Acompanhe os avisos, atos, editais e comunicados publicados no site oficial.' },
   { title: 'Sistema de licitações eletrônicas', url: 'https://saojoaodelrei.licitapp.com.br/', description: 'Acesse os certames eletrônicos e os documentos disponíveis na plataforma.' },
 ] as const;
@@ -23,7 +23,7 @@ export default function PublicNotices() {
       <section className="mb-14 rounded-3xl border border-colonial/10 bg-white p-8">
         <div className="flex items-center gap-3"><FileSearch size={25} className="text-clay"/><h2 className="font-display text-3xl">Como consultar um edital</h2></div>
         <p className="mt-4 max-w-3xl leading-8 text-colonial/80">Abra o portal de origem, encontre o número do processo e confirme objeto, anexos, data e condições de participação. Em caso de divergência, prevalece sempre a publicação oficial.</p>
-        <a className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-clay" href="https://ptn.imp.saojoaodelrei.mg.gov.br/" target="_blank" rel="noopener noreferrer">Consultar no Portal da Transparência <ExternalLink size={17}/></a>
+        <a className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-clay" href="https://ptn.saojoaodelrei.mg.gov.br/" target="_blank" rel="noopener noreferrer">Consultar no Portal da Transparência <ExternalLink size={17}/></a>
       </section>
     </Page>
   );
