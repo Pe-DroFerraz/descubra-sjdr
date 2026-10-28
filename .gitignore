@@ -17,3 +17,10 @@ test-results/
 .env.local.cloud-tmp
 
 .vercel/
+
+# Backups and local restoration reports must never enter version control.
+*.dump
+*.backup
+*.bak
+backup-reports/
+validacao-*/
