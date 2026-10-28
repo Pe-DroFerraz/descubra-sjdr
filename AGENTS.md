@@ -21,3 +21,7 @@ A branch work/fontes-oficiais-editorial parte de d325646 (work/gestao-conteudo-t
 ## Revisão de infraestrutura (27/10/2026)
 
 Nova entrega sobre 76459ad: work/revisao-infra-homologacao. Leia docs/INFRA_HOMOLOGACAO.md antes de implantação. As três adicionais pendentes foram revisadas; NÃO executar se alguma já tiver sido aplicada com fonte diferente. Função específica torna versões de routes monotônicas; stop edits diretos invalidam o pai. Hardening só restringe ACL de rls_auto_enable, sem mudar corpo/owner/evento. O envelope supabase/deploy/reviewed-additions.sql é proposta, não autorização: guarda mapeamento do histórico, fonte exata e commits por etapa. Não combinar com db push/up/repair. Não usar fixtures ou o substituto de event trigger no Cloud. Testes locais não homologam Auth/Storage reais. AAL2 ainda não é exigido no painel e mídia draft em bucket público não é confidencial; resolver/revisar antes de liberar administração sensível.
+
+## Backup Windows (28/10/2026)
+
+Base 685ebb5/PR #6; entrega work/validacao-backup-local. O dump real fica somente no Windows do usuário e NÃO está disponível aqui. Não solicitar/uploadar o dump nem publicar relatórios reais. Leia docs/BACKUP_WINDOWS.md e docs/CHECKLIST_IMPLANTACAO_ADMIN.md. O script testa recorte da aplicação em PG17.11 local sem rede/portas; exclui dados gerenciados, owners/ACLs e FKs externas, com limitações explícitas. Testes sintéticos não validam o arquivo real nem recuperação integral do Supabase. Não aplicar migrations/restore no Cloud; seis migrations/envelope da base preservados.

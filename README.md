@@ -60,3 +60,7 @@ O catálogo de revisão agora contém 28 candidatos e seis roteiros em rascunho.
 ### Infraestrutura e homologação segura
 
 [Revisão de 27/10/2026](docs/INFRA_HOMOLOGACAO.md): correção de versão de roteiros, auditoria de funções/RLS/Storage, preflight/postflight somente leitura e artefatos de implantação para aprovação. Nenhuma migration adicional foi aplicada no Cloud. Gerar artefatos com `node scripts/prepare-reviewed-deployment.mjs` não executa SQL nem conecta ao banco. Auth/Storage autenticados reais, MFA/AAL2 e política de mídia pública permanecem condições de liberação.
+
+### Ensaio local do backup no Windows
+
+[Instruções Windows](docs/BACKUP_WINDOWS.md) e [checklist operacional](docs/CHECKLIST_IMPLANTACAO_ADMIN.md). Com PowerShell 7 e Docker Desktop Linux, executar `pwsh -NoProfile -File .\scripts\backup\Test-SjdrBackup.ps1`. O script restaura somente o recorte da aplicação em PostgreSQL 17.11 descartável, sem destino remoto e sem pedir senha. O arquivo real permanece no computador do usuário; testes sintéticos não significam validação desse arquivo ou recuperação integral do Supabase. Não enviar dumps/relatórios reais ao GitHub.

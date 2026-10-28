@@ -1,0 +1,58 @@
+{
+  "tables": [
+    "profiles",
+    "user_roles",
+    "categories",
+    "advertisers",
+    "plans",
+    "places",
+    "place_translations",
+    "place_photos",
+    "place_hours",
+    "subscriptions",
+    "payments",
+    "routes",
+    "route_translations",
+    "route_stops",
+    "route_sponsors",
+    "events",
+    "event_translations",
+    "tips",
+    "coupons",
+    "coupon_redemptions",
+    "qr_codes",
+    "qr_scans",
+    "place_views",
+    "click_events",
+    "reviews",
+    "leads",
+    "lead_notes",
+    "ai_sessions",
+    "audit_logs"
+  ],
+  "types": [
+    "app_role",
+    "content_status"
+  ],
+  "public_functions": [
+    "touch_updated_at",
+    "has_role",
+    "place_daily_metrics",
+    "redeem_coupon",
+    "public_place_benefits",
+    "public_route_sponsors",
+    "admin_set_route_stops"
+  ],
+  "private_functions": [
+    "owns_advertiser",
+    "owns_place",
+    "can_edit_place",
+    "published_place",
+    "path_place_id",
+    "touch_route_updated_at",
+    "validate_editorial_content",
+    "lock_editorial_route",
+    "mark_route_changed",
+    "check_editorial_stops"
+  ]
+}

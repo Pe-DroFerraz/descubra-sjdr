@@ -1,3 +1,36 @@
+# Entrega atual — ensaio de backup Windows e preparo operacional (28/10/2026)
+
+Base atualizada e confirmada antes das alterações: `work/revisao-infra-homologacao`, commit `685ebb5c30cfc9fae85e383f0fe882f470d5867b`, PR #6. Nova branch `work/validacao-backup-local`. Scripts/instruções em [BACKUP_WINDOWS.md](BACKUP_WINDOWS.md) e operação em [CHECKLIST_IMPLANTACAO_ADMIN.md](CHECKLIST_IMPLANTACAO_ADMIN.md).
+
+**Backup real não acessado nem restaurado pelo Codex.** O usuário informou pg_dump/PostgreSQL 17.11, CUSTOM/gzip, 521.502 bytes, 942 entradas e exit 0, em arquivo local do Windows. Esses números são expectativas do script, não resultados de uma verificação realizada aqui. Nenhum dump ou relatório real foi recebido, copiado para o repositório ou enviado ao GitHub.
+
+Entregue um ponto de entrada PowerShell 7 para Windows e módulo de restauração local: detecta ferramentas nativas, confere arquivo/cabeçalho/SHA256, usa exclusivamente pipes locais do Docker Desktop Linux, cria PostgreSQL 17.11 sem rede/portas, restaura o recorte das 29 tabelas e verifica dados/índices/políticas/triggers/FKs internas. O dump é montado somente para leitura, os dados temporários ficam em tmpfs e a limpeza exige label da própria execução. Não há parâmetro de host/DSN/senha ou conexão ao Supabase.
+
+Os dados de schemas gerenciados, owners e ACLs originais não são restaurados. FKs para auth/storage/vault são identificadas no DDL e excluídas do ensaio, com quantidade declarada. A função auth.uid() é um substituto NULL e as roles locais não fazem login. Extensões disponíveis são inventariadas, sem instalação automática das extraídas do dump. O teste confirma o recorte da aplicação, **não recuperação integral de Auth/Storage, grants ou serviços Supabase**. Não exibe/exporta linhas de tabelas, senhas/hashes de Auth ou erros brutos de COPY.
+
+| Verificação local | Resultado |
+| --- | --- |
+| PowerShell parser e proteções | Passou em PowerShell 7 no Linux: escopo/TOC, endpoint local fixo, parâmetros sem credenciais, recusa de caminhos remotos/Git, relatório sem conteúdo do arquivo e sem sobrescrever saída existente |
+| Restauração sintética PostgreSQL 17.11 | Passou: CUSTOM/gzip, dados em 29 tabelas, índices/constraints/triggers/RLS, exclusão de auth.users, nove FKs externas da fixture explicitamente não validadas e limpeza de containers |
+| Dependência não suportada | Erro post-data corretamente produz failed e omite os detalhes brutos, sem declarar sucesso parcial |
+| Windows real / dump do usuário | Pendente: executar o script no computador que contém o arquivo; não existe esse arquivo no ambiente do Codex |
+| Windows CI | Job adicionado para parser/caminhos/proteções, sem Docker Desktop e sem arquivo real; resultado posterior aparece na PR |
+| `npm run build` | Passou |
+| `npm run lint` | Passou |
+| `npm test` | 113 testes passaram, 18 arquivos |
+| `npm run test:db` | Passou — suite isolada herdada com migrations, RLS, concorrência e implantação/replay |
+| `npm run test:e2e` | 26 cenários passaram |
+| Manifesto/envelope das migrations | `node scripts/prepare-reviewed-deployment.mjs --check` passou; as seis migrations e o envelope permanecem idênticos ao commit 685ebb5 |
+| Remoto | Nenhuma mutation/migration/restore/importação/upload, usuário criado, merge ou deploy de produção |
+
+Durante os testes, o libpq tratou PGSERVICE vazio como seleção de serviço: corrigido removendo a variável, em vez de atribuir string vazia. A espera de prontidão agora verifica PID 1/postgres para não confundir o servidor temporário de inicialização com o processo final. Detectadas e corrigidas também a classificação de códigos post-data e a recusa de saída existente sem sobrescrever relatório. Os testes finais acima passaram.
+
+A ordem de aplicação permanece **security_hardening → admin_route_stops → editorial_provenance**, depois de reconciliar definições/owners/ACLs e o histórico remoto conhecido, revisar o backup e aprovar os efeitos. Não reaplicar core/storage/tourist_catalog nem alterar seus registros. O checklist cobre preflight, checkpoints, triggers/RPCs, grants/RLS, Advisor oficial, Auth/Storage, contagens/invariantes e recuperação. O ensaio de backup não aplica migrations; o envelope não é autorização de execução e não deve ser combinado com db push/up/repair.
+
+Continuam pendentes as provas privilegiadas no Cloud, recuperação dos serviços gerenciados, homologação Auth/Storage reais, política de signup e exigência de MFA/AAL2 com fluxo de cliente compatível. Mídia de bucket público não se torna confidencial por pertencer a draft. Não preencher essas lacunas declarando sucesso do teste parcial.
+
+---
+
 # Entrega atual — revisão da infraestrutura e preparo de homologação (27/10/2026)
 
 Base confirmada e atualizada: `work/fontes-oficiais-editorial`, commit `76459adec66c1c1ddeafdff9d6a301f4cc95a982`. Nova branch `work/revisao-infra-homologacao`, sem partir da main e sem desenvolver módulos de negócio. Relatório completo, diferenças, classificação de segurança e procedimentos em [INFRA_HOMOLOGACAO.md](INFRA_HOMOLOGACAO.md).
