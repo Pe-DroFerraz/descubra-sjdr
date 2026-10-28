@@ -391,7 +391,12 @@ export function Account() {
             {t('admin.access')}
           </Link>
         )}
-        {auth.roles.includes('admin') && <Notice>{t('auth.adminMfa')}</Notice>}
+        {auth.adminMfaRequired && (
+          <Notice>
+            Para administrar o portal, configure ou confirme o segundo fator de autenticação.
+            {' '}<Link to="/admin" className="text-link">Continuar com MFA</Link>
+          </Notice>
+        )}
         <Button
           variant="outline"
           onClick={() => void auth.signOut().then((ok) => setFailed(!ok))}

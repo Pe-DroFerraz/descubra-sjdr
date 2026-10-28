@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 type VerifiedAuth = {
   user: User | null;
   roles: Array<'admin' | 'advertiser'>;
+  adminMfaRequired: boolean;
   pending: boolean;
   error: boolean;
 };
@@ -30,6 +31,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState<VerifiedAuth>({
     user: null,
     roles: [],
+    adminMfaRequired: false,
     pending: !!supabase,
     error: false,
   });
@@ -45,7 +47,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (!active) return;
       if (event === 'PASSWORD_RECOVERY') setRecovery(true);
       if (event === 'SIGNED_OUT') setRecovery(false);
-      setState({ user: null, roles: [], pending: !!next, error: false });
+      setState({ user: null, roles: [], adminMfaRequired: false, pending: !!next, error: false });
       setSession(next);
     });
     void supabase.auth
@@ -67,20 +69,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     if (session === undefined) return;
     if (!session || !supabase) {
-      setState({ user: null, roles: [], pending: false, error: false });
+      setState({ user: null, roles: [], adminMfaRequired: false, pending: false, error: false });
       return;
     }
     const db = supabase;
     let active = true;
-    setState({ user: null, roles: [], pending: true, error: false });
+    setState({ user: null, roles: [], adminMfaRequired: false, pending: true, error: false });
     void (async () => {
       try {
         const verified = await db.auth.getUser(session.access_token);
         if (verified.error || !verified.data.user)
           throw new Error('Session verification failed');
         const user = verified.data.user;
-        const [admin, advertisers] = await Promise.all([
+        const [admin, membership, advertisers] = await Promise.all([
           db.rpc('has_role', { requested: 'admin' }),
+          db.rpc('admin_membership'),
           db
             .from('advertisers')
             .select('id')
@@ -88,15 +91,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
             .eq('status', 'approved')
             .limit(1),
         ]);
-        if (admin.error || advertisers.error)
+        if (admin.error || membership.error || advertisers.error)
           throw new Error('Role verification failed');
         const roles: Array<'admin' | 'advertiser'> = [];
         if (admin.data === true) roles.push('admin');
         if (advertisers.data?.length) roles.push('advertiser');
-        if (active) setState({ user, roles, pending: false, error: false });
+        if (active) setState({ user, roles, adminMfaRequired: membership.data === true && admin.data !== true, pending: false, error: false });
       } catch {
         if (active)
-          setState({ user: null, roles: [], pending: false, error: true });
+          setState({ user: null, roles: [], adminMfaRequired: false, pending: false, error: true });
       }
     })();
     return () => {
@@ -121,7 +124,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
             if (error) return false;
             setRecovery(false);
             setSession(null);
-            setState({ user: null, roles: [], pending: false, error: false });
+            setState({ user: null, roles: [], adminMfaRequired: false, pending: false, error: false });
             return true;
           } catch {
             return false;

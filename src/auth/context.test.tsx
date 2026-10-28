@@ -36,7 +36,7 @@ function Probe() {
         : auth.error
           ? 'error'
           : auth.user
-            ? auth.roles.join(',') || 'visitor'
+            ? auth.adminMfaRequired ? 'needs-mfa' : auth.roles.join(',') || 'visitor'
             : 'signed-out'}
     </div>
   );
@@ -91,6 +91,11 @@ describe('verified session and server permissions', () => {
       </AuthProvider>,
     );
     expect(await screen.findByText('admin')).toBeTruthy();
+  });
+  it('does not grant admin rights without AAL2 and signals MFA enrollment', async () => {
+    mocks.rpc.mockImplementation(async (name: string) => ({ data: name === 'admin_membership', error: null }));
+    render(<AuthProvider><Probe /></AuthProvider>);
+    expect(await screen.findByText('needs-mfa')).toBeTruthy();
   });
   it('clears verified identity and roles on sign-out', async () => {
     render(
