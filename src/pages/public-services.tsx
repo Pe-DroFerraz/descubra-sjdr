@@ -4,7 +4,7 @@ import { Page } from '../components/tourism/common';
 
 export const governmentLinks = [
   { title: 'Prefeitura Municipal', kind: 'Portal institucional', url: 'https://www.saojoaodelrei.mg.gov.br/', description: 'Acesso aos canais e publicações da administração municipal.' },
-  { title: 'Portal da Transparência', kind: 'Contas públicas e licitações', url: 'https://ptn.imp.saojoaodelrei.mg.gov.br/', description: 'Consulta às informações e procedimentos publicados pelo município.' },
+  { title: 'Portal da Transparência', kind: 'Contas públicas e licitações', url: 'https://ptn.saojoaodelrei.mg.gov.br/', description: 'Consulta às informações e procedimentos publicados pelo município.' },
   { title: 'Licitações eletrônicas', kind: 'Processos licitatórios', url: 'https://saojoaodelrei.licitapp.com.br/', description: 'Plataforma referida nos avisos oficiais de licitação. Confira sempre os editais e prazos na fonte.' },
   { title: 'Mapa do Turismo Brasileiro', kind: 'Ministério do Turismo', url: 'https://mapa.turismo.gov.br/mapa/init.html', description: 'Consulta ao mapa nacional das regiões e municípios turísticos.' },
   { title: 'Guia Turístico — Museu Regional', kind: 'Instituto Brasileiro de Museus', url: 'https://museuregionaldesaojoaodelrei.museus.gov.br/guia-de-turismo/', description: 'Guia de atrativos e endereços, última atualização declarada em julho de 2025; confirme horários antes da visita.' },
