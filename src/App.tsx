@@ -116,7 +116,7 @@ function Layout() {
               )}
             </Link>
             <button
-              className="icon-button lg:hidden"
+              className="icon-button xl:hidden"
               aria-label={t('menu')}
               aria-expanded={menu}
               aria-controls="mobile-navigation"

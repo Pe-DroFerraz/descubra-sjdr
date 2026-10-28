@@ -126,7 +126,7 @@ input[type='checkbox'] {
     @apply text-clay;
   }
   .desktop-nav {
-    @apply hidden items-center gap-6 text-[13px] font-medium lg:flex;
+    @apply hidden items-center gap-6 text-[13px] font-medium xl:flex;
   }
   .desktop-nav a {
     @apply relative py-9 transition hover:text-clay;
@@ -144,7 +144,7 @@ input[type='checkbox'] {
     @apply flex h-5 min-w-5 items-center justify-center rounded-full bg-ochre px-1 text-colonial;
   }
   .mobile-nav {
-    @apply grid gap-1 border-t border-colonial/10 px-5 py-4 lg:hidden;
+    @apply grid gap-1 border-t border-colonial/10 px-5 py-4 xl:hidden;
   }
   .mobile-nav a {
     @apply rounded-lg px-3 py-3 text-sm;
