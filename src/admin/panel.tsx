@@ -11,6 +11,7 @@ import { CatalogReview } from './review';
 import { ContentManager } from './editor';
 import { StopsManager } from './stops';
 import { MediaManager } from './gallery';
+import { AdminMFA } from '../auth/admin-mfa';
 function Guard({ children }: PropsWithChildren) {
   const auth = useAuth(),
     query = useQueryClient();
@@ -38,6 +39,7 @@ function Guard({ children }: PropsWithChildren) {
       </Page>
     );
   if (!auth.user) return <Navigate to="/entrar?next=%2Fadmin" replace />;
+  if (auth.adminMfaRequired) return <AdminMFA />;
   if (!auth.roles.includes('admin'))
     return (
       <Page title={t('admin.restricted')}>
