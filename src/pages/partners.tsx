@@ -113,7 +113,7 @@ export default function Partners() {
           {feedback === 'success' && <p role="status" className="rounded-lg bg-green-50 p-3 text-sm text-green-900">Solicitação recebida. Nossa equipe poderá entrar em contato pelos dados informados.</p>}
           {feedback === 'error' && <p role="alert" className="text-sm text-clay">Não foi possível registrar. Tente novamente mais tarde.</p>}
           {feedback === 'invalid' && <p role="alert" className="text-sm text-clay">Confira os campos e aceite o uso dos dados.</p>}
-          <Link className="text-link" to="/entrar"><Mail size={16}/> Já sou anunciante e tenho acesso</Link>
+          <Link className="text-link" to="/minha-empresa"><Mail size={16}/> Já sou anunciante: gerenciar meus locais</Link>
         </form>
       </section>
     </Page>

@@ -25,6 +25,7 @@ const Map3D = lazy(() => import('./pages/map3d'));
 const PublicServices = lazy(() => import('./pages/public-services'));
 const PublicNotices = lazy(() => import('./pages/public-notices'));
 const Partners = lazy(() => import('./pages/partners'));
+const AdvertiserStudio = lazy(() => import('./pages/advertiser'));
 const Places = lazy(() => import('./pages/places'));
 const PlaceDetail = lazy(() => import('./pages/place-detail'));
 const RoutesPage = lazy(() => import('./pages/routes'));
@@ -167,6 +168,7 @@ function Layout() {
             <Route path="/servicos-oficiais" element={<PublicServices />} />
             <Route path="/editais" element={<PublicNotices />} />
             <Route path="/anuncie" element={<Partners />} />
+            <Route path="/minha-empresa" element={<AdvertiserStudio />} />
             <Route path="/roteiros" element={<RoutesPage />} />
             <Route path="/roteiros/:slug" element={<RouteDetail />} />
             <Route path="/eventos" element={<Events />} />
