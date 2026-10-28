@@ -126,7 +126,7 @@ input[type='checkbox'] {
     @apply text-clay;
   }
   .desktop-nav {
-    @apply hidden items-center gap-6 text-[13px] font-medium lg:flex;
+    @apply hidden items-center gap-6 text-[13px] font-medium xl:flex;
   }
   .desktop-nav a {
     @apply relative py-9 transition hover:text-clay;
@@ -144,7 +144,7 @@ input[type='checkbox'] {
     @apply flex h-5 min-w-5 items-center justify-center rounded-full bg-ochre px-1 text-colonial;
   }
   .mobile-nav {
-    @apply grid gap-1 border-t border-colonial/10 px-5 py-4 lg:hidden;
+    @apply grid gap-1 border-t border-colonial/10 px-5 py-4 xl:hidden;
   }
   .mobile-nav a {
     @apply rounded-lg px-3 py-3 text-sm;
@@ -356,3 +356,41 @@ input[type='checkbox'] {
   .admin-stop { @apply flex flex-wrap items-start gap-4 rounded-xl border border-colonial/10 p-4; }
   .admin-feedback { @apply my-4 break-words rounded-xl border p-4 text-sm; }
 }
+
+/* Public experience expansion — 2026-10 */
+.experience-rail { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:32px; }
+.experience-tile { min-height:142px; display:flex; align-items:flex-start; flex-direction:column; gap:12px; padding:22px; border-radius:22px; background:#fff; border:1px solid rgba(23,60,88,.12); box-shadow:0 8px 30px rgba(23,60,88,.05); transition:transform .2s,box-shadow .2s; }
+.experience-tile:hover { transform:translateY(-4px); box-shadow:0 20px 38px rgba(23,60,88,.11); }
+.experience-tile>svg:first-child { color:#ad694f; }
+.experience-tile>span { flex:1; }
+.experience-tile b,.experience-tile small {display:block}
+.experience-tile b {font-family:Georgia,serif;font-size:20px}
+.experience-tile small {font-size:12px;margin-top:4px;opacity:.75}
+.experience-tile>svg:last-child {align-self:flex-end;color:#ad694f}
+.gov-headline {display:flex;align-items:flex-start;gap:14px;background:#efe8da;padding:23px 26px;border:1px solid #e0d4c0;border-radius:20px;margin-bottom:30px;font-size:14px;line-height:1.8}
+.gov-headline svg {flex-shrink:0;color:#ad694f}
+.official-card {display:block;min-height:240px;border:1px solid rgba(23,60,88,.12);background:#fff;border-radius:22px;padding:28px;transition:transform .2s,box-shadow .2s}
+.official-card:hover {transform:translateY(-3px);box-shadow:0 16px 32px rgba(23,60,88,.1)}
+.official-icon {display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:#f5eee3;color:#ad694f;border-radius:15px}
+.feature-panel {min-height:280px;display:block;border-radius:25px;padding:34px;background:#173c58;color:#fff}
+.feature-panel-light {background:#e9dfcb;color:#173c58}
+.feature-link {display:flex;gap:12px;align-items:center;background:#fff;border:1px solid rgba(23,60,88,.13);padding:22px 25px;border-radius:18px;font-weight:600}
+.partner-hero {display:grid;grid-template-columns:1.4fr .7fr;align-items:center;gap:30px;min-height:350px;padding:55px;border-radius:32px;background:radial-gradient(circle at 85% 30%,#37627b 0,#173c58 58%);color:white;overflow:hidden}
+.partner-visual {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;min-height:240px;border:1px solid rgba(255,255,255,.18);border-radius:30px;background:rgba(255,255,255,.05);color:#e3b56a}
+.partner-visual span {font-family:Georgia,serif;letter-spacing:.22em}
+.plan-card {background:#fff;border:1px solid rgba(23,60,88,.12);border-radius:22px;padding:30px}
+.partner-form-shell {display:grid;grid-template-columns:.85fr 1.1fr;gap:45px;background:#fff;border:1px solid rgba(23,60,88,.1);border-radius:28px;padding:40px;margin:40px 0 60px}
+.partner-fields {display:flex;flex-direction:column;gap:20px}
+.partner-fields label {display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:650}
+.partner-fields input:not([type=checkbox]),.partner-fields select,.partner-fields textarea {border:1px solid #c9d3d7;background:#fbfaf7;border-radius:11px;padding:13px 14px;font-size:14px;font-weight:400;min-height:44px}
+.partner-fields input[type=checkbox] {width:20px;height:20px;flex-shrink:0}
+.map3d-shell {border-radius:25px;overflow:hidden;border:1px solid rgba(23,60,88,.15);background:#eaece6}
+.map3d-toolbar {display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:16px 20px;background:#173c58;color:white}
+.map3d-control {display:inline-flex;gap:7px;align-items:center;padding:10px 15px;border:1px solid rgba(255,255,255,.4);border-radius:12px;font-size:13px;background:rgba(255,255,255,.08)}
+.map3d-control:hover {background:rgba(255,255,255,.2)}
+.map3d-canvas {height:min(70vh,700px);min-height:430px;width:100%}
+.map3d-credit {padding:12px 20px;background:white;font-size:11px;color:#526674}
+.map3d-pin {display:grid;place-items:center;width:28px;height:28px;color:#fff;background:#a55c48;border:2px solid #fff;border-radius:50%;box-shadow:0 4px 12px #0005;font-size:14px;cursor:pointer}
+@media(max-width:1024px) {.experience-rail {grid-template-columns:repeat(2,1fr)}.partner-hero,.partner-form-shell {grid-template-columns:1fr}.partner-visual {display:none}}
+@media(max-width:640px) {.experience-rail{gap:9px}.experience-tile{padding:15px;min-height:140px}.experience-tile b{font-size:17px}.partner-hero{padding:30px 24px}.partner-form-shell{padding:24px}.map3d-canvas{height:65vh;min-height:360px}.feature-panel{padding:26px}}
+@media(prefers-reduced-motion:reduce) {.experience-tile,.official-card{transition:none}.experience-tile:hover,.official-card:hover{transform:none}}

@@ -21,6 +21,11 @@ const NewPassword = lazy(() =>
   import('./pages/auth').then((module) => ({ default: module.NewPassword })),
 );
 const Home = lazy(() => import('./pages/home'));
+const Map3D = lazy(() => import('./pages/map3d'));
+const PublicServices = lazy(() => import('./pages/public-services'));
+const PublicNotices = lazy(() => import('./pages/public-notices'));
+const Partners = lazy(() => import('./pages/partners'));
+const AdvertiserStudio = lazy(() => import('./pages/advertiser'));
 const Places = lazy(() => import('./pages/places'));
 const PlaceDetail = lazy(() => import('./pages/place-detail'));
 const RoutesPage = lazy(() => import('./pages/routes'));
@@ -39,6 +44,9 @@ const navigation = [
   ['/roteiros', 'routes'],
   ['/eventos', 'events'],
   ['/dicas', 'tips'],
+  ['/mapa-3d', 'Mapa 3D'],
+  ['/editais', 'Editais'],
+  ['/anuncie', 'Anuncie'],
 ] as const;
 function Layout() {
   const { t, i18n } = useTranslation();
@@ -52,7 +60,7 @@ function Layout() {
   }, [location.pathname]);
   useEffect(() => {
     document.documentElement.lang = i18n.language;
-    document.title = `${t(navigation.find(([url]) => location.pathname.startsWith(url))?.[1] ?? 'home')} · Descubra SJDR`;
+    document.title = `${t(navigation.find(([url]) => location.pathname === url || location.pathname.startsWith(url + '/'))?.[1] ?? 'home')} · Descubra SJDR`;
   }, [i18n.language, location.pathname, t]);
   function language(value: string) {
     void i18n.changeLanguage(value);
@@ -108,7 +116,7 @@ function Layout() {
               )}
             </Link>
             <button
-              className="icon-button lg:hidden"
+              className="icon-button xl:hidden"
               aria-label={t('menu')}
               aria-expanded={menu}
               aria-controls="mobile-navigation"
@@ -156,6 +164,11 @@ function Layout() {
             <Route path="/lugares" element={<Places />} />
             <Route path="/lugares/:slug" element={<PlaceDetail />} />
             <Route path="/mapa" element={<Places map />} />
+            <Route path="/mapa-3d" element={<Map3D />} />
+            <Route path="/servicos-oficiais" element={<PublicServices />} />
+            <Route path="/editais" element={<PublicNotices />} />
+            <Route path="/anuncie" element={<Partners />} />
+            <Route path="/minha-empresa" element={<AdvertiserStudio />} />
             <Route path="/roteiros" element={<RoutesPage />} />
             <Route path="/roteiros/:slug" element={<RouteDetail />} />
             <Route path="/eventos" element={<Events />} />
@@ -204,6 +217,7 @@ function Layout() {
               ))}
               <Link to="/favoritos">{t('favorites')}</Link>
               <Link to="/conta">{t('auth.account')}</Link>
+              <Link to="/servicos-oficiais">Serviços oficiais</Link>
             </nav>
             <div className="max-w-xs">
               <p className="text-sm leading-relaxed text-white/70">
