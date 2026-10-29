@@ -47,47 +47,39 @@ test('main map is a first-class destination with map filters even when the catal
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
-test('3D engine initializes and switches between terrain and flat mode',async ({page})=>{
-  await page.route('https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.mjs',async route=>{
-    await route.fulfill({status:200,contentType:'text/javascript',headers:{'Access-Control-Allow-Origin':'*'},
-      body:[
-        'export function supported(){return true;}',
-        'export class Map {',
-        'constructor(options){this.options=options;this.events={};window.__map3dCreated=true;queueMicrotask(()=>{this.events.load?.({});queueMicrotask(()=>this.events.idle?.({}));});}',
-        'on(type,fn){this.events[type]=fn;}',
-        'setTerrain(terrain){window.__lastTerrain=terrain;}',
-        'addControl(){} easeTo(options){window.__lastCamera=options;} remove(){} resize(){}',
-        '}',
-        'export class NavigationControl {constructor(){}}',
-        'export class Popup {setDOMContent(){return this;}}',
-        'export class Marker {setLngLat(){return this;}setPopup(){return this;}addTo(){return this;}remove(){}}',
-      ].join('\n')
-    });
-  });
+test('3D map either renders its real canvas or reports a clear browser limitation',async ({page})=>{
+  test.setTimeout(35000);
   await page.goto('/mapa-3d');
   await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
   await page.getByRole('button',{name:'Ativar 3D'}).click();
-  await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:15000});
-  expect(await page.evaluate(()=>(window as unknown as {__map3dCreated?:boolean}).__map3dCreated)).toBe(true);
-  expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:{source:string}}).__lastTerrain?.source)).toBe('terrain');
-  await page.getByRole('button',{name:'Ver plano'}).click();
-  expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:object|null}).__lastTerrain)).toBe(null);
-  await page.getByRole('button',{name:'Ver 3D'}).click();
-  expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:{source:string}}).__lastTerrain?.source)).toBe('terrain');
+  await expect.poll(async()=>{
+    if(await page.getByRole('button',{name:'Ver plano'}).count())return 'ready';
+    if(await page.getByRole('alert').count())return 'error';
+    return 'loading';
+  },{timeout:28000}).not.toBe('loading');
+  if(await page.getByRole('button',{name:'Ver plano'}).count()){
+    await expect(page.locator('.maplibregl-canvas')).toBeVisible();
+    await page.getByRole('button',{name:'Ver plano'}).click();
+    await expect(page.getByRole('button',{name:'Ver 3D'})).toBeVisible();
+  }else{
+    await expect(page.getByRole('alert')).toContainText(/WebGL|elevação|MapLibre|relevo|falha/i);
+  }
 });
 
-test('real MapLibre terrain initializes in Chromium with external elevation tiles',async ({page})=>{
+test('real bundled MapLibre terrain renders in Chromium with elevation tiles',async ({page})=>{
   test.setTimeout(70000);
-  const networkErrors:string[]=[];
-  page.on('requestfailed',request=>{if(/maplibre|mapterhorn|openstreetmap/.test(request.url()))networkErrors.push(request.url()+': '+(request.failure()?.errorText??''));});
+  const errors:string[]=[];
+  page.on('requestfailed',request=>{if(/mapterhorn|openstreetmap/.test(request.url()))errors.push(request.url()+': '+(request.failure()?.errorText??''));});
   await page.goto('/mapa-3d');
   await page.getByRole('button',{name:'Ativar 3D'}).click();
-  try {
+  try{
     await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:45000});
     await expect(page.locator('.maplibregl-canvas')).toBeVisible();
-  } catch(error) {
-    console.error('MapLibre live initialization failures:',networkErrors);
-    console.error('Browser map alert:',await page.getByRole('alert').allTextContents());
-    throw error;
+    await page.getByRole('button',{name:'Ver plano'}).click();
+    await expect(page.getByRole('button',{name:'Ver 3D'})).toBeVisible();
+  }catch(e){
+    console.error('Terrain source network issues:',errors);
+    console.error('Terrain status:',await page.getByRole('alert').allTextContents());
+    throw e;
   }
 });

@@ -1,3 +1,4 @@
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Compass, Layers3, MapPinned, RotateCcw, RefreshCw } from 'lucide-react';
@@ -30,35 +31,11 @@ type MapLibre = {
   Popup: new (options: Record<string, unknown>) => Popup;
 };
 
-const MAPLIBRE_VERSION = '6.16.0';
-const ENGINE_SOURCES = [
-  'https://unpkg.com/maplibre-gl@' + MAPLIBRE_VERSION + '/dist/maplibre-gl.mjs',
-  'https://cdn.jsdelivr.net/npm/maplibre-gl@' + MAPLIBRE_VERSION + '/dist/maplibre-gl.mjs',
-];
+// Self-hosted by Vite: no external script or CDN is required to start WebGL.
 let enginePromise: Promise<MapLibre> | undefined;
-function ensureStyles() {
-  if (document.querySelector('link[data-sjdr-gl-css]')) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/maplibre-gl@' + MAPLIBRE_VERSION + '/dist/maplibre-gl.css';
-  link.dataset.sjdrGlCss = '1';
-  document.head.appendChild(link);
-}
 async function importEngine(): Promise<MapLibre> {
-  ensureStyles();
-  for (const source of ENGINE_SOURCES) {
-    try {
-      // The official v6 distribution is an ESM module; do not assume a window.maplibregl global.
-      const imported: unknown = await import(/* @vite-ignore */ source);
-      const maplibre = imported as MapLibre;
-      if (typeof maplibre.Map === 'function' && typeof maplibre.supported === 'function') {
-        return maplibre;
-      }
-    } catch {
-      // A second trusted CDN is attempted before showing the real map fallback.
-    }
-  }
-  throw new Error('Não foi possível carregar o motor 3D. Sua conexão pode estar bloqueando os arquivos externos.');
+  const module = await import('maplibre-gl');
+  return module as unknown as MapLibre;
 }
 function getEngine() {
   enginePromise ??= importEngine().catch(error => {
@@ -186,7 +163,7 @@ export default function Map3D() {
       }, 20000);
       instance.resize();
     }).catch(err => {
-      fail(err instanceof Error ? err.message : 'Ocorreu uma falha ao iniciar o modo 3D.');
+      fail(err instanceof Error ? 'Falha ao iniciar o MapLibre: ' + err.message : 'Ocorreu uma falha ao iniciar o modo 3D.');
     });
     return () => {
       alive=false;
