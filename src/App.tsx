@@ -6,6 +6,7 @@ import { ClockProvider } from './hooks/clock';
 import { TripProvider, useTrip } from './trip-context';
 import { AuthProvider } from './auth/context';
 import { Page } from './components/tourism/common';
+import './styles/editorial.css';
 const Admin = lazy(() => import('./admin/panel'));
 const SignIn = lazy(() => import('./pages/auth'));
 const Account = lazy(() =>
@@ -21,6 +22,10 @@ const NewPassword = lazy(() =>
   import('./pages/auth').then((module) => ({ default: module.NewPassword })),
 );
 const Home = lazy(() => import('./pages/home'));
+const Explore = lazy(() => import('./pages/explore'));
+const Journeys = lazy(() => import('./pages/journeys'));
+const JourneyDetailEditorial = lazy(() => import('./pages/journeys').then(m => ({default:m.JourneyDetail})));
+const Planner = lazy(() => import('./pages/journeys').then(m => ({default:m.Planner})));
 const Map3D = lazy(() => import('./pages/map3d'));
 const PublicServices = lazy(() => import('./pages/public-services'));
 const PublicNotices = lazy(() => import('./pages/public-notices'));
@@ -39,14 +44,11 @@ const EventDetail = lazy(() =>
 const Tips = lazy(() => import('./pages/tips'));
 const Trip = lazy(() => import('./pages/trip'));
 const navigation = [
-  ['/lugares', 'places'],
-  ['/mapa', 'map'],
-  ['/roteiros', 'routes'],
-  ['/eventos', 'events'],
-  ['/dicas', 'tips'],
-  ['/mapa-3d', 'Mapa 3D'],
-  ['/editais', 'Editais'],
-  ['/anuncie', 'Anuncie'],
+  ['/explorar','Explorar'],
+  ['/roteiros','routes'],
+  ['/planejar','Planejar'],
+  ['/eventos','events'],
+  ['/anuncie','Anuncie'],
 ] as const;
 function Layout() {
   const { t, i18n } = useTranslation();
@@ -155,6 +157,8 @@ function Layout() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/explorar" element={<Explore />} />
+            <Route path="/planejar" element={<Planner />} />
             <Route path="/admin/*" element={<Admin />} />
             <Route path="/entrar" element={<SignIn />} />
             <Route path="/conta" element={<Account />} />
@@ -169,7 +173,9 @@ function Layout() {
             <Route path="/editais" element={<PublicNotices />} />
             <Route path="/anuncie" element={<Partners />} />
             <Route path="/minha-empresa" element={<AdvertiserStudio />} />
-            <Route path="/roteiros" element={<RoutesPage />} />
+            <Route path="/roteiros" element={<Journeys />} />
+            <Route path="/roteiros/guias/:slug" element={<JourneyDetailEditorial />} />
+            <Route path="/roteiros/catalogo" element={<RoutesPage />} />
             <Route path="/roteiros/:slug" element={<RouteDetail />} />
             <Route path="/eventos" element={<Events />} />
             <Route path="/eventos/:id" element={<EventDetail />} />
@@ -218,6 +224,9 @@ function Layout() {
               <Link to="/favoritos">{t('favorites')}</Link>
               <Link to="/conta">{t('auth.account')}</Link>
               <Link to="/servicos-oficiais">Serviços oficiais</Link>
+              <Link to="/mapa-3d">Mapa 3D</Link>
+              <Link to="/editais">Editais</Link>
+              <Link to="/lugares">Catálogo turístico</Link>
             </nav>
             <div className="max-w-xs">
               <p className="text-sm leading-relaxed text-white/70">

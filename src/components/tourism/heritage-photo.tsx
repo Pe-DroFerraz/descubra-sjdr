@@ -1,16 +1,13 @@
-import { commonsFile } from './editorial-showcase';
-const photos: Record<string,string> = {
-  'igreja-sao-francisco-de-assis-sjdr':'Igreja de São Francisco de Assis, em São Joao Del Rei.jpg',
-  'museu-regional-sao-joao-del-rei':'Museu Regional de São João Del-Rei.jpg',
-  'catedral-nossa-senhora-do-pilar':'Igreja de Nossa Senhora do Pilar.jpg',
-  'museu-ferroviario-estacao-efom':'Estação ferroviária de São João del-Rei.jpg',
+import { EditorialImage } from './editorial-image';
+import type { PhotoKey } from '../../data/editorial';
+const photoMap:Record<string,PhotoKey>={
+ 'igreja-sao-francisco-de-assis-sjdr':'francisco',
+ 'museu-regional-sao-joao-del-rei':'museum',
+ 'catedral-nossa-senhora-do-pilar':'pilar',
+ 'museu-ferroviario-estacao-efom':'station',
+ 'centro-cultural-ufsj-solar-baronesa':'carmo',
 };
-export function HeritagePhoto({slug, alt}:{slug:string;alt:string}) {
-  const file=photos[slug];
-  if(!file)return <img className="h-full w-full object-cover" src="/heritage.svg" alt="Ilustração do patrimônio cultural da cidade"/>;
-  return <div className="relative h-full w-full">
-    <img className="h-full w-full object-cover" src={commonsFile(file)} alt={alt} loading="lazy"
-      onError={e=>{const img=e.currentTarget;img.onerror=null;img.src='/heritage.svg';}}/>
-    <span className="heritage-credit">Imagem: Wikimedia Commons · créditos na galeria</span>
-  </div>;
+export function HeritagePhoto({slug,alt}:{slug:string;alt:string}) {
+  const key=photoMap[slug];
+  return key?<EditorialImage photo={key} alt={alt} />:<img className="h-full w-full object-cover" src="/heritage.svg" alt="Ilustração do patrimônio local"/>;
 }

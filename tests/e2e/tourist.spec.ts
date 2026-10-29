@@ -104,7 +104,8 @@ test('search, place details, save, persist, translation and mobile navigation', 
     })
     .fill('igreja');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
-  await expect(page).toHaveURL(/lugares\?q=igreja/);
+  await expect(page).toHaveURL(/explorar\?q=igreja/);
+  await page.goto('/lugares?q=igreja');
   await page
     .getByRole('link', { name: 'Igreja de teste', exact: true })
     .click();
@@ -183,7 +184,7 @@ test('routes, calendar, tips and a shared itinerary use published response data'
   page,
 }) => {
   await api(page);
-  await page.goto('/roteiros');
+  await page.goto('/roteiros/catalogo');
   await page.getByRole('link', { name: /Roteiro de teste/ }).click();
   await expect(
     page.getByRole('heading', { name: 'Roteiro de teste', exact: true }),
