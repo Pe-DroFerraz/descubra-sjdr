@@ -47,39 +47,22 @@ test('main map is a first-class destination with map filters even when the catal
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
-test('3D map either renders its real canvas or reports a clear browser limitation',async ({page})=>{
-  test.setTimeout(35000);
+test('locally bundled MapLibre renders 3D and toggles terrain with a real Chromium WebGL canvas',async ({page})=>{
+  test.setTimeout(90000);
+  const networkErrors:string[]=[];
+  page.on('requestfailed',request=>{if(/mapterhorn|openstreetmap/.test(request.url()))networkErrors.push(request.url()+': '+(request.failure()?.errorText??''));});
   await page.goto('/mapa-3d');
   await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
   await page.getByRole('button',{name:'Ativar 3D'}).click();
-  await expect.poll(async()=>{
-    if(await page.getByRole('button',{name:'Ver plano'}).count())return 'ready';
-    if(await page.getByRole('alert').count())return 'error';
-    return 'loading';
-  },{timeout:28000}).not.toBe('loading');
-  if(await page.getByRole('button',{name:'Ver plano'}).count()){
+  try {
+    await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:60000});
     await expect(page.locator('.maplibregl-canvas')).toBeVisible();
-    await page.getByRole('button',{name:'Ver plano'}).click();
-    await expect(page.getByRole('button',{name:'Ver 3D'})).toBeVisible();
-  }else{
-    await expect(page.getByRole('alert')).toContainText(/WebGL|elevação|MapLibre|relevo|falha/i);
-  }
-});
-
-test('real bundled MapLibre terrain renders in Chromium with elevation tiles',async ({page})=>{
-  test.setTimeout(70000);
-  const errors:string[]=[];
-  page.on('requestfailed',request=>{if(/mapterhorn|openstreetmap/.test(request.url()))errors.push(request.url()+': '+(request.failure()?.errorText??''));});
-  await page.goto('/mapa-3d');
-  await page.getByRole('button',{name:'Ativar 3D'}).click();
-  try{
-    await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:45000});
-    await expect(page.locator('.maplibregl-canvas')).toBeVisible();
-    await page.getByRole('button',{name:'Ver plano'}).click();
-    await expect(page.getByRole('button',{name:'Ver 3D'})).toBeVisible();
-  }catch(e){
-    console.error('Terrain source network issues:',errors);
-    console.error('Terrain status:',await page.getByRole('alert').allTextContents());
+    // dispatchEvent avoids waiting for a visually stable layout under SwiftShader software GPU.
+    await page.getByRole('button',{name:'Ver plano'}).dispatchEvent('click',{timeout:15000});
+    await expect(page.getByRole('button',{name:'Ver 3D'})).toBeVisible({timeout:10000});
+  } catch(e) {
+    console.error('MapLibre tile/network issues:',networkErrors);
+    console.error('MapLibre state:',await page.locator('.map3d-status').allTextContents().catch(()=>[]));
     throw e;
   }
 });

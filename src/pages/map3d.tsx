@@ -103,12 +103,12 @@ export default function Map3D() {
       const instance = new lib.Map({
         container: element.current,
         center: CENTER,
-        zoom: 12.5,
-        pitch: 70,
+        zoom: 12.1,
+        pitch: 66,
         bearing: -20,
         maxPitch: 80,
         maxZoom: 18,
-        antialias: true,
+        antialias: false,
         attributionControl: true,
         style: {
           version: 8,
@@ -215,7 +215,7 @@ export default function Map3D() {
     setMode(next);
     try {
       map.current.setTerrain(next==='3d'?{source:'terrain',exaggeration:1.15}:null);
-      map.current.easeTo({pitch:next==='3d'?70:0,bearing:next==='3d'?-20:0,duration:800});
+      map.current.easeTo({pitch:next==='3d'?66:0,bearing:next==='3d'?-20:0,duration:800});
     } catch {
       setError('O modo 3D não pôde ser ativado. Tente novamente.');
     }
@@ -241,7 +241,7 @@ export default function Map3D() {
               {loading?'Carregando 3D…':!showCanvas?'Ativar 3D':mode==='3d'?'Ver plano':'Ver 3D'}
             </button>
             <button type="button" className="map3d-control" disabled={!showCanvas}
-              onClick={()=>map.current?.easeTo({zoom:12.5,pitch:mode==='3d'?70:0,bearing:mode==='3d'?-20:0,duration:700})}>
+              onClick={()=>map.current?.easeTo({zoom:12.1,pitch:mode==='3d'?66:0,bearing:mode==='3d'?-20:0,duration:700})}>
               <RotateCcw size={16}/> Recentrar
             </button>
           </div>
