@@ -93,14 +93,12 @@ function Photo({id,alt,className=''}:{id:PhotoKey;alt:string;className?:string})
 }
 function StudioMap({onPlace}:{onPlace:(name:string)=>void}){
  const root=useRef<HTMLDivElement>(null);
- const instance=useRef<{invalidateSize:()=>void}|null>(null);
  useEffect(()=>{
    if(!root.current)return;
-   let active=true;let map:{remove:()=>void;invalidateSize:()=>void}|undefined;
+   let active=true;let map: import('leaflet').Map|undefined;
    void import('leaflet').then(({default:L})=>{
      if(!active||!root.current)return;
      map=L.map(root.current,{zoomControl:true,scrollWheelZoom:false}).setView([-21.136,-44.262],14.4);
-     instance.current=map;
      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
        maxZoom:19,attribution:'© OpenStreetMap contributors',
      }).addTo(map);
@@ -110,7 +108,7 @@ function StudioMap({onPlace}:{onPlace:(name:string)=>void}){
      });
      requestAnimationFrame(()=>map?.invalidateSize());
    }).catch(()=>{/* map keeps a readable placeholder */});
-   return()=>{active=false;map?.remove();instance.current=null;};
+   return()=>{active=false;map?.remove();};
  },[onPlace]);
  return <div className="st-map-canvas" ref={root} aria-label="Mapa interativo de demonstração com pontos turísticos"/>;
 }
