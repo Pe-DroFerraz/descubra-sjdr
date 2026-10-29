@@ -6,7 +6,8 @@ test('homepage provides full editorial experiences when Supabase is offline', as
   await expect(page.getByRole('heading',{name:/Uma cidade para sentir/})).toBeVisible();
   await expect(page.getByRole('heading',{name:/Existe um São João/})).toBeVisible();
   await expect(page.locator('.destination-mosaic .visual-photo img')).toHaveCount(4);
-  await expect(page.getByRole('link',{name:/Monte sua viagem/})).toBeVisible();
+  await expect(page.getByRole('link',{name:/Ver mapa da cidade/})).toBeVisible();
+  await expect(page.getByRole('link',{name:/Abrir mapa em tela cheia/})).toBeVisible();
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
@@ -30,4 +31,18 @@ test('map retains an immediately visible flat fallback',async ({page})=>{
   await page.goto('/mapa-3d');
   await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
   await expect(page.getByRole('button',{name:/Ativar 3D/})).toBeVisible();
+});
+
+test('main map is a first-class destination with map filters even when the catalog is offline',async ({page})=>{
+  await page.route('http://127.0.0.1:54399/**',route=>route.abort());
+  await page.goto('/mapa');
+  await expect(page.getByRole('heading',{name:/Descubra a cidade/})).toBeVisible();
+  await expect(page.getByRole('region',{name:'Mapa de São João del-Rei com pontos turísticos'})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Igrejas',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Igrejas',exact:true}).click();
+  await expect(page.getByText('Igreja de São Francisco de Assis',{exact:true}).first()).toBeVisible();
+  await page.getByRole('button',{name:'Eventos',exact:true}).click();
+  await expect(page.getByText(/Ainda não há eventos futuros publicados/)).toBeVisible();
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

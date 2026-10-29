@@ -36,7 +36,7 @@ describe('tourist application without Cloud configuration', () => {
       { name: /Uma cidade para sentir/ },
       { timeout: 3000 },
     );
-    expect(await screen.findByRole('link', { name: /Monte sua viagem/ })).toBeTruthy();
+    expect(await screen.findByRole('link', { name: /Ver mapa da cidade/ })).toBeTruthy();
     expect(await screen.findByRole('heading', { name: /Seus próximos dias/ })).toBeTruthy();
     expect(screen.queryByText(/DEMONSTRAÇÃO/)).toBeNull();
   });
