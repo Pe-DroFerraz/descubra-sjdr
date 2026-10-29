@@ -47,9 +47,31 @@ test('main map is a first-class destination with map filters even when the catal
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
-test('3D can actually initialize, show its canvas and switch between terrain and flat mode',async ({page})=>{
-  // A controlled MapLibre module exercises the app's dynamic ESM loading and
-  // terrain-ready lifecycle without depending on a third-party CDN in CI.
+test('3D engine initializes and switches between terrain and flat mode',async ({page})=>{
   await page.route('https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.mjs',async route=>{
     await route.fulfill({status:200,contentType:'text/javascript',headers:{'Access-Control-Allow-Origin':'*'},
-      body:
+      body:[
+        'export function supported(){return true;}',
+        'export class Map {',
+        'constructor(options){this.options=options;this.events={};window.__map3dCreated=true;queueMicrotask(()=>{this.events.load?.({});queueMicrotask(()=>this.events.idle?.({}));});}',
+        'on(type,fn){this.events[type]=fn;}',
+        'setTerrain(terrain){window.__lastTerrain=terrain;}',
+        'addControl(){} easeTo(options){window.__lastCamera=options;} remove(){} resize(){}',
+        '}',
+        'export class NavigationControl {constructor(){}}',
+        'export class Popup {setDOMContent(){return this;}}',
+        'export class Marker {setLngLat(){return this;}setPopup(){return this;}addTo(){return this;}remove(){}}',
+      ].join('\n')
+    });
+  });
+  await page.goto('/mapa-3d');
+  await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
+  await page.getByRole('button',{name:'Ativar 3D'}).click();
+  await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:15000});
+  expect(await page.evaluate(()=>(window as unknown as {__map3dCreated?:boolean}).__map3dCreated)).toBe(true);
+  expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:{source:string}}).__lastTerrain?.source)).toBe('terrain');
+  await page.getByRole('button',{name:'Ver plano'}).click();
+  expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:object|null}).__lastTerrain)).toBe(null);
+  await page.getByRole('button',{name:'Ver 3D'}).click();
+  expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:{source:string}}).__lastTerrain?.source)).toBe('terrain');
+});
