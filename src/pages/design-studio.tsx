@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type FormEvent } from 'react';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Bookmark, Check, CheckCircle2, ChevronDown, Clock3, Compass, Copy, Download, Eye, FileText, Heart, Layers3, LayoutGrid, MapPin, Maximize2, Menu, Monitor, MousePointer2, Palette, RotateCcw, Save, Search, Settings2, Share2, ShieldCheck, Smartphone, SlidersHorizontal, Sparkles, Tablet, Type, Upload, X } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, type ChangeEvent, type CSSProperties, type FormEvent } from 'react';
+import { ArrowRight, ArrowUpRight, Bookmark, Check, CheckCircle2, ChevronDown, Clock3, Compass, Copy, Download, FileText, Heart, Layers3, LayoutGrid, MapPin, Menu, Monitor, MousePointer2, Palette, RotateCcw, Save, Search, Settings2, Share2, ShieldCheck, Smartphone, SlidersHorizontal, Sparkles, Tablet, Type, Upload, X } from 'lucide-react';
 import { commonsImage, journeys, topics, type PhotoKey } from '../data/editorial';
 import { CURATED_MAP_POINTS } from '../data/map-landmarks';
 import 'leaflet/dist/leaflet.css';

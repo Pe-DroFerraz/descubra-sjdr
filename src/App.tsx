@@ -9,6 +9,7 @@ import { Page } from './components/tourism/common';
 import './styles/editorial.css';
 import './styles/soft-destination.css';
 const Admin = lazy(() => import('./admin/panel'));
+const DesignStudio = lazy(() => import('./pages/design-studio'));
 const SignIn = lazy(() => import('./pages/auth'));
 const Account = lazy(() =>
   import('./pages/auth').then((module) => ({ default: module.Account })),
@@ -268,6 +269,10 @@ function Layout() {
   );
 }
 export default function App() {
+  const location = useLocation();
+  if (location.pathname === '/estudio' || location.pathname === '/estudio/') {
+    return <Suspense fallback={<div role="status" className="state-panel">Abrindo Ateliê Visual…</div>}><DesignStudio /></Suspense>;
+  }
   return (
     <AuthProvider>
       <ClockProvider>
