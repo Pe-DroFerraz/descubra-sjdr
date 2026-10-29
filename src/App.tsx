@@ -1,12 +1,13 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Heart, Landmark, Menu, X } from 'lucide-react';
+import { ArrowRight, Heart, MapPinned, Menu, X } from 'lucide-react';
 import { ClockProvider } from './hooks/clock';
 import { TripProvider, useTrip } from './trip-context';
 import { AuthProvider } from './auth/context';
 import { Page } from './components/tourism/common';
 import './styles/editorial.css';
+import './styles/soft-destination.css';
 const Admin = lazy(() => import('./admin/panel'));
 const SignIn = lazy(() => import('./pages/auth'));
 const Account = lazy(() =>
@@ -27,6 +28,7 @@ const Journeys = lazy(() => import('./pages/journeys'));
 const JourneyDetailEditorial = lazy(() => import('./pages/journeys').then(m => ({default:m.JourneyDetail})));
 const Planner = lazy(() => import('./pages/journeys').then(m => ({default:m.Planner})));
 const Map3D = lazy(() => import('./pages/map3d'));
+const DiscoveryMap = lazy(() => import('./pages/discovery-map'));
 const PublicServices = lazy(() => import('./pages/public-services'));
 const PublicNotices = lazy(() => import('./pages/public-notices'));
 const Partners = lazy(() => import('./pages/partners'));
@@ -45,9 +47,10 @@ const Tips = lazy(() => import('./pages/tips'));
 const Trip = lazy(() => import('./pages/trip'));
 const navigation = [
   ['/explorar','Explorar'],
+  ['/mapa','Mapa'],
   ['/roteiros','routes'],
-  ['/planejar','Planejar'],
   ['/eventos','events'],
+  ['/planejar','Planejar'],
   ['/anuncie','Anuncie'],
 ] as const;
 function Layout() {
@@ -81,7 +84,7 @@ function Layout() {
         <div className="header-inner">
           <Link to="/" className="brand" aria-label="Descubra SJDR">
             <span className="brand-icon">
-              <Landmark size={28} strokeWidth={1.4} />
+              <span className="brand-mono">sj.</span>
             </span>
             <span>
               descubra<span className="brand-city">SÃO JOÃO DEL-REI</span>
@@ -95,6 +98,7 @@ function Layout() {
             ))}
           </nav>
           <div className="flex items-center gap-3">
+            <Link to="/mapa" className="header-map-cta"><MapPinned size={17}/> Mapa da cidade</Link>
             <label className="language-select">
               <span className="sr-only">{t('language')}</span>
               <select
@@ -139,6 +143,7 @@ function Layout() {
                 {t(key)}
               </NavLink>
             ))}
+            <NavLink to="/mapa-3d">Mapa em 3D</NavLink>
           </nav>
         )}
       </header>
@@ -167,7 +172,8 @@ function Layout() {
             <Route path="/auth/nova-senha" element={<NewPassword />} />
             <Route path="/lugares" element={<Places />} />
             <Route path="/lugares/:slug" element={<PlaceDetail />} />
-            <Route path="/mapa" element={<Places map />} />
+            <Route path="/mapa" element={<DiscoveryMap />} />
+            <Route path="/mapa/catalogo" element={<Places map />} />
             <Route path="/mapa-3d" element={<Map3D />} />
             <Route path="/servicos-oficiais" element={<PublicServices />} />
             <Route path="/editais" element={<PublicNotices />} />
@@ -203,7 +209,7 @@ function Layout() {
           <div className="footer-grid">
             <div>
               <Link to="/" className="brand">
-                <Landmark size={30} />
+                <span className="brand-mono">sj.</span>
                 <span>
                   descubra<span className="brand-city">SÃO JOÃO DEL-REI</span>
                 </span>

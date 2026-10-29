@@ -159,7 +159,7 @@ test('map clusters and attribution work even with unavailable tiles; category an
       },
     ],
   });
-  await page.goto('/mapa');
+  await page.goto('/mapa/catalogo');
   await expect(
     page.getByRole('region', { name: 'Mapa', exact: true }),
   ).toBeVisible();

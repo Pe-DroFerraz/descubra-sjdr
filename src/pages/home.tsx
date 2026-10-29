@@ -6,6 +6,7 @@ import { usePlaces } from '../data/queries';
 import { journeys, topics, visitorGuide } from '../data/editorial';
 import { EditorialImage } from '../components/tourism/editorial-image';
 import { HeritagePhoto } from '../components/tourism/heritage-photo';
+import { DestinationMap } from '../components/tourism/destination-map';
 export default function Home() {
   const {t}=useTranslation();
   const navigate=useNavigate();
@@ -22,7 +23,7 @@ export default function Home() {
         <p className="destination-hero-lead">Descubra lugares, histórias e experiências que fazem de cada viagem uma memória.</p>
         <div className="destination-hero-actions">
           <Link className="destination-button-primary" to="/explorar">Comece a explorar <ArrowUpRight size={19}/></Link>
-          <Link className="destination-button-light" to="/planejar">Monte sua viagem <ArrowRight size={18}/></Link>
+          <Link className="destination-button-light" to="/mapa">Ver mapa da cidade <MapPinned size={18}/></Link>
         </div>
         <form className="destination-hero-search" onSubmit={submit}>
           <Search size={19} aria-hidden/>
@@ -39,6 +40,18 @@ export default function Home() {
     <div className="destination-intro-strip">
       <span>DESTINO DE MUITAS HISTÓRIAS</span><p>Arquitetura que encanta. Cultura que permanece. Experiências que surpreendem.</p><Link to="/roteiros">Conheça os roteiros <ArrowUpRight size={16}/></Link>
     </div>
+
+    <section className="destination-home-map" aria-labelledby="home-map-title">
+      <div className="destination-home-map-heading">
+        <div><p className="destination-kicker">MAPA TURÍSTICO INTERATIVO</p>
+          <h2 id="home-map-title">Descubra no mapa.<br/><em>Viva na cidade.</em></h2>
+        </div>
+        <div className="destination-home-map-intro"><p>Encontre igrejas, museus e experiências na localização certa. Explore por categoria e aproxime o mapa antes de sair.</p>
+          <Link to="/mapa">Abrir mapa em tela cheia <ArrowUpRight size={17}/></Link>
+        </div>
+      </div>
+      <DestinationMap compact />
+    </section>
 
     <section className="destination-section" id="conheca">
       <div className="destination-section-head">
@@ -108,15 +121,6 @@ export default function Home() {
           <h3>{place.name}</h3>
           <Link to={'/lugares/'+place.slug}>Conhecer <ArrowUpRight size={16}/></Link>
         </article>)}
-      </div>
-    </section>
-
-    <section className="destination-map-teaser">
-      <div className="destination-map-image"><EditorialImage photo="serra"/></div>
-      <div className="destination-map-copy"><MapPinned size={30}/><p className="destination-kicker">ALÉM DO CENTRO HISTÓRICO</p>
-        <h2>A região é um<br/><em>convite para ir além.</em></h2>
-        <p>Descubra o entorno de São João del-Rei, encontre os lugares no mapa e crie seu próprio caminho.</p>
-        <Link to="/mapa-3d" className="destination-button-primary">Explore no mapa <ArrowUpRight size={18}/></Link>
       </div>
     </section>
 
