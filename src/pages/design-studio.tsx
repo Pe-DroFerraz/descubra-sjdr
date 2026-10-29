@@ -86,6 +86,12 @@ function readVersions():Snapshot[]{
   return Array.isArray(raw)?raw.filter((x):x is Snapshot=>Boolean(x&&typeof x.id==='string'&&validateTheme(x.theme))).slice(0,10):[];
  }catch{return []}
 }
+function readApproval():boolean{
+ try{
+   const value=JSON.parse(localStorage.getItem(APPROVAL)??'null');
+   return Boolean(value?.approvedAt)&&JSON.stringify(validateTheme(value.theme))===JSON.stringify(readSaved());
+ }catch{return false;}
+}
 function Photo({id,alt,className=''}:{id:PhotoKey;alt:string;className?:string}){
  const [failed,setFailed]=useState(false);
  return <div className={'st-photo '+className} style={{background:failed?'linear-gradient(140deg,#c9c6b9,#738e7d)':'#c9d0c4'}}>
@@ -297,7 +303,8 @@ export default function DesignStudio(){
  const [device,setDevice]=useState<Device>('desktop');
  const [inspector,setInspector]=useState<Inspector>('cores');
  const [compare,setCompare]=useState(false);
- const [approved,setApproved]=useState(false);
+ const [approved,setApproved]=useState(readApproval);
+ const [compareWith,setCompareWith]=useState('base');
  const [versions,setVersions]=useState<Snapshot[]>(readVersions);
  const [snapshotName,setSnapshotName]=useState('');
  const [showVersions,setShowVersions]=useState(false);
@@ -365,10 +372,12 @@ export default function DesignStudio(){
  useEffect(()=>{
    const input=new URLSearchParams(window.location.search).get('tema');
    if(!input||input.length>3000)return;
-   try{const t=validateTheme(JSON.parse(atob(input)));if(t){setTheme(t);setApproved(false);}}catch{/* ignore invalid shared URL */}
+   try{const t=validateTheme(JSON.parse(atob(input)));if(t){setTheme(t);setApproved(new URLSearchParams(window.location.search).get('aprovado')==='1');}}catch{/* ignore invalid shared URL */}
  },[]);
  useEffect(()=>{document.title='Ateliê Visual · Descubra SJDR';},[]);
  const currentPreset=presets.find(x=>JSON.stringify(x.theme)===JSON.stringify(theme));
+ const baselineTheme=versions.find(x=>x.id===compareWith)?.theme??original;
+ const baselineName=versions.find(x=>x.id===compareWith)?.name??'Identidade original';
  const previewClass='ds-viewport '+device+(compare?' comparison':'');
  return <div className="ds-root">
    <aside className={'ds-left '+(studioMenu?'mobile-open':'')}>
@@ -392,8 +401,9 @@ export default function DesignStudio(){
      </header>
      <div className="ds-preview-area" ref={browserRef}>
        <div className="ds-preview-heading"><div><span className="ds-live-dot"/> PRÉVIA INTERATIVA <small>Dados fictícios · Visualização instantânea</small></div><div>{themeIsOriginal?'Identidade-base':currentPreset?.title??'Identidade personalizada'}<span> · {device==='desktop'?'Desktop':device==='tablet'?'Tablet':'Celular'}</span></div></div>
+       {compare&&<label className="ds-compare-choice">Comparar com <select aria-label="Versão para comparação" value={compareWith} onChange={e=>setCompareWith(e.target.value)}><option value="base">Identidade original</option>{versions.map(v=><option key={v.id} value={v.id}>{v.name}</option>)}</select></label>}
        <div className={'ds-stage-row '+(compare?'is-comparing':'')}>
-         {compare&&<div className="ds-stage-holder"><div className="ds-stage-label">ANTES <span>Identidade original</span></div><div className="ds-preview-scroll"><div className={previewClass}><PreviewSite theme={original} screen={page} onNavigate={setScreen} baseline/></div></div></div>}
+         {compare&&<div className="ds-stage-holder"><div className="ds-stage-label">REFERÊNCIA <span>{baselineName}</span></div><div className="ds-preview-scroll"><div className={previewClass}><PreviewSite theme={baselineTheme} screen={page} onNavigate={setScreen} baseline/></div></div></div>}
          <div className="ds-stage-holder"><div className="ds-stage-label">{compare?'DEPOIS':'VISUALIZAÇÃO'} <span>{compare?'Suas alterações':'Altere os controles à direita'}</span></div><div className="ds-preview-scroll"><div className={previewClass}><PreviewSite theme={theme} screen={page} onNavigate={setScreen}/></div></div></div>
        </div>
        <div className="ds-preview-footer"><span><MousePointer2 size={15}/> Clique e teste menus, filtros, mapa, roteiros e formulários.</span><span>Visual editorial · Portal turístico</span></div>
