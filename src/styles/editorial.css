@@ -158,3 +158,7 @@ body{background:var(--paper);color:var(--forest)}
 .editorial-planner-page{padding:58px 22px}.editorial-option-grid{grid-template-columns:1fr}.destination-button-primary,.destination-button-light{min-height:46px;padding:10px 14px}
 }
 @media(prefers-reduced-motion:reduce){.destination-mosaic-item img,.destination-button-primary,.destination-button-dark{transition:none!important}}
+
+/* Maintain WCAG contrast for the white-on-forest footer identity. */
+.site-footer .brand,.site-footer .brand>span,.site-footer .brand-city{color:#f6f3eb!important}
+.site-footer .brand-icon{color:#e0c795!important}

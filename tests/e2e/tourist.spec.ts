@@ -328,9 +328,7 @@ test('home is responsive and passes automated WCAG checks', async ({
 }) => {
   await api(page);
   await page.goto('/');
-  await expect(
-    page.getByRole('link', { name: 'Igreja de teste', exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole('link',{name:/Comece a explorar/})).toBeVisible();
   const desktop = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();
@@ -359,7 +357,7 @@ test('routes and events explain empty published catalogs without reporting a net
   page,
 }) => {
   await api(page, { places: [], routes: [], events: [] });
-  await page.goto('/roteiros');
+  await page.goto('/roteiros/catalogo');
   await expect(page.getByText('Os roteiros estão em preparação')).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.goto('/eventos');
