@@ -32,7 +32,7 @@ test('demo journey, discovery map and lead form work without backend',async ({pa
   await site.getByRole('textbox',{name:'Buscar atrações demonstrativas'}).fill('Pilar');
   await expect(site.getByText('Catedral Basílica do Pilar')).toBeVisible();
   await expect(site.getByText('Museu Ferroviário')).toHaveCount(0);
-  await page.getByRole('button',{name:/Mapa turístico/}).click();
+  await page.locator('.ds-screen-nav button').filter({hasText:'Mapa turístico'}).click();
   await expect(site.locator('.st-map-canvas')).toBeVisible();
   await page.getByRole('button',{name:/Para anunciantes/}).click();
   await site.getByPlaceholder('Nome completo').fill('Joana Ribeiro');
