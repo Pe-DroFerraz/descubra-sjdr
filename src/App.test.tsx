@@ -36,10 +36,8 @@ describe('tourist application without Cloud configuration', () => {
       { name: /Uma cidade para sentir/ },
       { timeout: 3000 },
     );
-    expect(
-      (await screen.findAllByText('Este conteúdo ainda não está disponível'))
-        .length,
-    ).toBeGreaterThan(0);
+    expect(await screen.findByRole('link', { name: /Monte sua viagem/ })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: /Seus próximos dias/ })).toBeTruthy();
     expect(screen.queryByText(/DEMONSTRAÇÃO/)).toBeNull();
   });
   it('provides an honest configuration error instead of sample places', async () => {

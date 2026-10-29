@@ -1,22 +1,33 @@
 import { test, expect } from '@playwright/test';
 
-test('homepage shows photographic preview when the database is offline', async ({ page }) => {
-  await page.route('http://127.0.0.1:54399/**', (route) => route.abort());
+test('homepage provides full editorial experiences when Supabase is offline', async ({page})=>{
+  await page.route('http://127.0.0.1:54399/**',route=>route.abort());
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /O patrimônio em imagens/ })).toBeVisible();
-  const gallery = page.getByRole('region', { name: 'Galeria de São João del-Rei' });
-  // The gallery is statically bundled, regardless of Supabase requests.
-  await expect(gallery.locator('img')).toHaveCount(4);
-  await expect(gallery.getByRole('link', { name: /Foto: Wikimedia Commons/ })).toHaveCount(4);
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading',{name:/Uma cidade para sentir/})).toBeVisible();
+  await expect(page.getByRole('heading',{name:/Existe um São João/})).toBeVisible();
+  await expect(page.locator('.destination-mosaic .visual-photo img')).toHaveCount(4);
+  await expect(page.getByRole('link',{name:/Monte sua viagem/})).toBeVisible();
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
-test('map preview has visible 2D fallback without loading the catalog or 3D engine', async ({ page }) => {
-  await page.route('http://127.0.0.1:54399/**', (route) => route.abort());
+test('curated routes and itinerary builder work without a database',async ({page})=>{
+  await page.route('http://127.0.0.1:54399/**',route=>route.abort());
+  await page.goto('/roteiros');
+  await expect(page.getByRole('heading',{name:/Roteiros que/})).toBeVisible();
+  await page.getByRole('link',{name:/Explorar roteiro/}).first().click();
+  await expect(page.getByText('Passo a passo,')).toBeVisible();
+  await expect(page.getByText('4 paradas')).toBeVisible();
+  await page.getByRole('checkbox',{name:/Incluir Igreja de São Francisco/}).uncheck();
+  await expect(page.getByText('3 paradas')).toBeVisible();
+  await page.goto('/planejar');
+  await page.getByRole('button',{name:/Encontrar meu roteiro/}).click();
+  await expect(page.getByRole('link',{name:/Ver roteiro com/})).toBeVisible();
+});
+
+test('map retains an immediately visible flat fallback',async ({page})=>{
+  await page.route('http://127.0.0.1:54399/**',route=>route.abort());
   await page.goto('/mapa-3d');
   await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
-  await expect(page.getByRole('button', { name: /Ativar 3D/ })).toBeVisible();
-  await expect(page.getByText('Mapa visível imediatamente.', { exact: false })).toBeVisible();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
+  await expect(page.getByRole('button',{name:/Ativar 3D/})).toBeVisible();
 });

@@ -104,7 +104,8 @@ test('search, place details, save, persist, translation and mobile navigation', 
     })
     .fill('igreja');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
-  await expect(page).toHaveURL(/lugares\?q=igreja/);
+  await expect(page).toHaveURL(/explorar\?q=igreja/);
+  await page.goto('/lugares?q=igreja');
   await page
     .getByRole('link', { name: 'Igreja de teste', exact: true })
     .click();
@@ -183,7 +184,7 @@ test('routes, calendar, tips and a shared itinerary use published response data'
   page,
 }) => {
   await api(page);
-  await page.goto('/roteiros');
+  await page.goto('/roteiros/catalogo');
   await page.getByRole('link', { name: /Roteiro de teste/ }).click();
   await expect(
     page.getByRole('heading', { name: 'Roteiro de teste', exact: true }),
@@ -327,9 +328,7 @@ test('home is responsive and passes automated WCAG checks', async ({
 }) => {
   await api(page);
   await page.goto('/');
-  await expect(
-    page.getByRole('link', { name: 'Igreja de teste', exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole('link',{name:/Comece a explorar/})).toBeVisible();
   const desktop = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();
@@ -358,7 +357,7 @@ test('routes and events explain empty published catalogs without reporting a net
   page,
 }) => {
   await api(page, { places: [], routes: [], events: [] });
-  await page.goto('/roteiros');
+  await page.goto('/roteiros/catalogo');
   await expect(page.getByText('Os roteiros estão em preparação')).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.goto('/eventos');

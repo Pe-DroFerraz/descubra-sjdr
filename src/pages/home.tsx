@@ -1,400 +1,130 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  ArrowDown,
-  ArrowRight,
-  BedDouble,
-  CloudSun,
-  Landmark,
-  MapPin,
-  Search,
-  ShoppingBag,
-  UtensilsCrossed,
-  Compass,
-  Layers3,
-  FileText,
-  Megaphone,
-  ShieldCheck,
-} from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
-import { Button } from '../components/ui/button';
-import {
-  Notice,
-  PlaceCard,
-  RouteCard,
-  Section,
-  State,
-} from '../components/tourism/common';
-import {
-  useBenefits,
-  useCategories,
-  useEvents,
-  usePlaces,
-  useRoutes,
-} from '../data/queries';
-import {
-  coordinates,
-  distanceKm,
-  monthBounds,
-  translated,
-} from '../lib/tourism';
-import { useClock } from '../hooks/clock';
-import { useLocation } from '../hooks/local-state';
-import { EditorialShowcase } from '../components/tourism/editorial-showcase';
-const icons: Record<string, typeof Landmark> = {
-  historia: Landmark,
-  comer: UtensilsCrossed,
-  hospedar: BedDouble,
-  artesanato: ShoppingBag,
-  passeios: Compass,
-};
+import { useTranslation } from 'react-i18next';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Compass, MapPinned, Search, ShieldCheck } from 'lucide-react';
+import { usePlaces } from '../data/queries';
+import { journeys, topics, visitorGuide } from '../data/editorial';
+import { EditorialImage } from '../components/tourism/editorial-image';
+import { HeritagePhoto } from '../components/tourism/heritage-photo';
 export default function Home() {
-  const now = useClock();
-  const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const places = usePlaces(),
-    categories = useCategories(),
-    routes = useRoutes(),
-    events = useEvents(),
-    benefits = useBenefits();
-  const location = useLocation();
-  const [weatherEnabled, setWeatherEnabled] = useState(false);
-  const weather = useQuery({
-    queryKey: ['weather', 'sjdr'],
-    enabled: weatherEnabled,
-    staleTime: 600_000,
-    retry: 1,
-    queryFn: async ({ signal }) => {
-      const response = await fetch(
-        'https://api.open-meteo.com/v1/forecast?latitude=-21.135&longitude=-44.262&current=temperature_2m,precipitation,weather_code&timezone=America%2FSao_Paulo',
-        { signal },
-      );
-      if (!response.ok) throw new Error('Weather unavailable');
-      return z
-        .object({
-          current: z.object({
-            temperature_2m: z.number(),
-            precipitation: z.number(),
-            weather_code: z.number(),
-          }),
-        })
-        .parse(await response.json()).current;
-    },
-  });
-  const nearby = location.position
-    ? [...(places.data ?? [])]
-        .filter((p) => coordinates(p))
-        .map((p) => ({
-          place: p,
-          distance: distanceKm(location.position!, coordinates(p)!),
-        }))
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, 3)
-    : [];
-  const currentMonth = monthBounds(
-    new Intl.DateTimeFormat('sv-SE', {
-      timeZone: 'America/Sao_Paulo',
-      year: 'numeric',
-      month: '2-digit',
-    }).format(new Date()),
-  );
-  const upcoming = (events.data ?? [])
-    .filter(
-      (e) =>
-        Date.parse(e.ends_at) >= Date.now() &&
-        Date.parse(e.starts_at) < currentMonth.end.getTime(),
-    )
-    .sort((a, b) => a.starts_at.localeCompare(b.starts_at))
-    .slice(0, 3);
-  const suggestedRoute = weather.data
-    ? routes.data?.find(
-        (r) =>
-          r.weather ===
-          (weather.data.precipitation > 0 || weather.data.weather_code >= 51
-            ? 'rain'
-            : 'dry'),
-      )
-    : undefined;
-  const categoryName = (id: string) => {
-    const c = categories.data?.find((c) => c.id === id);
-    return c ? t(c.slug, { defaultValue: c.name }) : undefined;
-  };
-  const flags = (id: string) =>
-    benefits.isError
-      ? undefined
-      : benefits.data?.find(
-          (b) => b.place_id === id && Date.parse(b.valid_until) > now.getTime(),
-        )?.features;
-  return (
-    <>
-      <section className="hero">
-        <div className="hero-copy">
-          <p className="eyebrow text-ochre">{t('eyebrow')}</p>
-          <h1>
-            {t('heroTitle')}
-            <em>{t('heroAccent')}</em>
-          </h1>
-          <p className="hero-description">{t('heroText')}</p>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate(`/lugares?q=${encodeURIComponent(search)}`);
-            }}
-            className="hero-search"
-          >
-            <Search className="shrink-0 text-clay" size={20} />
-            <label className="sr-only" htmlFor="hero-search">
-              {t('searchLabel')}
-            </label>
-            <input
-              id="hero-search"
-              value={search}
-              maxLength={120}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t('searchPlaceholder')}
-            />
-            <Button type="submit" className="shrink-0">
-              {t('search')}
-            </Button>
-          </form>
-          <div className="mt-8 flex flex-wrap gap-6 text-sm">
-            <Link to="/mapa" className="inline-flex items-center gap-2">
-              <MapPin size={17} />
-              {t('map')} <ArrowRight size={15} />
-            </Link>
-            <Link to="/mapa-3d" className="inline-flex items-center gap-2"><Layers3 size={17} /> Mapa 3D <ArrowRight size={15} /></Link>
-            <a href="#discover" className="inline-flex items-center gap-2">
-              {t('discover')} <ArrowDown size={15} />
-            </a>
-          </div>
+  const {t}=useTranslation();
+  const navigate=useNavigate();
+  const [search,setSearch]=useState('');
+  const places=usePlaces();
+  function submit(e:FormEvent){e.preventDefault();navigate('/explorar'+(search.trim()?'?q='+encodeURIComponent(search.trim()):''));}
+  return <>
+    <section className="destination-hero">
+      <div className="destination-hero-image"><EditorialImage photo="francisco" eager credit={false}/></div>
+      <div className="destination-hero-overlay"/>
+      <div className="destination-hero-inner">
+        <p className="destination-overline"><span className="destination-diamond"/> SÃO JOÃO DEL-REI · MINAS GERAIS</p>
+        <h1 aria-label="Uma cidade para sentir">Uma cidade<br/>para <em>sentir.</em></h1>
+        <p className="destination-hero-lead">Descubra lugares, histórias e experiências que fazem de cada viagem uma memória.</p>
+        <div className="destination-hero-actions">
+          <Link className="destination-button-primary" to="/explorar">Comece a explorar <ArrowUpRight size={19}/></Link>
+          <Link className="destination-button-light" to="/planejar">Monte sua viagem <ArrowRight size={18}/></Link>
         </div>
-        <div className="hero-art">
-          <img
-            src="https://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20de%20S%C3%A3o%20Francisco%20de%20Assis%2C%20em%20S%C3%A3o%20Joao%20Del%20Rei.jpg?width=1280"
-            onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = '/heritage.svg'; }}
-            alt="Igreja de São Francisco de Assis, São João del-Rei"
-            {...{ fetchpriority: 'high' }}
-          />
-          <div className="hero-location">
-            <Landmark size={20} />
-            <div>
-              <strong>São João del-Rei</strong>
-              <span>21°08′ S · 44°15′ O</span>
-            </div>
-          </div>
-          <div className="hero-stamp" aria-hidden="true">
-            SJ
-            <br />
-            <span>DEL-REI</span>
-          </div>
-        </div>
-      </section>
-      <div className="page-shell" id="discover">
-        <section className="experience-rail" aria-label="Explore as experiências disponíveis">
-          <Link to="/mapa-3d" className="experience-tile"><Layers3 size={24}/><span><b>Explore em 3D</b><small>Relevo e vistas da região</small></span><ArrowRight size={18}/></Link>
-          <Link to="/servicos-oficiais" className="experience-tile"><ShieldCheck size={24}/><span><b>Fontes oficiais</b><small>Informações com procedência</small></span><ArrowRight size={18}/></Link>
-          <Link to="/editais" className="experience-tile"><FileText size={24}/><span><b>Editais públicos</b><small>Links para consultar na origem</small></span><ArrowRight size={18}/></Link>
-          <Link to="/anuncie" className="experience-tile"><Megaphone size={24}/><span><b>Anuncie aqui</b><small>Apresente seu negócio</small></span><ArrowRight size={18}/></Link>
-        </section>
-        <EditorialShowcase />
-        <Section title={t('discover')} eyebrow="SÃO JOÃO DEL-REI">
-          <State
-            pending={categories.isPending}
-            error={categories.error}
-            retry={() => void categories.refetch()}
-            empty={!categories.data?.length}
-          >
-            <div className="category-grid">
-              {categories.data?.map((c) => {
-                const Icon = icons[c.slug] ?? Compass;
-                return (
-                  <Link
-                    to={`/lugares?categoria=${encodeURIComponent(c.slug)}`}
-                    key={c.id}
-                    className="category-tile"
-                  >
-                    <Icon size={27} strokeWidth={1.4} />
-                    <span>{t(c.slug, { defaultValue: c.name })}</span>
-                    <ArrowRight size={16} />
-                  </Link>
-                );
-              })}
-            </div>
-          </State>
-        </Section>
-        <Section title={t('explore')} to="/lugares">
-          <State
-            resource="places"
-            pending={places.isPending}
-            error={places.error}
-            retry={() => void places.refetch()}
-            empty={!places.data?.length}
-          >
-            <div className="card-grid">
-              {[...(places.data ?? [])]
-                .sort(
-                  (a, b) =>
-                    Number(flags(b.id)?.priority === true) -
-                      Number(flags(a.id)?.priority === true) ||
-                    a.name.localeCompare(b.name),
-                )
-                .slice(0, 3)
-                .map((place) => (
-                  <PlaceCard
-                    key={place.id}
-                    place={place}
-                    category={categoryName(place.category_id)}
-                    badge={flags(place.id)?.badge === true}
-                    featured={flags(place.id)?.priority === true}
-                  />
-                ))}
-            </div>
-          </State>
-        </Section>
+        <form className="destination-hero-search" onSubmit={submit}>
+          <Search size={19} aria-hidden/>
+          <label htmlFor="destination-search" className="sr-only">{t('searchLabel')}</label>
+          <input id="destination-search" value={search} onChange={e=>setSearch(e.target.value)}
+            maxLength={120} placeholder="Igrejas, museus, experiências..." />
+          <button type="submit">{t('search')} <ArrowRight size={17}/></button>
+        </form>
+        <div className="destination-hero-foot"><span>01 — 04</span><span>Herança, cultura e novos caminhos</span><a href="#conheca" aria-label="Descer para experiências"><ArrowDownRight size={24}/></a></div>
       </div>
-      <div className="bg-colonial/[.04]">
-        <div className="page-shell">
-          <Section title={t('curated')} eyebrow={t('routes')} to="/roteiros">
-            <p className="mb-7 max-w-xl text-colonial/80">{t('routeIntro')}</p>
-            <State
-              resource="routes"
-              pending={routes.isPending}
-              error={routes.error}
-              retry={() => void routes.refetch()}
-              empty={!routes.data?.length}
-            >
-              <div className="route-carousel">
-                {routes.data?.map((route) => (
-                  <RouteCard key={route.id} route={route} />
-                ))}
-              </div>
-            </State>
-          </Section>
-        </div>
+      <a className="destination-hero-photo-credit" href="https://commons.wikimedia.org/wiki/File:Igreja_de_S%C3%A3o_Francisco_de_Assis%2C_S%C3%A3o_Jo%C3%A3o_del-Rei%2C_MG_-_2023-11-08_-_DSC05317.jpg" target="_blank" rel="noopener noreferrer">Fotografia: Wikimedia Commons · ver licença</a>
+    </section>
+
+    <div className="destination-intro-strip">
+      <span>DESTINO DE MUITAS HISTÓRIAS</span><p>Arquitetura que encanta. Cultura que permanece. Experiências que surpreendem.</p><Link to="/roteiros">Conheça os roteiros <ArrowUpRight size={16}/></Link>
+    </div>
+
+    <section className="destination-section" id="conheca">
+      <div className="destination-section-head">
+        <div><p className="destination-kicker">ESCOLHA SUA EXPERIÊNCIA</p><h2 aria-label="Existe um São João para cada viajante">Existe um São João<br/><em>para cada viajante.</em></h2></div>
+        <p>Explore a cidade a partir do que mais desperta sua curiosidade. História, cultura, natureza e encontros inesperados.</p>
       </div>
-      <div className="page-shell">
-        <Section title={t('nearby')}>
-          <p className="mb-4 text-sm text-colonial/80">{t('gpsPrivacy')}</p>
-          <Button
-            variant="outline"
-            onClick={location.locate}
-            disabled={location.state === 'loading'}
-            className="gap-2"
-          >
-            <MapPin size={16} />
-            {t(location.state === 'loading' ? 'locating' : 'locate')}
-          </Button>
-          {location.state === 'error' && (
-            <div className="mt-4">
-              <Notice>{t('locationError')}</Notice>
-            </div>
-          )}
-          {location.position && (
-            <div className="mt-7">
-              <State
-                resource="places"
-                pending={places.isPending}
-                error={places.error}
-                empty={!nearby.length}
-              >
-                <div className="card-grid">
-                  {nearby.map(({ place, distance }) => (
-                    <PlaceCard
-                      key={place.id}
-                      place={place}
-                      category={categoryName(place.category_id)}
-                      distance={distance}
-                    />
-                  ))}
-                </div>
-              </State>
-            </div>
-          )}
-        </Section>
-        <Section title={t('agenda')} eyebrow={t('events')} to="/eventos">
-          <State
-            resource="events"
-            pending={events.isPending}
-            error={events.error}
-            retry={() => void events.refetch()}
-            empty={!upcoming.length}
-          >
-            <div className="grid gap-4 md:grid-cols-3">
-              {upcoming.map((event) => {
-                const content = translated(
-                  event,
-                  event.event_translations,
-                  i18n.language,
-                );
-                return (
-                  <Link
-                    key={event.id}
-                    to={`/eventos/${event.id}`}
-                    className="event-teaser"
-                  >
-                    <span className="eyebrow">
-                      {new Intl.DateTimeFormat(i18n.language, {
-                        timeZone: 'America/Sao_Paulo',
-                        day: 'numeric',
-                        month: 'short',
-                      }).format(new Date(event.starts_at))}
-                    </span>
-                    <h3 className="mt-3 font-display text-2xl">
-                      {content.name}
-                    </h3>
-                    <ArrowRight size={18} className="mt-6 text-clay" />
-                  </Link>
-                );
-              })}
-            </div>
-          </State>
-        </Section>
-        <section className="weather-panel">
-          <CloudSun size={44} strokeWidth={1} />
-          <div className="flex-1">
-            <p className="eyebrow">{t('weather')}</p>
-            <h2 className="section-title">
-              {weather.data
-                ? `${Math.round(weather.data.temperature_2m)}°C · São João del-Rei`
-                : t('fairWeather')}
-            </h2>
-            {weather.data && (
-              <p className="mt-3">
-                {t(
-                  weather.data.precipitation > 0 ||
-                    weather.data.weather_code >= 51
-                    ? 'rain'
-                    : 'fairWeather',
-                )}
-              </p>
-            )}
-            {weather.isError && <p role="status">{t('weatherError')}</p>}
+      <div className="destination-mosaic">
+        {topics.map((topic,i)=><article key={topic.id} className={'destination-mosaic-item '+(i===0?'destination-mosaic-lead':'')}>
+          <EditorialImage photo={topic.image} />
+          <div className="destination-mosaic-scrim"/>
+          <div className="destination-mosaic-content">
+            <span>{topic.eyebrow}</span>
+            <h3>{topic.name}</h3>
+            <p>{topic.copy}</p>
+            <Link to={'/explorar?interesse='+topic.id} className="destination-circle-link" aria-label={'Explorar '+topic.name}><ArrowUpRight size={21}/></Link>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setWeatherEnabled(true);
-                if (weatherEnabled) void weather.refetch();
-              }}
-              disabled={weather.isFetching}
-            >
-              {t(weather.isFetching ? 'loading' : 'weatherCheck')}
-            </Button>
-            <Button asChild>
-              <Link to="/roteiros">{t('routes')}</Link>
-            </Button>
-          </div>
-        </section>
-        {suggestedRoute && (
-          <div className="mb-10 max-w-md">
-            <RouteCard route={suggestedRoute} />
-          </div>
-        )}
+        </article>)}
       </div>
-    </>
-  );
+    </section>
+
+    <section className="destination-feature">
+      <div className="destination-feature-photo"><EditorialImage photo="carmo" /></div>
+      <div className="destination-feature-copy">
+        <p className="destination-kicker">O MELHOR DA VIAGEM</p>
+        <h2>Mais do que ver.<br/><em>É viver o lugar.</em></h2>
+        <p>Entre o som dos sinos e as ruas de pedra, a cidade guarda histórias que não cabem em um roteiro apressado.</p>
+        <p>Nossa proposta é ajudar você a descobrir com contexto, respeitando o patrimônio e apoiando quem faz a cidade acontecer.</p>
+        <Link className="destination-text-link" to="/explorar">Descubra os lugares <ArrowRight size={18}/></Link>
+      </div>
+    </section>
+
+    <section className="destination-section destination-journeys">
+      <div className="destination-section-head">
+        <div><p className="destination-kicker">ROTEIROS COM PROPÓSITO</p><h2 aria-label="Seus próximos dias começam aqui">Seus próximos dias<br/><em>começam aqui.</em></h2></div>
+        <div><p>Experiências organizadas para você aproveitar melhor o tempo, sem perder a liberdade de explorar.</p><Link className="destination-text-link" to="/roteiros">Todos os roteiros <ArrowUpRight size={18}/></Link></div>
+      </div>
+      <div className="destination-journey-grid">
+        {journeys.map((r,i)=><article className="destination-journey-card" key={r.slug}>
+          <div className="destination-journey-photo"><EditorialImage photo={r.image}/><span>{String(i+1).padStart(2,'0')}</span></div>
+          <div className="destination-journey-body"><p>{r.label} · {r.duration}</p><h3>{r.title}</h3><span>{r.short}</span>
+            <Link to={'/roteiros/guias/'+r.slug}>Ver roteiro completo <ArrowUpRight size={17}/></Link></div>
+        </article>)}
+      </div>
+    </section>
+
+    <section className="destination-planner-teaser">
+      <div><p className="destination-kicker">SEU TEMPO, SUA VIAGEM</p><h2>Você escolhe o ritmo.<br/><em>A cidade faz o resto.</em></h2>
+        <p>Uma tarde, um fim de semana ou a primeira visita. Escolha seus interesses e personalize um percurso para levar com você.</p>
+        <Link className="destination-button-gold" to="/planejar">Planejar minha viagem <ArrowUpRight size={19}/></Link>
+      </div>
+      <div className="destination-planner-graphic"><span>MG</span><span>21°08′ S / 44°15′ W</span><Compass size={110} strokeWidth={.65} /><strong>SÃO JOÃO<br/>DEL-REI</strong></div>
+    </section>
+
+    <section className="destination-section">
+      <div className="destination-section-head">
+        <div><p className="destination-kicker">PATRIMÔNIO PARA DESCOBRIR</p><h2>Ícones que contam<br/><em>a nossa história.</em></h2></div>
+        <Link className="destination-text-link" to="/lugares">Consultar atrações do catálogo <ArrowRight size={18}/></Link>
+      </div>
+      <div className="destination-places-grid">
+        {(places.data?.length? places.data.slice(0,3) : [
+          {id:'heritage1',slug:'igreja-sao-francisco-de-assis-sjdr',name:'Igreja de São Francisco de Assis'},
+          {id:'heritage2',slug:'museu-regional-sao-joao-del-rei',name:'Museu Regional'},
+          {id:'heritage3',slug:'catedral-nossa-senhora-do-pilar',name:'Catedral Basílica do Pilar'},
+        ]).map((place,i)=><article className="destination-place" key={place.id}>
+          <div className="destination-place-photo"><HeritagePhoto slug={place.slug} alt={place.name}/></div>
+          <span>{String(i+1).padStart(2,'0')} / SÃO JOÃO DEL-REI</span>
+          <h3>{place.name}</h3>
+          <Link to={'/lugares/'+place.slug}>Conhecer <ArrowUpRight size={16}/></Link>
+        </article>)}
+      </div>
+    </section>
+
+    <section className="destination-map-teaser">
+      <div className="destination-map-image"><EditorialImage photo="serra"/></div>
+      <div className="destination-map-copy"><MapPinned size={30}/><p className="destination-kicker">ALÉM DO CENTRO HISTÓRICO</p>
+        <h2>A região é um<br/><em>convite para ir além.</em></h2>
+        <p>Descubra o entorno de São João del-Rei, encontre os lugares no mapa e crie seu próprio caminho.</p>
+        <Link to="/mapa-3d" className="destination-button-primary">Explore no mapa <ArrowUpRight size={18}/></Link>
+      </div>
+    </section>
+
+    <section className="destination-community">
+      <div><p className="destination-kicker">UMA CIDADE FEITA DE PESSOAS</p><h2>Seu negócio também<br/><em>faz parte dessa história.</em></h2><p>Um espaço para empreendedores locais, turismo e cultura se encontrarem. Anúncios identificados e informações revisadas, sem parcerias institucionais implícitas.</p></div>
+      <div className="destination-community-actions"><Link className="destination-button-dark" to="/anuncie">Anuncie no Descubra <ArrowUpRight size={17}/></Link>
+      <Link className="destination-text-link" to="/servicos-oficiais"><ShieldCheck size={16}/> Consulte fontes oficiais</Link></div>
+    </section>
+    <p className="destination-source-note">Roteiros editoriais baseados em referências culturais e no <a href={visitorGuide} target="_blank" rel="noopener noreferrer">guia turístico do Museu Regional</a> (atualizado em julho de 2025). Confira funcionamento e condições de visita diretamente com os responsáveis.</p>
+  </>;
 }
