@@ -75,3 +75,19 @@ test('3D engine initializes and switches between terrain and flat mode',async ({
   await page.getByRole('button',{name:'Ver 3D'}).click();
   expect(await page.evaluate(()=>(window as unknown as {__lastTerrain?:{source:string}}).__lastTerrain?.source)).toBe('terrain');
 });
+
+test('real MapLibre terrain initializes in Chromium with external elevation tiles',async ({page})=>{
+  test.setTimeout(70000);
+  const networkErrors:string[]=[];
+  page.on('requestfailed',request=>{if(/maplibre|mapterhorn|openstreetmap/.test(request.url()))networkErrors.push(request.url()+': '+(request.failure()?.errorText??''));});
+  await page.goto('/mapa-3d');
+  await page.getByRole('button',{name:'Ativar 3D'}).click();
+  try {
+    await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:45000});
+    await expect(page.locator('.maplibregl-canvas')).toBeVisible();
+  } catch(error) {
+    console.error('MapLibre live initialization failures:',networkErrors);
+    console.error('Browser map alert:',await page.getByRole('alert').allTextContents());
+    throw error;
+  }
+});
