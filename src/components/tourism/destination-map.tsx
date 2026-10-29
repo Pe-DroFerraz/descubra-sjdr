@@ -113,7 +113,6 @@ export function DestinationMap({compact=false}:{compact?:boolean}){
    }).catch(()=>{if(mounted)setMapError(true)});
    return ()=>{mounted=false;observer?.disconnect();pins.forEach(pin=>pin.remove());mapInstance?.remove();mapRef.current=null};
  // No dependency on "focus": selecting a pin should not destroy/recreate the map.
- // eslint-disable-next-line react-hooks/exhaustive-deps
  },[filtered,location.position]);
  function choosePoint(p:PublicMapPoint){
    setFocus(p.id);
