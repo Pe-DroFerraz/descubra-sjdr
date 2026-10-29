@@ -24,6 +24,7 @@ function kindOf(category:string,name:string):PublicMapKind{
 export function DestinationMap({compact=false}:{compact?:boolean}){
  const element=useRef<HTMLDivElement|null>(null);
  const mapRef=useRef<L.Map|null>(null);
+ const markersRef=useRef<Map<string,L.Marker>>(new Map());
  const [selected,setSelected]=useState<Filter>('all');
  const [focus,setFocus]=useState<string>('');
  const [tileError,setTileError]=useState(false);
@@ -93,6 +94,7 @@ export function DestinationMap({compact=false}:{compact?:boolean}){
          marker.on('click',()=>{if(mounted)setFocus(point.id)});
          if(focus===point.id)marker.openPopup();
          pins.push(marker);
+         markersRef.current.set(point.id,marker);
          visibleCoords.push([point.lat,point.lng]);
        }
        if(visibleCoords.length>1)map.fitBounds(lib.latLngBounds(visibleCoords),{padding:[40,40],maxZoom:15});
@@ -111,12 +113,13 @@ export function DestinationMap({compact=false}:{compact?:boolean}){
        setMapError(false);
      }catch{if(mounted)setMapError(true)}
    }).catch(()=>{if(mounted)setMapError(true)});
-   return ()=>{mounted=false;observer?.disconnect();pins.forEach(pin=>pin.remove());mapInstance?.remove();mapRef.current=null};
+   return ()=>{mounted=false;observer?.disconnect();pins.forEach(pin=>pin.remove());markersRef.current.clear();mapInstance?.remove();mapRef.current=null};
  // No dependency on "focus": selecting a pin should not destroy/recreate the map.
  },[filtered,location.position]);
  function choosePoint(p:PublicMapPoint){
    setFocus(p.id);
    mapRef.current?.flyTo([p.lat,p.lng],16,{duration:.65});
+   markersRef.current.get(p.id)?.openPopup();
  }
  const sourceUrl='https://www.openstreetmap.org/#map=15/-21.136/-44.261';
  return <section className={'destination-map-experience '+(compact?'is-compact':'is-full')} aria-label="Mapa turístico interativo">
