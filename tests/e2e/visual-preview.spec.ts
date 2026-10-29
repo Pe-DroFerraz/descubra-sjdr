@@ -46,3 +46,10 @@ test('main map is a first-class destination with map filters even when the catal
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
+
+test('3D can actually initialize, show its canvas and switch between terrain and flat mode',async ({page})=>{
+  // A controlled MapLibre module exercises the app's dynamic ESM loading and
+  // terrain-ready lifecycle without depending on a third-party CDN in CI.
+  await page.route('https://unpkg.com/maplibre-gl@6.16.0/dist/maplibre-gl.mjs',async route=>{
+    await route.fulfill({status:200,contentType:'text/javascript',headers:{'Access-Control-Allow-Origin':'*'},
+      body:

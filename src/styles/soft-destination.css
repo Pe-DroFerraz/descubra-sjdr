@@ -152,3 +152,18 @@
 
 /* Distinguish OSM attribution links without relying on color, for WCAG 2.1 AA. */
 .destination-map-view .leaflet-control-attribution a{text-decoration:underline!important;text-underline-offset:2px;color:#064666!important}
+
+/* 3D terrain stage: keep 2D visible until the WebGL style has rendered. */
+.map3d-stage{position:relative;isolation:isolate;min-height:480px}
+.map3d-stage>iframe{position:relative;z-index:1;width:100%;height:520px;display:block;border:0}
+.map3d-stage .map3d-overlay{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;z-index:3;border:0}
+.map3d-stage .map3d-status{position:absolute;top:20px;left:20px;right:20px;z-index:5;max-width:520px;padding:16px 19px;border-radius:16px;background:#fffef8;box-shadow:0 9px 25px #122a2850;color:#173b37;font-size:13px;line-height:1.7}
+.map3d-stage .map3d-status-error{border:1px solid #c6a18c}
+.map3d-stage .map3d-status button{display:inline-flex;align-items:center;gap:8px;margin-top:11px;border-radius:99px;padding:9px 14px;background:#173b37;color:#fff;font-weight:700}
+.map3d-stage .visual-map-caption{position:absolute;bottom:0;left:0;right:0;z-index:2}
+.map3d-stage .maplibregl-ctrl-attrib a{text-decoration:underline;text-underline-offset:2px}
+.map3d-shell{border-radius:26px;overflow:hidden}
+.map3d-shell .map3d-toolbar{background:#173b37;padding:16px 19px}
+.map3d-shell .map3d-control{border-radius:999px;min-height:41px;padding:10px 17px}
+.map3d-shell .map3d-control:disabled{opacity:.55;cursor:wait}
+@media(max-width:620px){.map3d-stage>iframe{height:440px}.map3d-stage{min-height:440px}.map3d-stage .map3d-status{left:10px;right:10px;top:12px;padding:14px}}
