@@ -18,7 +18,7 @@ export default function Home() {
       <div className="destination-hero-overlay"/>
       <div className="destination-hero-inner">
         <p className="destination-overline"><span className="destination-diamond"/> SÃO JOÃO DEL-REI · MINAS GERAIS</p>
-        <h1>Uma cidade<br/>para <em>sentir.</em></h1>
+        <h1 aria-label="Uma cidade para sentir">Uma cidade<br/>para <em>sentir.</em></h1>
         <p className="destination-hero-lead">Descubra lugares, histórias e experiências que fazem de cada viagem uma memória.</p>
         <div className="destination-hero-actions">
           <Link className="destination-button-primary" to="/explorar">Comece a explorar <ArrowUpRight size={19}/></Link>
@@ -42,7 +42,7 @@ export default function Home() {
 
     <section className="destination-section" id="conheca">
       <div className="destination-section-head">
-        <div><p className="destination-kicker">ESCOLHA SUA EXPERIÊNCIA</p><h2>Existe um São João<br/><em>para cada viajante.</em></h2></div>
+        <div><p className="destination-kicker">ESCOLHA SUA EXPERIÊNCIA</p><h2 aria-label="Existe um São João para cada viajante">Existe um São João<br/><em>para cada viajante.</em></h2></div>
         <p>Explore a cidade a partir do que mais desperta sua curiosidade. História, cultura, natureza e encontros inesperados.</p>
       </div>
       <div className="destination-mosaic">
@@ -72,7 +72,7 @@ export default function Home() {
 
     <section className="destination-section destination-journeys">
       <div className="destination-section-head">
-        <div><p className="destination-kicker">ROTEIROS COM PROPÓSITO</p><h2>Seus próximos dias<br/><em>começam aqui.</em></h2></div>
+        <div><p className="destination-kicker">ROTEIROS COM PROPÓSITO</p><h2 aria-label="Seus próximos dias começam aqui">Seus próximos dias<br/><em>começam aqui.</em></h2></div>
         <div><p>Experiências organizadas para você aproveitar melhor o tempo, sem perder a liberdade de explorar.</p><Link className="destination-text-link" to="/roteiros">Todos os roteiros <ArrowUpRight size={18}/></Link></div>
       </div>
       <div className="destination-journey-grid">
