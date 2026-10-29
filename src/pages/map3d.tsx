@@ -1,4 +1,5 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
+import mapWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Compass, Layers3, MapPinned, RotateCcw, RefreshCw } from 'lucide-react';
@@ -24,7 +25,6 @@ type Marker = {
   remove: () => void;
 };
 type MapLibre = {
-  supported: () => boolean;
   Map: new (options: Record<string, unknown>) => MapInstance;
   NavigationControl: new (options: Record<string, unknown>) => unknown;
   Marker: new (options: Record<string, unknown>) => Marker;
@@ -35,6 +35,8 @@ type MapLibre = {
 let enginePromise: Promise<MapLibre> | undefined;
 async function importEngine(): Promise<MapLibre> {
   const module = await import('maplibre-gl');
+  // MapLibre v6 requires an explicit worker URL when bundled with Vite.
+  module.setWorkerUrl(mapWorkerUrl);
   return module as unknown as MapLibre;
 }
 function getEngine() {
@@ -93,7 +95,7 @@ export default function Map3D() {
     };
     void getEngine().then(lib => {
       if (!alive || !element.current) return;
-      if (!lib.supported()) {
+      if (!('WebGL2RenderingContext' in window)) {
         fail('Este navegador não disponibiliza WebGL, necessário para o relevo 3D. O mapa plano continua disponível.');
         return;
       }
