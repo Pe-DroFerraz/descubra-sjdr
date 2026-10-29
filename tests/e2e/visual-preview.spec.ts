@@ -46,3 +46,23 @@ test('main map is a first-class destination with map filters even when the catal
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
+
+test('locally bundled MapLibre renders 3D and toggles terrain with a real Chromium WebGL canvas',async ({page})=>{
+  test.setTimeout(90000);
+  const networkErrors:string[]=[];
+  page.on('requestfailed',request=>{if(/mapterhorn|openstreetmap/.test(request.url()))networkErrors.push(request.url()+': '+(request.failure()?.errorText??''));});
+  await page.goto('/mapa-3d');
+  await expect(page.getByTitle('Mapa de São João del-Rei')).toBeVisible();
+  await page.getByRole('button',{name:'Ativar 3D'}).click();
+  try {
+    await expect(page.getByRole('button',{name:'Ver plano'})).toBeVisible({timeout:60000});
+    await expect(page.locator('.maplibregl-canvas')).toBeVisible();
+    // dispatchEvent avoids waiting for a visually stable layout under SwiftShader software GPU.
+    await page.getByRole('button',{name:'Ver plano'}).dispatchEvent('click',{timeout:15000});
+    await expect(page.getByRole('button',{name:'Ver 3D'})).toBeVisible({timeout:10000});
+  } catch(e) {
+    console.error('MapLibre tile/network issues:',networkErrors);
+    console.error('MapLibre state:',await page.locator('.map3d-status').allTextContents().catch(()=>[]));
+    throw e;
+  }
+});
