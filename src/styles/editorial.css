@@ -162,3 +162,8 @@ body{background:var(--paper);color:var(--forest)}
 /* Maintain WCAG contrast for the white-on-forest footer identity. */
 .site-footer .brand,.site-footer .brand>span,.site-footer .brand-city{color:#f6f3eb!important}
 .site-footer .brand-icon{color:#e0c795!important}
+
+/* WCAG AA: typography must contrast against the ivory canvas on desktop and mobile. */
+:root{--rust:#8b472f}
+.destination-source-note{color:#465950}
+.destination-hero .destination-kicker,.destination-planner-teaser .destination-kicker,.destination-map-teaser .destination-kicker,.editorial-page-hero-dark .destination-kicker,.editorial-journey-hero .destination-kicker{color:#e5c48e}
