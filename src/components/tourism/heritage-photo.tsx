@@ -5,7 +5,6 @@ const photoMap:Record<string,PhotoKey>={
  'museu-regional-sao-joao-del-rei':'museum',
  'catedral-nossa-senhora-do-pilar':'pilar',
  'museu-ferroviario-estacao-efom':'station',
- 'centro-cultural-ufsj-solar-baronesa':'carmo',
 };
 export function HeritagePhoto({slug,alt}:{slug:string;alt:string}) {
   const key=photoMap[slug];

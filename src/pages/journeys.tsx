@@ -29,7 +29,21 @@ const routeText=(route:Journey,selected:number[])=>[
 export function JourneyDetail(){
  const {slug}=useParams();
  const route=journeys.find(item=>item.slug===slug);
- const [selected,setSelected]=useState<number[]>(route?.stops.map((_,i)=>i)??[]);
+ const [selected,setSelected]=useState<number[]>(()=>{
+   const defaults=route?.stops.map((_,i)=>i)??[];
+   if(!route) return defaults;
+   try{
+     const raw=localStorage.getItem('sjdr-curated-route');
+     if(!raw)return defaults;
+     const savedRoute:unknown=JSON.parse(raw);
+     if(typeof savedRoute!=='object'||savedRoute===null)return defaults;
+     const found=savedRoute as {slug?:unknown;selected?:unknown};
+     if(found.slug!==route.slug||!Array.isArray(found.selected))return defaults;
+     const items=found.selected as unknown[];
+     return items.every(i=>typeof i==='number'&&Number.isInteger(i)&&i>=0&&i<route.stops.length)
+       ? (items as number[]).filter((n,i,a)=>a.indexOf(n)===i).sort((a,b)=>a-b) : defaults;
+   }catch{return defaults;}
+ });
  const [message,setMessage]=useState('');
  const [saved,setSaved]=useState(false);
  if(!route)return <div className="editorial-page-hero"><h1>Roteiro não encontrado.</h1><Link to="/roteiros">Voltar aos roteiros</Link></div>;
