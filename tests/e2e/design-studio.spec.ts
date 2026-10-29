@@ -55,4 +55,6 @@ test('theme can be saved, compared, exported and restored locally',async ({page}
   const download=page.waitForEvent('download');
   await page.getByRole('button',{name:/Exportar identidade/}).click();
   expect((await download).suggestedFilename()).toContain('identidade-visual');
+  await page.getByRole('button',{name:/Aprovar visual/}).click();
+  await expect(page.getByRole('status').last()).toContainText('aprovado');
 });

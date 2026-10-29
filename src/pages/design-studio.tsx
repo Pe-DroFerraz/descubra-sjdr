@@ -20,6 +20,7 @@ type Snapshot={id:string;name:string;created:string;theme:Theme};
 type ConfigFile={app:string;version:number;name?:string;theme:Theme};
 const STORAGE='sjdr-atelie-v1';
 const SLOTS='sjdr-atelie-versions-v1';
+const APPROVAL='sjdr-atelie-aprovacao-v1';
 const original:Theme={
  primary:'#173B37',paper:'#F7F5EF',accent:'#B38456',ink:'#233B33',soft:'#E7EEE8',
  font:'editorial',radius:24,spacing:22,scale:100,button:'pill',hero:'full',shadows:false,animations:true,
@@ -296,6 +297,7 @@ export default function DesignStudio(){
  const [device,setDevice]=useState<Device>('desktop');
  const [inspector,setInspector]=useState<Inspector>('cores');
  const [compare,setCompare]=useState(false);
+ const [approved,setApproved]=useState(false);
  const [versions,setVersions]=useState<Snapshot[]>(readVersions);
  const [snapshotName,setSnapshotName]=useState('');
  const [showVersions,setShowVersions]=useState(false);
@@ -304,7 +306,7 @@ export default function DesignStudio(){
  const fileRef=useRef<HTMLInputElement>(null);
  const browserRef=useRef<HTMLDivElement>(null);
  const themeIsOriginal=JSON.stringify(theme)===JSON.stringify(original);
- function update(patch:Partial<Theme>){setTheme(t=>({...t,...patch}));}
+ function update(patch:Partial<Theme>){setTheme(t=>({...t,...patch}));setApproved(false);}
  function notify(message:string){setNotification(message);}
  function setScreen(s:Screen){setPage(s);setStudioMenu(false);browserRef.current?.scrollTo({top:0,behavior:'smooth'});}
  function save(){
@@ -331,6 +333,24 @@ export default function DesignStudio(){
    try{await navigator.clipboard.writeText(url.toString());notify('Link com a identidade atual copiado.');}
    catch{window.history.replaceState(null,'',url.toString());notify('Link atualizado na barra de endereços. Copie-o para compartilhar.');}
  }
+
+ async function approve(){
+   try{
+     localStorage.setItem(STORAGE,JSON.stringify(theme));
+     localStorage.setItem(APPROVAL,JSON.stringify({theme,approvedAt:new Date().toISOString()}));
+     setApproved(true);
+   }catch{notify('Não foi possível registrar a aprovação local. Exporte o arquivo JSON.');return;}
+   const url=new URL(window.location.href);
+   url.searchParams.set('tema',btoa(JSON.stringify(theme)));
+   url.searchParams.set('aprovado','1');
+   try{
+     await navigator.clipboard.writeText(url.toString());
+     notify('Visual aprovado neste navegador. Envie o link copiado no chat para aplicarmos ao código definitivo.');
+   }catch{
+     window.history.replaceState(null,'',url.toString());
+     notify('Visual aprovado neste navegador. Copie o link da barra de endereços e envie no chat.');
+   }
+ }
  async function upload(event:ChangeEvent<HTMLInputElement>){
    const file=event.target.files?.[0];if(!file)return;
    if(file.size>100000){notify('Arquivo muito grande. Selecione um JSON exportado pelo estúdio.');return;}
@@ -338,14 +358,14 @@ export default function DesignStudio(){
      const raw=JSON.parse(await file.text()) as ConfigFile;
      const next=validateTheme(raw?.theme);
      if(!next){notify('Arquivo não reconhecido. Utilize um JSON exportado por este estúdio.');return;}
-     setTheme(next);notify('Identidade importada. Confira e salve sua versão.');
+     setTheme(next);setApproved(false);notify('Identidade importada. Confira e salve sua versão.');
    }catch{notify('Não foi possível ler o arquivo JSON.');}
    event.target.value='';
  }
  useEffect(()=>{
    const input=new URLSearchParams(window.location.search).get('tema');
    if(!input||input.length>3000)return;
-   try{const t=validateTheme(JSON.parse(atob(input)));if(t)setTheme(t);}catch{/* ignore invalid shared URL */}
+   try{const t=validateTheme(JSON.parse(atob(input)));if(t){setTheme(t);setApproved(false);}}catch{/* ignore invalid shared URL */}
  },[]);
  useEffect(()=>{document.title='Ateliê Visual · Descubra SJDR';},[]);
  const currentPreset=presets.find(x=>JSON.stringify(x.theme)===JSON.stringify(theme));
@@ -367,6 +387,7 @@ export default function DesignStudio(){
          <button className={'ds-top-button '+(compare?'active':'')} aria-pressed={compare} onClick={()=>setCompare(!compare)}><Layers3 size={16}/><span>Comparar</span></button>
          <button className="ds-top-button" onClick={()=>void share()}><Share2 size={16}/><span>Compartilhar</span></button>
          <button className="ds-top-button ds-save-btn" onClick={save}><Save size={16}/><span>Salvar</span></button>
+         <button className={'ds-top-button ds-approve-btn '+(approved?'is-approved':'')} onClick={()=>void approve()} title="Aprovar visual"><CheckCircle2 size={16}/><span>{approved?'Aprovado':'Aprovar visual'}</span></button>
        </div>
      </header>
      <div className="ds-preview-area" ref={browserRef}>
@@ -383,7 +404,7 @@ export default function DesignStudio(){
      <div className="ds-inspector-tabs" role="tablist">{([{id:'cores',label:'Cores',Icon:Palette},{id:'tipografia',label:'Tipo',Icon:Type},{id:'layout',label:'Layout',Icon:LayoutGrid},{id:'elementos',label:'Elementos',Icon:SlidersHorizontal}] as const).map(x=><button key={x.id} role="tab" aria-selected={inspector===x.id} className={inspector===x.id?'active':''} onClick={()=>setInspector(x.id)}><x.Icon size={16}/>{x.label}</button>)}</div>
      <div className="ds-inspector-content">
        {inspector==='cores'&&<>
-         <div className="ds-control-group"><h3>Identidades prontas</h3><p>Uma boa base para começar, sem limitar suas escolhas.</p><div className="ds-presets">{presets.map(p=><button key={p.id} onClick={()=>setTheme({...p.theme})} className={JSON.stringify(theme)===JSON.stringify(p.theme)?'active':''}><div className="ds-preset-swatches">{[p.theme.primary,p.theme.paper,p.theme.accent].map(c=><span key={c} style={{background:c}}/>)}</div><div><strong>{p.title}</strong><small>{p.caption}</small></div>{JSON.stringify(theme)===JSON.stringify(p.theme)&&<Check size={16}/>}</button>)}</div></div>
+         <div className="ds-control-group"><h3>Identidades prontas</h3><p>Uma boa base para começar, sem limitar suas escolhas.</p><div className="ds-presets">{presets.map(p=><button key={p.id} onClick={()=>{setTheme({...p.theme});setApproved(false);}} className={JSON.stringify(theme)===JSON.stringify(p.theme)?'active':''}><div className="ds-preset-swatches">{[p.theme.primary,p.theme.paper,p.theme.accent].map(c=><span key={c} style={{background:c}}/>)}</div><div><strong>{p.title}</strong><small>{p.caption}</small></div>{JSON.stringify(theme)===JSON.stringify(p.theme)&&<Check size={16}/>}</button>)}</div></div>
          <div className="ds-control-group"><h3>Paleta personalizada</h3><p>As cores influenciam toda a experiência demonstrativa.</p>
          {([{key:'primary',label:'Cor principal'},{key:'paper',label:'Fundo'},{key:'accent',label:'Cor de destaque'},{key:'ink',label:'Texto'},{key:'soft',label:'Superfícies'}] as const).map(x=><label className="ds-color-input" key={x.key}><span>{x.label}<small>{theme[x.key].toUpperCase()}</small></span><input aria-label={x.label} type="color" value={theme[x.key]} onChange={e=>update({[x.key]:e.target.value})}/></label>)}
          </div>
@@ -403,9 +424,9 @@ export default function DesignStudio(){
        </>}
        <div className="ds-control-group ds-versions"><div className="ds-section-title"><h3>Versões salvas</h3><button aria-label="Abrir versões salvas" onClick={()=>setShowVersions(!showVersions)}><ChevronDown size={17}/></button></div>
          <div className="ds-version-form"><input aria-label="Nome da versão" value={snapshotName} onChange={e=>setSnapshotName(e.target.value)} placeholder="Ex.: Proposta prefeitura"/><button onClick={version}>Criar versão</button></div>
-         {showVersions&&<div className="ds-version-list">{versions.length?versions.map(v=><button key={v.id} onClick={()=>{setTheme({...v.theme});notify('Versão '+v.name+' restaurada.');}}><strong>{v.name}</strong><small>{v.created}</small><ArrowRight size={16}/></button>):<small>Nenhuma versão salva neste navegador.</small>}</div>}
+         {showVersions&&<div className="ds-version-list">{versions.length?versions.map(v=><button key={v.id} onClick={()=>{setTheme({...v.theme});setApproved(false);notify('Versão '+v.name+' restaurada.');}}><strong>{v.name}</strong><small>{v.created}</small><ArrowRight size={16}/></button>):<small>Nenhuma versão salva neste navegador.</small>}</div>}
        </div>
-       <div className="ds-control-group ds-import-export"><h3>Leve seu design com você</h3><button onClick={download}><Download size={16}/> Exportar identidade (JSON)</button><button onClick={()=>fileRef.current?.click()}><Upload size={16}/> Importar identidade</button><input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={e=>void upload(e)}/><button className="ds-reset" onClick={()=>{setTheme({...original});notify('Identidade-base restaurada.');}}><RotateCcw size={15}/> Restaurar base original</button></div>
+       <div className="ds-control-group ds-import-export"><h3>Leve seu design com você</h3><button onClick={download}><Download size={16}/> Exportar identidade (JSON)</button><button onClick={()=>fileRef.current?.click()}><Upload size={16}/> Importar identidade</button><input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={e=>void upload(e)}/><button className="ds-reset" onClick={()=>{setTheme({...original});setApproved(false);notify('Identidade-base restaurada.');}}><RotateCcw size={15}/> Restaurar base original</button></div>
      </div>
      <footer className="ds-inspector-footer"><div><ShieldCheck size={16}/> ALTERAÇÕES SEGURAS</div><p>O estúdio funciona com dados demonstrativos e armazenamento local. Nenhuma alteração é aplicada automaticamente ao site em produção.</p></footer>
    </aside>
