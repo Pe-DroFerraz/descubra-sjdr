@@ -1,7 +1,7 @@
 import {useCallback,useEffect,useMemo,useRef,useState,type FormEvent} from 'react';
 import {useQuery,useQueryClient} from '@tanstack/react-query';
 import {Link} from 'react-router-dom';
-import {ArrowRight,ArrowUpRight,CalendarClock,CheckCircle2,Clock3,Compass,ExternalLink,FileText,LayoutDashboard,MapPin,MessageSquareText,RefreshCw,Search,ShieldCheck,TrendingUp,UsersRound,Wallet,X} from 'lucide-react';
+import {ArrowRight,ArrowUpRight,CalendarClock,CheckCircle2,Clock3,Compass,ExternalLink,FileText,LayoutDashboard,MapPin,MessageSquareText,RefreshCw,Search,ShieldCheck,UsersRound,Wallet,X} from 'lucide-react';
 import type L from 'leaflet';
 import {adminClient} from './api';
 import {CURATED_MAP_POINTS} from '../data/map-landmarks';
@@ -19,7 +19,6 @@ type Note={id:string;lead_id:string;body:string;created_at:string};
 type Log={id:string;action:string;table_name:string;created_at:string};
 type Subscription={id:string;status:string;verified_at:string|null};
 type Data={places:Place[];leads:Lead[];advertisers:Company[];reviews:Review[];payments:Payment[];routes:Simple[];events:Simple[];plans:Plan[];notes:Note[];logs:Log[];subscriptions:Subscription[]};
-type MapPoint={id:string;name:string;lat:number;lng:number;status:string;ref:boolean};
 const demo:Data={
  places:[
  {id:'p1',name:'Igreja de São Francisco de Assis',slug:'igreja-sao-francisco-de-assis-sjdr',status:'published',latitude:-21.13891,longitude:-44.26005,is_demo:true,address:'Praça Frei Orlando'},
