@@ -12,6 +12,8 @@ import { ContentManager } from './editor';
 import { StopsManager } from './stops';
 import { MediaManager } from './gallery';
 import { AdminMFA } from '../auth/admin-mfa';
+import AdminCommandCenter from './command-center';
+import { LayoutDashboard } from 'lucide-react';
 function Guard({ children }: PropsWithChildren) {
   const auth = useAuth(),
     query = useQueryClient();
@@ -59,12 +61,12 @@ function Studio() {
   const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const [dirty, setDirty] = useState(false);
-  const section = params.get('secao') ?? 'places';
+  const section = params.get('secao') ?? 'overview';
   const active = entities.includes(section as Entity)
     ? (section as Entity)
-    : section === 'media' || section === 'stops' || section === 'catalog'
+    : section === 'media' || section === 'stops' || section === 'catalog' || section === 'overview'
       ? section
-      : 'places';
+      : 'overview';
   function change(next: string) {
     if (dirty && !window.confirm(t('admin.discard'))) return;
     setDirty(false);
@@ -94,6 +96,7 @@ function Studio() {
       </div>
       <div className="admin-layout">
         <nav className="admin-nav" aria-label={t('admin.access')}>
+          <button aria-current={active === 'overview' ? 'page' : undefined} onClick={() => change('overview')}><LayoutDashboard size={16}/> Central de gestão</button>
           {entities.map((entity) => (
             <button
               key={entity}
@@ -115,7 +118,9 @@ function Studio() {
         </nav>
         <section className="min-w-0">
           <Notice>{t('admin.draftNote')}</Notice>
-          {active === 'media' ? (
+          {active === 'overview' ? (
+            <AdminCommandCenter />
+          ) : active === 'media' ? (
             <MediaManager key={active} />
           ) : active === 'stops' ? (
             <StopsManager key={active} onDirty={setDirty} />

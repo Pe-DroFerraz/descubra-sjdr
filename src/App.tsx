@@ -10,6 +10,7 @@ import './styles/editorial.css';
 import './styles/soft-destination.css';
 const Admin = lazy(() => import('./admin/panel'));
 const DesignStudio = lazy(() => import('./pages/design-studio'));
+const AdminDemo = lazy(() => import('./admin/demo'));
 const SignIn = lazy(() => import('./pages/auth'));
 const Account = lazy(() =>
   import('./pages/auth').then((module) => ({ default: module.Account })),
@@ -270,6 +271,9 @@ function Layout() {
 }
 export default function App() {
   const location = useLocation();
+  if (location.pathname === '/painel-demo' || location.pathname === '/painel-demo/') {
+    return <Suspense fallback={<div role="status" className="state-panel">Abrindo demonstração de gestão…</div>}><AdminDemo /></Suspense>;
+  }
   if (location.pathname === '/estudio' || location.pathname === '/estudio/') {
     return <Suspense fallback={<div role="status" className="state-panel">Abrindo Ateliê Visual…</div>}><DesignStudio /></Suspense>;
   }
