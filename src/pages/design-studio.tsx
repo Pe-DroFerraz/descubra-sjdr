@@ -385,7 +385,7 @@ export default function DesignStudio(){
      <div className="ds-demo-tag"><span/> AMBIENTE DE DEMONSTRAÇÃO</div>
      <div className="ds-side-label">TELAS DO PROJETO</div>
      <nav className="ds-screen-nav" aria-label="Telas da prévia">{screens.map(x=>{const Icon=icons[x.id];return <button key={x.id} className={page===x.id?'selected':''} onClick={()=>setScreen(x.id)}><Icon size={18}/><span><strong>{x.name}</strong><small>{x.description}</small></span>{page===x.id&&<ArrowRight size={15}/>}</button>;})}</nav>
-     <div className="ds-left-bottom"><div><ShieldCheck size={17}/><p><b>Seu banco está protegido.</b><br/>Nenhuma ação aqui altera Supabase, pagamentos ou anúncios reais.</p></div><a href="/" target="_blank" rel="noopener noreferrer">Abrir site público <ArrowUpRight size={14}/></a></div>
+     <div className="ds-left-bottom"><div><ShieldCheck size={17}/><p><b>Seu banco está protegido.</b><br/>Nenhuma ação aqui altera Supabase, pagamentos ou anúncios reais.</p></div><a href="/" target="_blank" rel="noopener noreferrer">Abrir site público <ArrowUpRight size={14}/></a><a href="/painel-demo" target="_blank" rel="noopener noreferrer">Conhecer o painel administrativo <ArrowUpRight size={14}/></a></div>
    </aside>
    <div className="ds-workspace">
      <header className="ds-toolbar">

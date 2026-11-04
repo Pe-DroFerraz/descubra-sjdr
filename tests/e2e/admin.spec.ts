@@ -704,6 +704,7 @@ test('missing editorial migration is explicit and does not hide the versioned dr
   const state = await backend(page);
   state.schemaReady = false;
   await login(page);
+  await page.goto('/admin?secao=places');
   await expect(
     page.getByText('O banco ainda não oferece todos os recursos editoriais.', {
       exact: false,

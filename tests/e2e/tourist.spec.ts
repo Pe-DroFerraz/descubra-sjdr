@@ -164,7 +164,7 @@ test('map clusters and attribution work even with unavailable tiles; category an
     page.getByRole('region', { name: 'Mapa', exact: true }),
   ).toBeVisible();
   await expect(page.getByText('OpenStreetMap', { exact: true })).toBeVisible();
-  await expect(page.locator('.marker-cluster')).toBeVisible();
+  await expect(page.locator('.marker-cluster').first()).toBeVisible();
   await expect(
     page.getByText('A base do mapa está indisponível.', { exact: false }),
   ).toBeVisible();
